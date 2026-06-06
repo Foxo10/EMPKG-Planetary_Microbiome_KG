@@ -1,0 +1,15 @@
+name: empkg
+channels:
+  - conda-forge
+dependencies:
+  - python=3.11
+  - h5py
+  - numpy
+  - pandas
+  - requests
+  - tqdm
+  - pytest
+  - pip:
+    - biom-format
+    - python-dotenv
+

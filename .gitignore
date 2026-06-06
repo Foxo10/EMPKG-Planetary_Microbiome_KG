@@ -1,1 +1,10 @@
-whole_project.md
+# Metadados
+/data/raw/
+/data/processed/
+*.biom
+
+# Entorno y cache
+venv/
+.env
+*.pyc
+__pycache__/
