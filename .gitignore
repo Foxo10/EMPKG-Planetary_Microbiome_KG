@@ -1,6 +1,5 @@
 # Metadados
 /data/raw/
-/data/processed/
 *.biom
 
 # Entorno y cache

@@ -1,14 +1,26 @@
 name: empkg
+
 channels:
   - conda-forge
+  - bioconda
+  - defaults
+
 dependencies:
-  - python=3.11
+  - python=3.11 # 3.11 es más estable que 3.13 para bioinformática
+  - pip
+
   - h5py
+  - biom-format
+
   - numpy
   - pandas
+
   - requests
   - tqdm
   - pytest
+  - jupyterlab
+  - ipykernel
+
   - pip:
     - biom-format
     - python-dotenv
