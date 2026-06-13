@@ -1,148 +1,269 @@
-# Apuntes
+# Diario técnico del TFG EMPKG-lite
+> Documento vivo de seguimiento del TFG.
 
-## Tareas por llevar a cabo
-* Buscar más información sobre EMP
-* Bajar los datos de EMP y abrirlos programaticamente (HDF5)
+---
 
-## Plan de trabajo
-### Fase 0 (sem. 1-3): setup + explorar datos BIOM
+## Estado actual del proyecto
+**Fase:** 0 — Setup y exploración inicial de datos.
 
-### Fase 1 (sem. 4-10): pipeline limpieza + normalización LLM + ontologías
-### Fase 2 (sem. 11-17): esquema KG + ingestión Neo4j + consultas Cypher
-### Extensión (sem. 18-20): elegir A/B/C según tiempo disponible
-[Workflow](workflow.md)
+**Lo que está hecho:**
+- Entorno conda `empkg` creado y documentado en `environment.yml`.
+- Descargados los dos archivos iniciales del EMP (ver sección "Archivos descargados").
+- Script `inspect_data.py` creado para inspeccionar mapping file y BIOM.
+- Estructura básica del repositorio definida.
 
-## Información recabada
-### HDF5
-Hierarchical Data Format. Organiza cantidades inmensas de datos en base a dos objetos principales:
-* Datasets: Arrays multidimensionales de elementos de datos (imágenes, serie temporal, etc.)
-* Grupos: contenedores estructurales que organizan los datasets y otros grupos, similar a un sistema de ficheros.
+**Lo que está en curso:**
+- Exploración programática del archivo BIOM con `biom-format` y `h5py`.
+- Inspección del mapping file con `pandas`.
 
-### Biom
-Apuntes sobre los datos BIOM y biom-format:
-- Mirate este script de la linea 35 a la 66 que saco metadatos y tal: https://github.com/acotanor/biom-ld/blob/develop/scripts/extractBiomMetadata.py
-- Si tienes obsidian puedes abrir esta carpeta con un vault y mirar de forma más comoda los apuntes, si no mira los .md de uno en uno: https://github.com/acotanor/biom-ld/tree/develop/doc/Apuntes_TFG
-- El formato en la versión de hdf5: https://biom-format.org/documentation/format_versions/biom-2.1.html
-- La librería de python, sin más, solo pone como instalarlo: https://github.com/biocore/biom-format
+**Lo que NO está hecho aún:**
+- No se ha construido ningún componente del Knowledge Graph.
+- No se ha realizado ningún procesamiento LLM.
+- No se ha conectado a Neo4j.
 
+---
 
-## Estructura del repositorio
-En bioinformática y ciencia de datos, hay una tensión habitual entre **notebooks** (rápidos, exploratorios, difíciles de mantener) y **scripts modulares** (lentos de escribir, pero reutilizables). Para el TFG, una solución práctica es mantener ambos en carpetas separadas con un propósito claro cada uno.
-* `data/`—
-* `notebooks/`—
-* `src/empkg/`—
-* `scripts/`—
-* `docs/`—
-* `tests/`—
+## Próximas tareas
+### Fase 0 — Setup y exploración (en curso)
 
-Separar `src/` (código modular) de `notebooks/` (exploración)
-Solo guardamos `data/samples` en el repositorio git, con ejemplos pequeños.
+- [x] Crear entorno conda `empkg` con dependencias base.
+- [x] Descargar `emp_qiime_mapping_subset_2k.tsv`.
+- [x] Descargar `emp_deblur_90bp.subset_2k.rare_5000.biom`.
+- [ ] Completar `inspect_biom_file()` en `inspect_data.py`:
+  - Abrir el BIOM con `biom.load_table()`.
+  - Mostrar dimensiones (nº de ASVs × nº de muestras).
+  - Listar IDs de muestra (primeros 5).
+  - Listar IDs de ASV/OTU (primeros 5).
+  - Mostrar si hay metadatos de muestra embebidos.
+- [ ] Crear `notebooks/explore_biom_data.ipynb` con exploración interactiva.
+- [ ] Explorar las columnas del mapping file: identificar campos relevantes para el KG (`latitude_deg`, `longitude_deg`, `empo_3`, `ph`, `temperature_deg_c`).
+- [ ] Comprobar cobertura de campos clave: ¿cuántas muestras tienen pH? ¿cuántas tienen coordenadas GPS?
+- [ ] Intentar descargar `empo_v3.csv` o encontrar una fuente alternativa (ver dudas).
 
-## Entorno
-- Gestor local: Miniconda 25.11.1 con solver libmamba
-- Entorno del proyecto: `empkg` (Python 3.11)
-- Canales conda: conda-forge > bioconda > defaults
-- Dependencias base: biom-format, h5py, pandas, numpy
-- Para activar: `conda activate empkg`
-- Para reproducir: `conda env create -f environment.yml`
-- No usar el entorno base para instalar paquetes del proyecto.
-  
-La documentación oficial de BIOM recomienda instalar `numpy`, `biom-format` y `h5py` para trabajar con BIOM 2.0+. Además, `biom-format` incluye tanto CLI como API de Python.
+### Fase 1 — Pipeline de limpieza y normalización (pendiente)
 
-## Datos EMP y su descarga
-EMP publica tablas de observaciones, metadatos y resultados en Zenodo, FTP y el portal EMP de Qiita; el FTP incluye README, mapping files, tablas OTU/BIOM, secuencias, árboles y resultados de diversidad. El repositorio oficial (`https://github.com/biocore/emp`) tiene instrucciones de acceso a los datos via FTP (`ftp://ftp.microbio.me/emp/release1/`). 
+- [ ] Diseñar pipeline de normalización de metadatos con LLM.
+- [ ] Mapear campos de metadatos a ontologías ENVO, NCBITaxon, GAZ, CHEBI.
+- [ ] Documentar el esquema de nodos y relaciones del KG.
 
-1. **Ficheros de metadatos (`mapping_files/`)**
-Un 'mapping_file' es una tabla TSV donde cada fila es una muestra y cada columna es un campo de metadatos (pH, temperatura, bioma, coordenadas GPS, tipo de muestra, etc.). 
-El fichero de metadatos principal para los análisis es `emp_qiime_mapping_qc_filtered.tsv`, la versión filtrada por calidad de todas las muestras del Release 1.
-Además, contamos con submuestras de 2k, 5k y 10k muestras.
-Estos ficheros TSV ya son legibles con `pandas` y no necesitamos `biom-format` ni `h5py` para empezar a explorar los metadatos.
+### Fase 2 — Knowledge Graph en Neo4j (pendiente)
 
-2. **Ontología EMP (`emp_ontology/`)**
-   * `empo_v3.csv`: La ontología EMPO (EMP Ontology) versión 3. Es una clasificación jerárquica de tipos de entorno usada por el EMP.
-   * `envoEmpo_graph_v3.vue`: Un grafo que relaciona EMPO con ENVO.
-EMPO es la ontoloǵia propia del EMP. En el mapping file, muchas muestras ya tienen un campo `empo_3` o similar que asigna cada muestra a un tipo de entorno según EMPO. Mientras que ENVO es la ontología estándar de entornos, EMPO es más gruesa y específica del EMP (por ejemplo: `Free-living aquatic`, `Animal corpus`, `Plant corpus`).
-*Mirar el fichero empo_v3.csv con detalle*
+- [ ] Instalar y configurar Neo4j.
+- [ ] Definir esquema Cypher (nodos: Sample, Location, EnvironmentalFeature, Taxon).
+- [ ] Implementar pipeline de ingestión.
+- [ ] Escribir consultas Cypher de ejemplo.
 
-3. **Tablas de OTUs/ASVs (`otu_tables/`)**
-Tablas de abundancia microbiana: matrices donde las filas son taxa (OTUs o ASVs) y las columnas son muestras. Están en formatio BIOM (HDF5).
-   * `closed_ref_greengenes/` — OTUs por referencia cerrada contra Greengenes 13.8
-    La referencia Greengenes es la más antigua y ampliamente usada en estudios del EMP, pero está desactualizada
-   * `closed_ref_silva/` — OTUs por referencia cerrada contra Silva 123
-    Silva es más actualizada y tiene mejor cobertura de Archaea. Para un proyecto nuevo, esta o Deblur son mejores opciones que Greengenes.
-   * `deblur/` — ASVs (Amplicon Sequence Variants) con Deblur
-    Deblur genera ASVs en vez de OTUs. Los ASVs son más precisos: representan secuencias reales, no clusters al 97% de similitud. Son el estándar actual en microbiomía.
-   * `open_ref_greengenes/` — OTUs por referencia abierta contra Greengenes 13.8
-    La referencia abierta permite asignar también secuencias que no caen en la referencia (las pone en OTUs "nuevas"). Es la opción más completa pero también la que genera más ruido.
+---
 
-Los ficheros, dentro de cada una de estas carpetas, siguen una nomenclatura consistente:
-```emp_<método>_<longitud_bp>.<tamaño>.<rarefacción>.biom```
+## Registro de avances
+| Fecha        | Avance                                                                             |
+| ------------ | ---------------------------------------------------------------------------------- |
+| *(sem. 1-3)* | Setup del entorno. Descarga de datos EMP iniciales. Creación de `inspect_data.py`. |
 
-4. **Información de referencia sobre OTUs/secuencias (`otu_info/`)**
-Aquí viven los ficheros de referencia que se usaron para el OTU picking:
+> Añadir filas con fecha concreta al ir avanzando.
 
-| Carpeta                   | Contenido                                                                               |
-| ------------------------- | --------------------------------------------------------------------------------------- |
-| deblur/                   | Secuencias representativas (.fa) y árboles filogenéticos (.tre) para los ASVs de Deblur |
-| greengenes_13_8/          | Secuencias, taxonomías y árbol filogenético de Greengenes 13.8                          |
-| silva_123/                | Secuencias, taxonomías y árbol filogenético de Silva 123                                |
-| open_ref/                 | Secuencias representativas del OTU picking de referencia abierta                        |
-| greengenes_sepp_pipeline/ | Pipeline SEPP para inserción filogenética                                               |
-5.  
+---
 
 
-Primero descargar:
+## Decisiones técnicas tomadas
+| Decisión                                 | Alternativas descartadas   | Motivo                                                                                            |
+| ---------------------------------------- | -------------------------- | ------------------------------------------------------------------------------------------------- |
+| Usar ASVs de Deblur (no OTUs)            | Greengenes 13.8, Silva 123 | Los ASVs son el estándar actual; mayor resolución taxonómica                                      |
+| Subconjunto 2k muestras para exploración | 5k, 10k, dataset completo  | Manejable para Fase 0; escalar después                                                            |
+| Python 3.11 como versión base            | 3.12, 3.13                 | Mayor estabilidad con `biom-format` y `h5py` en bioinformática                                    |
+| Miniconda con solver libmamba            | pip, poetry, venv          | Mejor compatibilidad con paquetes bioinformáticos (canales conda-forge, bioconda)                 |  |
+| Usar Deblur 90bp, rarefaccionado a 5000  | otros parámetros           | Equilibrio entre resolución y manejabilidad; rarefacción permite comparar muestras de forma justa |
+
+---
+
+## Dudas abiertas
+- [ ] **`empo_v3.csv` inaccesible:** el servidor devuelve 404 para v3 y 403 para v2. ¿Dónde conseguir la ontología EMPO actualizada? Opciones a investigar: repositorio GitHub de EMP, Qiita, contactar con autores.
+- [ ] **¿Es necesario EMPO ahora?** Para la Fase 0 no es bloqueante. Los campos `empo_3` del mapping file ya están codificados como cadenas de texto. EMPO será necesario cuando se mapee a ENVO.
+- [ ] **Extensión del TFG:** ¿A/B/C? Decidir antes del mes 4 según el ritmo de avance. No es urgente ahora.
+
+---
+
+## Notas sobre EMP y sus datos
+### Resumen del proyecto EMP
+
+El EMP Release 1 contiene ~25.000 muestras de 97 estudios (Thompson et al., *Nature* 2017, doi: `10.1038/nature24621`). Los datos están en el FTP: `ftp://ftp.microbio.me/emp/release1/`. El subset de 2k muestras es una submuestra estratificada representativa usada en análisis exploratorios.
+
+Repo oficial: https://github.com/biocore/emp
+
+### Estructura del FTP
+release1/
+
+├── mapping_files/        # Metadatos TSV por muestra
+
+├── emp_ontology/         # relación con ENVO
+
+├── otu_tables/
+
+│   ├── deblur/           # ASVs ← opción elegida
+
+│   ├── closed_ref_greengenes/
+
+│   ├── closed_ref_silva/
+
+│   └── open_ref_greengenes/
+
+└── otu_info/             # Secuencias de referencia y árboles filogenéticos
+
+### Mapping file
+
+Archivo TSV donde cada fila es una muestra y cada columna es un campo de metadatos. La primera columna es `#SampleID`. Campos relevantes para el KG:
+
+| Campo               | Descripción                |
+| ------------------- | -------------------------- |
+| `latitude_deg`      | Latitud GPS                |
+| `longitude_deg`     | Longitud GPS               |
+| `empo_3`            | Tipo de entorno según EMPO |
+| `ph`                | pH de la muestra           |
+| `temperature_deg_c` | Temperatura en °C          |
+
+No todos los campos están rellenos en todas las muestras.
+
+### Nomenclatura de archivos BIOM
+*emp_<método>_<longitud_bp>.<tamaño>.<rarefacción>.biom*
+
+Ejemplo: `emp_deblur_90bp.subset_2k.rare_5000.biom`
+
+### Archivos descargados
+
+| Archivo                                    | Ruta local                                 | Descripción                                                 |
+| ------------------------------------------ | ------------------------------------------ | ----------------------------------------------------------- |
+| `emp_qiime_mapping_subset_2k.tsv`          | `data/raw/emp/release1/mapping_files/`     | Metadatos de 2.000 muestras. Abrir con `pandas`.            |
+| `emp_deblur_90bp.subset_2k.rare_5000.biom` | `data/raw/emp/release1/otu_tables/deblur/` | Tabla de abundancias ASVs. Requiere `biom-format` + `h5py`. |
+
+### Comandos de descarga
+
 ```bash
-# El mapping file filtrado con las 2k muestras — solo TSV, abre con pandas
+# Mapping file
 mkdir -p data/raw/emp/release1/mapping_files
 wget -c \
   -O data/raw/emp/release1/mapping_files/emp_qiime_mapping_subset_2k.tsv \
   https://ftp.microbio.me/emp/release1/mapping_files/emp_qiime_mapping_subset_2k.tsv
-```
 
-Segundo:
-```bash
-# Tabla BIOM Deblur, 2k muestras, rarefaccionada — el fichero de datos más manejable
+# Tabla BIOM Deblur
 mkdir -p data/raw/emp/release1/otu_tables/deblur
 wget -c \
   -O data/raw/emp/release1/otu_tables/deblur/emp_deblur_90bp.subset_2k.rare_5000.biom \
   https://ftp.microbio.me/emp/release1/otu_tables/deblur/emp_deblur_90bp.subset_2k.rare_5000.biom
 ```
 
-**Por qué Deblur y no Greengenes o Silva:** Deblur genera ASVs de alta resolución, que son el estándar moderno, mientras que los métodos de referencia cerrada como Greengenes se usaron para compatibilidad con estudios previos. Para un proyecto nuevo y actual, Deblur es la opción más actualizada y con mejor resolución taxonómica.
+---
 
-**Por qué el subset_2k:** el Release 1 del EMP contiene alrededor de 25.000 muestras de 97 estudios, lo cual para una exploración inicial es demasiado. El subset de 2.000 muestras es suficiente para entender la estructura de los datos.
+## Notas sobre BIOM / HDF5
 
-Intenté descargar `empo_v3.csv`, pero el servidor devolvía 404.
-Después probé con `empo_v2.csv`, que aparece en el índice actual del FTP, pero devuelve 403 Forbidden al acceder directamente.
+### HDF5
 
-- El mapping file contiene los metadatos de las muestras.
-- El archivo BIOM contiene la matriz de abundancias.
-- EMPO será útil más adelante para interpretar/clasificar ambientes, pero no es necesario para abrir el BIOM ni validar la ingesta inicial.
+Hierarchical Data Format. Organiza grandes volúmenes de datos en torno a dos objetos:
+- **Datasets:** arrays multidimensionales (imágenes, series temporales, matrices de abundancia).
+- **Grupos:** contenedores jerárquicos que organizan datasets y otros grupos, similar a un sistema de ficheros.
 
-## Archivos descargados
-`emp_qiime_mapping_subset_2k.tsv` — el mapping file de 2.000 muestras. Es un TSV con una fila por muestra y una columna por campo de metadatos (pH, temperatura, bioma, coordenadas GPS, tipo de muestra, EMPO…). Lo puedes abrir directamente con pandas sin ninguna librería especial. Es el primer archivo que debes explorar porque te da el contexto ambiental de cada muestra.
+### BIOM 2.x
 
-`emp_deblur_90bp.subset_2k.rare_5000.biom` — la tabla de abundancias microbianas en formato BIOM/HDF5. El nombre lo dice todo: método Deblur, fragmentos de 90 pares de bases, subconjunto de 2k muestras, rarefaccionada a 5.000 lecturas por muestra. Es una matriz donde las filas son ASVs (taxones) y las columnas son muestras. Este es el archivo grande y el que requiere biom-format y h5py. El sufijo rare_5000 significa que todas las muestras tienen el mismo número de lecturas tras un proceso de submuestreo aleatorio (rarefacción), lo que permite comparar abundancias entre muestras de forma justa.
+El formato BIOM 2.x almacena la tabla de abundancias como una **matriz dispersa dentro de un HDF5**. La forma estándar de abrirlo en Python es `biom.load_table()`.
 
-`empo_v3.csv` — la ontología EMPO versión 3. Es un CSV pequeño que define la clasificación jerárquica de tipos de entorno usada en el EMP (por ejemplo: "Animal corpus", "Free-living aquatic"). Lo necesitas para entender los valores del campo empo_3 del mapping file.
+Especificación del formato: https://biom-format.org/documentation/format_versions/biom-2.1.html
 
-## Resumen EMP
-El EMP Release 1 contiene ~25.000 muestras de 97 estudios publicadas en Thompson et al., Nature 2017  (doi: 10.1038/nature24621). Los datos están en el FTP `ftp://ftp.microbio.me/emp/release1/`. El subset 2k es una submuestra estratificada representativa usada en análisis exploratorios.
+Referencia útil de código (extracción de metadatos desde BIOM):
+https://github.com/acotanor/biom-ld/blob/develop/scripts/extractBiomMetadata.py
 
-Los mapping files son archivos TSV donde cada fila es una muestra y cada columna es un campo de metadatos. La primera columna es `#SampleID`. Campos relevantes para el KG: `latitude_deg`, `longitude_deg`, `empo_3`, `ph`, `temperature_deg_c`. No todos los campos están rellenos en todas las muestras.
+Librería Python: https://github.com/biocore/biom-format
 
-El formato **BIOM 2.x** almacena la tabla de abundancias como una matriz dispersa dentro de un HDF5. Usar `biom.load_table()` para abrirlo.
+### OTUs vs ASVs
 
-Los *OTUs* agrupan secuencias al 97% de similitud, lo que introduce ruido. Los *ASVs* (Amplicon Sequence Variants) representan secuencias exactar y son el estándar acutal. En Deblur, el ID de cada ASV es la propia secuencia nucleotídica.
+- **OTUs:** agrupan secuencias al 97% de similitud. Introducen ruido. Metodología más antigua.
+- **ASVs (Amplicon Sequence Variants):** representan secuencias exactas. Estándar actual en microbiomía. En Deblur, el ID de cada ASV es la propia secuencia nucleotídica.
 
-*Rarefaccion*: normalización que submuestrea todas las muestras al mismo número de lecturas (aquí 5.000). Permite comparar diversidad microbiana de forma justa. El precio es que muestras con pocas lecturas se eliminan.
+### Rarefacción
 
+Normalización que submuestrea todas las muestras al mismo número de lecturas (aquí: 5.000). Permite comparar diversidad microbiana de forma justa entre muestras. El coste es que las muestras con pocas lecturas se eliminan.
 
-## Recursos
-* Documentacion de biom y biom-format: ```help(biom)```
-* Repo oficial de EMP: https://github.com/biocore/emp?tab=readme-ov-file
+---
 
+## Notas sobre ontologías (EMPO, ENVO, NCBITaxon…)
 
-## Dudas varias
-* Entorno y gestor de paquetes para scripts y programas que manejan datos biológicos.
+### EMPO (EMP Ontology)
+
+Ontología propia del EMP. Clasificación jerárquica de tipos de entorno: `Free-living aquatic`, `Animal corpus`, `Plant corpus`, etc. Más gruesa y específica del EMP que ENVO. Los campos `empo_3` del mapping file asignan cada muestra a un nodo EMPO.
+
+Archivo: `emp_ontology/empo_v3.csv` en el FTP (inaccesible actualmente — ver dudas).
+Grafo EMPO–ENVO: `emp_ontology/envoEmpo_graph_v3.vue`.
+
+### ENVO (Environment Ontology)
+
+Ontología estándar de entornos ambientales. Más detallada y actualizada que EMPO.
+Ejemplo de uso: "suelo, bosque, templado" → `ENVO:00002258` (soil) + `ENVO:01000174` (temperate broadleaf forest).
+Se usará en la Fase 1 para normalizar metadatos con el LLM.
+
+### Otras ontologías previstas en el KG
+
+| Ontología | Dominio                 |
+| --------- | ----------------------- |
+| NCBITaxon | Taxonomía microbiana    |
+| GAZ       | Geografía / ubicaciones |
+| CHEBI     | Sustancias químicas     |
+
+## Notas sobre Knowledge Graph / Neo4j (vacío por ahora)
+Esquema previsto de nodos: `Sample`, `Location`, `EnvironmentalFeature`, `Taxon`.
+Relaciones previstas: `was_collected_at`, `has_feature`, `contains_taxon_with_abundance_X`.
+
+## Entorno y configuración
+| Elemento             | Valor                                    |
+| -------------------- | ---------------------------------------- |
+| Gestor de entornos   | Miniconda 25.11.1 con solver libmamba    |
+| Entorno del proyecto | `empkg` (Python 3.11)                    |
+| Canales conda        | conda-forge > bioconda > defaults        |
+| Dependencias base    | `biom-format`, `h5py`, `pandas`, `numpy` |
+
+```bash
+# Activar entorno
+conda activate empkg
+
+# Reproducir entorno desde cero
+conda env create -f environment.yml
+```
+
+## Estructura del repositorio
+empkg-lite/
+
+├── data/
+
+│   └── raw/emp/release1/     # Datos originales (en .gitignore)
+
+├── notebooks/                # Exploración interactiva
+
+├── src/empkg/                # Código modular reutilizable
+
+├── scripts/                  # Scripts de ingesta, inspección, etc.
+
+├── docs/                     # Memoria y documentación
+
+└── tests/                    # Tests básicos
+
+**Criterio utilizado**: separar `src/` (código modular) de `notebooks/` (exploración). Solo guardar en Git pequeños ejemplos de datos bajo `data/samples/`.
+
+---
+
+## Recursos útiles
+
+### EMP y datos microbianos
+- Repo oficial EMP: https://github.com/biocore/emp
+- FTP EMP Release 1: `ftp://ftp.microbio.me/emp/release1/`
+- Thompson et al. 2017 (paper EMP): doi `10.1038/nature24621`
+
+### BIOM / HDF5
+- Documentación biom-format: https://biom-format.org/documentation/format_versions/biom-2.1.html
+- Repo biom-format Python: https://github.com/biocore/biom-format
+- Ejemplo de extracción de metadatos BIOM: https://github.com/acotanor/biom-ld/blob/develop/scripts/extractBiomMetadata.py
+- Apuntes adicionales (Obsidian-compatible): https://github.com/acotanor/biom-ld/tree/develop/doc/Apuntes_TFG
+
+### Ontologías
+- ENVO: https://obofoundry.org/ontology/envo.html
+- NCBITaxon: https://obofoundry.org/ontology/ncbitaxon.html
+- CHEBI: https://www.ebi.ac.uk/chebi/
+
+### Documentación Python
+- `help(biom)` en intérprete Python para API de biom-format.
