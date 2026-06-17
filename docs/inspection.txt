@@ -1,0 +1,139 @@
+========================================
+HDF5 STRUCTURE
+========================================
+
+File attributes:
+  creation-date => 2016-09-28T08:57:11.660674
+  format-url => http://biom-format.org
+  format-version => [2 1]
+  generated-by => QIIME 1.9.1
+  id => No Table ID
+  nnz => 858173
+  shape => [155002   2000]
+  type => OTU table
+
+GROUP: /observation  
+  GROUP: /observation/group-metadata  
+  DATASET: /observation/ids  (155002,)
+  GROUP: /observation/matrix  
+    DATASET: /observation/matrix/data  (858173,)
+    DATASET: /observation/matrix/indices  (858173,)
+    DATASET: /observation/matrix/indptr  (155003,)
+  GROUP: /observation/metadata  
+    DATASET: /observation/metadata/taxonomy  (155002, 7)
+GROUP: /sample  
+  GROUP: /sample/group-metadata  
+  DATASET: /sample/ids  (2000,)
+  GROUP: /sample/matrix  
+    DATASET: /sample/matrix/data  (858173,)
+    DATASET: /sample/matrix/indices  (858173,)
+    DATASET: /sample/matrix/indptr  (2001,)
+  GROUP: /sample/metadata  
+
+========================================
+MAPPING FILE
+========================================
+Filas: 2,000  |  Columnas: 76
+
+Primeras columnas:
+['#SampleID', 'BarcodeSequence', 'LinkerPrimerSequence', 'Description', 'host_subject_id', 'study_id', 'title', 'principal_investigator', 'doi', 'ebi_accession', 'target_gene', 'target_subfragment', 'pcr_primers', 'illumina_technology', 'extraction_center']
+
+Últimas columnas:
+['empo_1', 'empo_2', 'empo_3', 'adiv_observed_otus', 'adiv_chao1', 'adiv_shannon', 'adiv_faith_pd', 'temperature_deg_c', 'ph', 'salinity_psu', 'oxygen_mg_per_l', 'phosphate_umol_per_l', 'ammonium_umol_per_l', 'nitrate_umol_per_l', 'sulfate_umol_per_l']
+
+Todas las columnas (76):
+    0. #SampleID                                 nulos/NA: 0
+    1. BarcodeSequence                           nulos/NA: 0
+    2. LinkerPrimerSequence                      nulos/NA: 0
+    3. Description                               nulos/NA: 23
+    4. host_subject_id                           nulos/NA: 127
+    5. study_id                                  nulos/NA: 0
+    6. title                                     nulos/NA: 0
+    7. principal_investigator                    nulos/NA: 0
+    8. doi                                       nulos/NA: 0
+    9. ebi_accession                             nulos/NA: 0
+   10. target_gene                               nulos/NA: 0
+   11. target_subfragment                        nulos/NA: 0
+   12. pcr_primers                               nulos/NA: 0
+   13. illumina_technology                       nulos/NA: 0
+   14. extraction_center                         nulos/NA: 0
+   15. run_center                                nulos/NA: 0
+   16. run_date                                  nulos/NA: 0
+   17. read_length_bp                            nulos/NA: 0
+   18. sequences_split_libraries                 nulos/NA: 0
+   19. observations_closed_ref_greengenes        nulos/NA: 0
+   20. observations_closed_ref_silva             nulos/NA: 0
+   21. observations_open_ref_greengenes          nulos/NA: 0
+   22. observations_deblur_90bp                  nulos/NA: 0
+   23. observations_deblur_100bp                 nulos/NA: 0
+   24. observations_deblur_150bp                 nulos/NA: 0
+   25. emp_release1                              nulos/NA: 0
+   26. qc_filtered                               nulos/NA: 0
+   27. subset_10k                                nulos/NA: 0
+   28. subset_5k                                 nulos/NA: 0
+   29. subset_2k                                 nulos/NA: 0
+   30. sample_taxid                              nulos/NA: 0
+   31. sample_scientific_name                    nulos/NA: 0
+   32. host_taxid                                nulos/NA: 1091
+   33. host_common_name_provided                 nulos/NA: 1152
+   34. host_common_name                          nulos/NA: 1295
+   35. host_scientific_name                      nulos/NA: 1091
+   36. host_superkingdom                         nulos/NA: 1091
+   37. host_kingdom                              nulos/NA: 1091
+   38. host_phylum                               nulos/NA: 1091
+   39. host_class                                nulos/NA: 1091
+   40. host_order                                nulos/NA: 1091
+   41. host_family                               nulos/NA: 1091
+   42. host_genus                                nulos/NA: 1091
+   43. host_species                              nulos/NA: 1091
+   44. collection_timestamp                      nulos/NA: 241
+   45. country                                   nulos/NA: 0
+   46. latitude_deg                              nulos/NA: 2
+   47. longitude_deg                             nulos/NA: 2
+   48. depth_m                                   nulos/NA: 250
+   49. altitude_m                                nulos/NA: 81
+   50. elevation_m                               nulos/NA: 19
+   51. env_biome                                 nulos/NA: 0
+   52. env_feature                               nulos/NA: 0
+   53. env_material                              nulos/NA: 0
+   54. envo_biome_0                              nulos/NA: 0
+   55. envo_biome_1                              nulos/NA: 0
+   56. envo_biome_2                              nulos/NA: 33
+   57. envo_biome_3                              nulos/NA: 557
+   58. envo_biome_4                              nulos/NA: 1160
+   59. envo_biome_5                              nulos/NA: 1922
+   60. empo_0                                    nulos/NA: 0
+   61. empo_1                                    nulos/NA: 0
+   62. empo_2                                    nulos/NA: 0
+   63. empo_3                                    nulos/NA: 0
+   64. adiv_observed_otus                        nulos/NA: 0
+   65. adiv_chao1                                nulos/NA: 0
+   66. adiv_shannon                              nulos/NA: 0
+   67. adiv_faith_pd                             nulos/NA: 0
+   68. temperature_deg_c                         nulos/NA: 1589
+   69. ph                                        nulos/NA: 1716
+   70. salinity_psu                              nulos/NA: 1879
+   71. oxygen_mg_per_l                           nulos/NA: 1974
+   72. phosphate_umol_per_l                      nulos/NA: 1856
+   73. ammonium_umol_per_l                       nulos/NA: 1919
+   74. nitrate_umol_per_l                        nulos/NA: 1884
+   75. sulfate_umol_per_l                        nulos/NA: 1983
+
+========================================
+BIOM FILE
+========================================
+
+Id: No Table ID
+Versión: (2, 1)
+Observaciones OTUs : 155,002
+Muestras:             2,000
+Densidad de la matriz:             0.28%
+
+Primeros 5 IDs de muestra: [np.str_('1883.2008.269.Crump.Artic.LTREB.main.lane2.NoIndex'), np.str_('1453.45796SDZ4.G4.Pnem.stom'), np.str_('1039.L.Vermelha.SA'), np.str_('1773.Thraupis.gauco3.lgi'), np.str_('1453.45300SDZ4.D7.Pnem.stom')]
+Primeros 3 IDs de ASV/OTU (secuencias): ['TACGGAGGGTGCAAGCGTTA...', 'TACGGAGTGTGCAAGCGTTA...', 'TACGAGAGGTCCAAACGTTA...']
+
+Campos en metadatos de observación: ['taxonomy']
+Ejemplo de taxonomía (primer ASV): defaultdict(<function Table._cast_metadata.<locals>.cast_metadata.<locals>.<lambda> at 0x74a46154b560>, {'taxonomy': ['k__Bacteria', 'p__Proteobacteria', 'c__Gammaproteobacteria', 'o__Alteromonadales', 'f__Alteromonadaceae', 'g__Marinimicrobium', 's__']})
+
+Los metadatos de muestra no están en el BIOM.
+(Están en el mapping file TSV — lo habitual en EMP.)
