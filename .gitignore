@@ -1,5 +1,5 @@
 # Metadados
-/data/raw/
+*.tsv
 *.biom
 
 # Entorno y cache
@@ -7,3 +7,6 @@ venv/
 .env
 *.pyc
 __pycache__/
+
+# Documentación
+/docs/abd-ontology

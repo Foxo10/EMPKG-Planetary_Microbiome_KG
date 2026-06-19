@@ -119,21 +119,80 @@ Todas las columnas (76):
    74. nitrate_umol_per_l                        nulos/NA: 1884
    75. sulfate_umol_per_l                        nulos/NA: 1983
 
+Primeras muestras:
+                 #SampleID       Description study_id           empo_1  empo_2             empo_3
+0  550.L1S116.s.1.sequence   sample_20 stool      550  Host-associated  Animal  Animal distal gut
+1  550.L1S119.s.1.sequence   sample_23 stool      550  Host-associated  Animal  Animal distal gut
+2  550.L1S164.s.1.sequence   sample_73 stool      550  Host-associated  Animal  Animal distal gut
+3  550.L1S194.s.1.sequence  sample_105 stool      550  Host-associated  Animal  Animal distal gut
+4   550.L1S20.s.1.sequence  sample_112 stool      550  Host-associated  Animal  Animal distal gut
+
+Distribución EMPO nivel 1:
+empo_1
+Host-associated    1019
+Free-living         981
+Name: count, dtype: int64
+
+Distribución EMPO nivel 2:
+empo_2
+Animal        640
+Non-saline    595
+Saline        386
+Plant         379
+Name: count, dtype: int64
+
+Distribución EMPO nivel 3:
+empo_3
+Animal surface           143
+Soil (non-saline)        129
+Water (non-saline)       129
+Animal distal gut        128
+Animal corpus            128
+Water (saline)           128
+Sediment (saline)        128
+Sediment (non-saline)    128
+Surface (non-saline)     128
+Plant surface            128
+Plant rhizosphere        128
+Animal proximal gut      128
+Plant corpus             123
+Surface (saline)         117
+Animal secretion         113
+Aerosol (non-saline)      81
+Hypersaline (saline)      13
+Name: count, dtype: int64
+
 ========================================
 BIOM FILE
 ========================================
 
-Id: No Table ID
+ID tabla: No Table ID
 Versión: (2, 1)
 Observaciones OTUs : 155,002
 Muestras:             2,000
+Valores no nulos: 858173
 Densidad de la matriz:             0.28%
 
-Primeros 5 IDs de muestra: [np.str_('1883.2008.269.Crump.Artic.LTREB.main.lane2.NoIndex'), np.str_('1453.45796SDZ4.G4.Pnem.stom'), np.str_('1039.L.Vermelha.SA'), np.str_('1773.Thraupis.gauco3.lgi'), np.str_('1453.45300SDZ4.D7.Pnem.stom')]
-Primeros 3 IDs de ASV/OTU (secuencias): ['TACGGAGGGTGCAAGCGTTA...', 'TACGGAGTGTGCAAGCGTTA...', 'TACGAGAGGTCCAAACGTTA...']
+Primeros 5 IDs de muestra: 
+[np.str_('1883.2008.269.Crump.Artic.LTREB.main.lane2.NoIndex'), np.str_('1453.45796SDZ4.G4.Pnem.stom'), np.str_('1039.L.Vermelha.SA'), np.str_('1773.Thraupis.gauco3.lgi'), np.str_('1453.45300SDZ4.D7.Pnem.stom')]
+Primeros 5 IDs de ASV/OTU (secuencias): 
+['TACGGAGGGTGCAAGCGTTA...', 'TACGGAGTGTGCAAGCGTTA...', 'TACGAGAGGTCCAAACGTTA...', 'TACGTAGGTGGCAAGCGTTA...', 'TACGGAAGGTCCGGGCGTTA...']
 
 Campos en metadatos de observación: ['taxonomy']
-Ejemplo de taxonomía (primer ASV): defaultdict(<function Table._cast_metadata.<locals>.cast_metadata.<locals>.<lambda> at 0x74a46154b560>, {'taxonomy': ['k__Bacteria', 'p__Proteobacteria', 'c__Gammaproteobacteria', 'o__Alteromonadales', 'f__Alteromonadaceae', 'g__Marinimicrobium', 's__']})
 
 Los metadatos de muestra no están en el BIOM.
 (Están en el mapping file TSV — lo habitual en EMP.)
+
+Metadatos de la primera observación:
+defaultdict(<function Table._cast_metadata.<locals>.cast_metadata.<locals>.<lambda> at 0x75c9a8dfc900>, {'taxonomy': ['k__Bacteria', 'p__Proteobacteria', 'c__Gammaproteobacteria', 'o__Alteromonadales', 'f__Alteromonadaceae', 'g__Marinimicrobium', 's__']})
+
+========================================
+COMPROBACIÓN DE IDS
+========================================
+Muestras en mapping file: 2000
+Muestras en BIOM: 2000
+Muestras comunes: 2000
+Solo en mapping: 0
+Solo en BIOM: 0
+
+OK: todos los IDs de muestra coinciden.
