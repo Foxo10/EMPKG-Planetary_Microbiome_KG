@@ -1,7 +1,7 @@
 # El EMP como Grafo de Conocimiento fundamental
-## **EMPKG**: Creación de un Knowledge Graph Microbiano a Escala Planetaria a partir del Earth Microbiome Project con anototacion de metadatos mejorada por LLM
+## **EMPKG**: Creación de un Knowledge Graph Microbiano a Escala Planetaria a partir del Earth Microbiome Project con anotacion de metadatos mejorada por LLM
 
-**Idea principal:** Transformar el conjunto de datos masivo y estandarizado de EMP (miles de muestras en biomas) en un gráfico de conocimiento unificado. El mayor obstáculo está en los **metadatos** de muestra (el contexto ambiental como el pH, la temperatura o el tipo de bioma) que a menudo se encuentran en formatos de texto libre o inconsistentes. Utilizaremos una LLM para estructurar y normalizar estos metadatos con el fin de vincular la abundancia microbiana con los parámetros ambientales y las ubicaciones geográficas en un grafo consultable.
+**Idea principal:** Transformar el conjunto de datos masivo y estandarizado de EMP (miles de muestras en biomas) en un grafo de conocimiento unificado. El mayor obstáculo está en los **metadatos** de muestra (el contexto ambiental como el pH, la temperatura o el tipo de bioma) que a menudo se encuentran en formatos de texto libre o inconsistentes. Utilizaremos una LLM para estructurar y normalizar estos metadatos con el fin de vincular la abundancia microbiana con los parámetros ambientales y las ubicaciones geográficas en un grafo consultable.
 
 ### Componentes clave del proyecto
 
