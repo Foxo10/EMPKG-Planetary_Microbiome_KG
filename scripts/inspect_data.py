@@ -89,21 +89,6 @@ def inspect_mapping_file(mapping_path: Path, output_dir: Path | None = None) -> 
 
     print("\nPrimeras muestras:")
     print(
-        mapping[
-            [
-                "#SampleID",
-                "Description",
-                "study_id",
-                "empo_0",
-                "empo_1",
-                "empo_2",
-                "empo_3",
-            ]
-        ].head()
-    )
-
-    print("\nPrimeras muestras:")
-    print(
         mapping[["#SampleID", "Description", "study_id", "empo_0",
                  "empo_1", "empo_2", "empo_3"]].head()
     )
@@ -181,12 +166,12 @@ def inspect_biom_file(
     print("BIOM FILE")
     print("=" * 40 + "\n")
 
-    table = biom.load_table(str(BIOM_PATH))
+    table = biom.load_table(str(biom_path))
     n_obs, n_samples = table.shape
 
     print(f"ID tabla: {table.table_id}")
     print(f"Versión: {table.format_version}")
-    # "ASU table" no está definido como tipo de tabla.
+    # "ASV table" no está definido como tipo de tabla BIOM.
     print(f"Observaciones {table.type.split(' ')[0]}s : {n_obs:,}")
     print(f"Muestras:             {n_samples:,}")
     # La densidad indica qué fracción de celdas son no-cero.
