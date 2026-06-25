@@ -259,22 +259,125 @@ def convert_numeric_columns(df: pd.DataFrame) -> pd.DataFrame:
     return df
 
 
-def main() -> None:
+def load_biom_table(biom_path: Path) -> biom.Table:
+    """
+    Carga el fichero BIOM con biom-format.
 
-    mapping = load_mapping(MAPPING_PATH)
+    biom.load_table() maneja internamente el formato HDF5 v2.
+    Para construir la tabla de muestras, la API de biom
+    es suficiente.
 
-    validate_required_columns(mapping)
-
-    mapping = convert_numeric_columns(mapping)
-
+    Returns:
+        biom.Table con la matriz de abundancias ASV × muestra.
+    """
     print("\n" + "=" * 40)
-    print("CURRENT RESULT")
+    print("LOADING BIOM FILE")
     print("=" * 40)
 
-    mapping.to_csv("data/inspection/mapping_after_cleaning_preview.csv")
+    table = biom.load_table(str(biom_path))
+    n_obs, n_samples = table.shape
 
-    print("\nTipos de columnas:")
-    print(mapping.dtypes.to_string())
+    print(f" ASVs (observaciones):  {n_obs:,}")
+    print(f" Muestras:              {n_samples:,}")
+    print(f" Valores no nulos:      {table.nnz:,}")
+    print(f" Densidad de la matriz: {table.get_table_density():.4f}")
+
+    return table
+
+
+def validate_sample_ids(
+        mapping: pd.DataFrame,
+        table: biom.Table,
+        strict: bool = True,
+) -> set[str]:
+    """
+    Comprueba que los IDs de muestra coinciden entre mapping y BIOM.
+
+    Args:
+        mapping: DataFrame indexado por sample_id.
+        table: biom.Table cargado.
+        strict: si True, lanza ValueError si los IDs no coinciden exactamente.
+                si False, devuelve la intersección y emite un aviso.
+
+    Returns:
+        Conjunto de sample_ids comunes y válidos.
+
+    Raises:
+        ValueError: si strict=True y hay IDs que no coinciden.
+    """
+    print("\n" + "=" * 40)
+    print("VALIDATING SAMPLE IDs")
+    print("=" * 40)
+
+    mapping_ids = set(mapping.index)
+    biom_ids = set(table.ids(axis="sample"))
+
+    common = mapping_ids & biom_ids
+    only_mapping = mapping_ids - biom_ids
+    only_biom = biom_ids - mapping_ids
+
+    all_match = (len(only_mapping) == 0 and len(only_biom) == 0)
+
+    if all_match:
+        print("  OK: todos los IDs coinciden exactamente.")
+    elif strict:
+        raise ValueError(
+            f"Los IDs de muestra no coinciden entre mapping y BIOM.\n"
+            f"Solo en mapping: {len(only_mapping)} | Solo en BIOM: {len(only_biom)}\n"
+            f"Revisa los archivos o cambia strict=False para continuar con la intersección."
+        )
+    else:
+        print(f"  AVISO: se usará la intersección ({len(common):,} muestras).")
+
+    return common
+
+
+def extract_biom_sample_stats(table: biom.Table) -> pd.DataFrame:
+    """
+    Extrae estadísticas básicas por muestra directamente desde el BIOM.
+
+    Calcula dos métricas:
+    - biom_total_abundance: suma de todas las abundancias en la muestra.
+      Con rarefacción a 5000, todas las muestras deben sumar exactamente 5000.
+      Si alguna difiere, es una señal de alerta.
+
+    - biom_observed_asvs: número de ASVs con abundancia > 0 en la muestra.
+      Equivale a la riqueza observada (alpha diversity cruda, sin corrección).
+
+    Internamente:
+    - table.sum(axis="sample") suma por columna (muestra).
+    - table.pa() convierte la tabla a presencia/ausencia (0/1), luego
+      sumamos por muestra para contar ASVs presentes.
+
+    Returns:
+        DataFrame indexado por sample_id con columnas biom_total_abundance
+        y biom_observed_asvs.
+    """
+    print("\n" + "=" * 40)
+    print("EXTRACTING BIOM SAMPLE STATS")
+    print("=" * 40)
+
+
+def main() -> None:
+    # 1. Cargar y limpiar mapping file.
+    mapping = load_mapping(MAPPING_PATH)
+    validate_required_columns(mapping)
+    mapping = convert_numeric_columns(mapping)
+
+    # 2. Cargar BIOM.s
+    table = load_biom_table(BIOM_PATH)
+
+    # 3. Validar IDs cruzados.
+    common_ids = validate_sample_ids(mapping, table, strict=True)
+
+    # 4. Extraer estadísticas del BIOM por muestra.
+    df = extract_biom_sample_stats(table)
+
+    # 5. Construir tabla final.
+
+    # 6. Exportar.
+
+    # 7. Resumen diagnóstico.
 
 
 if __name__ == "__main__":
