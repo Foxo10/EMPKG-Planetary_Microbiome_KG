@@ -4,72 +4,101 @@
 ---
 
 ## Estado actual del proyecto
-**Fase:** 0 → 1 — Exploración de datos completada. Inicio de construcción de la tabla base de muestras.
+**Fase:** 0 → 1 (transición). La exploración inicial de datos está completada; el proyecto está entrando en la Fase 1 (construcción de la tabla base de muestras).
 
 **Lo que está hecho:**
 - Entorno conda `empkg` creado y documentado en `environment.yml`.
 - Descargados los dos archivos iniciales del EMP (ver sección "Archivos descargados").
-- Script `inspect_data.py` completado y ejecutado con éxito:
-  - Estructura HDF5 del BIOM inspeccionada con `h5py`.
-  - Mapping file (76 columnas, 2.000 muestras) explorado con `pandas`.
-  - BIOM cargado con `biom-format`: 155.002 ASVs × 2.000 muestras, densidad 0,28%.
-  - Validación de IDs: los 2.000 IDs coinciden exactamente entre mapping file y BIOM.
-  - Hallazgos de calidad de datos documentados (ver sección "Hallazgos de la inspección").
+- Script `inspect_data.py` creado y ejecutado: inspecciona mapping file, BIOM, estructura HDF5 y valida IDs. Exporta CSVs de diagnóstico a `data/inspection/`.
+- Script `inspect_missing_values.py` creado y ejecutado: detecta marcadores de valores ausentes no estándar en el mapping file.
 - Estructura básica del repositorio definida.
+- Exploración programática completa del archivo BIOM con `biom-format` y `h5py`, documentada en el notebook `notebooks/00_explore_biom.ipynb` (ver sección dedicada más abajo).
+- Validado formalmente que los 2.000 IDs de muestra coinciden exactamente entre el BIOM y el mapping file (sin discrepancias ni espacios invisibles).
+- Construido un prototipo de `sample_table` (mapping file + estadísticas derivadas del BIOM) dentro del notebook, como exploración previa a `build_sample_table.py`.
 
 **Lo que está en curso:**
-- Diseño del script `build_sample_table.py` para construir la tabla base de muestras.
+- `build_sample_table.py`: ya implementa carga y limpieza del mapping file, conversión de columnas numéricas, carga del BIOM, validación de IDs y extracción de `sample_stats`. Falta construir el `sample_table` final mediante join, seleccionar/ordenar columnas relevantes, exportar `data/processed/sample_table.csv` y añadir un resumen diagnóstico final.
 
 **Lo que NO está hecho aún:**
+- No se ha exportado todavía `data/processed/sample_table.csv` como artefacto reproducible (sí existe como prototipo dentro del notebook).
 - No se ha construido ningún componente del Knowledge Graph.
 - No se ha realizado ningún procesamiento LLM.
-- No se ha conectado a Neo4j.
+- No se ha configurado todavía GraphDB ni se ha creado ningún repositorio RDF/SPARQL.
+- No se ha empezado a modularizar código común en `src/empkg/`.
 
 ---
 
 ## Próximas tareas
-### Fase 0 — Setup y exploración ✓ completada
+### Fase 0 — Setup y exploración (completada)
 
 - [x] Crear entorno conda `empkg` con dependencias base.
 - [x] Descargar `emp_qiime_mapping_subset_2k.tsv`.
 - [x] Descargar `emp_deblur_90bp.subset_2k.rare_5000.biom`.
-- [x] Completar `inspect_data.py`:
-  - [x] Abrir el BIOM con `biom.load_table()`.
-  - [x] Mostrar dimensiones (nº de ASVs × nº de muestras).
-  - [x] Listar IDs de muestra y ASV.
-  - [x] Inspeccionar estructura HDF5 con `h5py`.
-  - [x] Verificar metadatos de observación (taxonomía presente) y de muestra (vacíos → en mapping file TSV).
-- [x] Explorar columnas del mapping file: identificar campos relevantes para el KG.
-- [x] Comprobar cobertura de campos clave (resultados en "Hallazgos de la inspección").
-- [x] Validar que los IDs de muestra coinciden entre BIOM y mapping file (OK: 2.000/2.000).
-- [ ] Crear `notebooks/explore_biom_data.ipynb` con exploración interactiva. *(aplazado: no es bloqueante para la Fase 1)*
-- [ ] Resolver acceso a `empo_v3.csv` (ver dudas abiertas). *(no bloqueante para la tabla base)*
+- [x] Completar `inspect_biom_file()` en `inspect_data.py`:
+  - Abrir el BIOM con `biom.load_table()`.
+  - Mostrar dimensiones (nº de ASVs × nº de muestras).
+  - Listar IDs de muestra (primeros 5).
+  - Listar IDs de ASV/OTU (primeros 5).
+  - Mostrar si hay metadatos de muestra embebidos.
+- [x] Crear `notebooks/00_explore_biom.ipynb` con exploración interactiva (BIOM, HDF5, mapping file y join exploratorio).
+- [x] Explorar las columnas del mapping file: identificar campos relevantes para el KG (`latitude_deg`, `longitude_deg`, `empo_3`, `ph`, `temperature_deg_c`).
+- [x] Comprobar cobertura de campos clave: cobertura calculada por campo en `inspect_data.py` (CSV `mapping_field_coverage.csv`) y en el notebook (sección "Cobertura de campos críticos para el KG").
+- [ ] Intentar descargar `empo_v3.csv` o encontrar una fuente alternativa (ver dudas — sigue pendiente, no bloqueante).
 
-### Fase 1 — Tabla base de muestras y pipeline de normalización (en curso)
+### Fase 1 — Construcción de `sample_table.csv` (en curso)
 
-- [ ] Escribir `build_sample_table.py`: cruzar mapping file + BIOM → `data/processed/sample_table.csv`.
-- [ ] Normalizar valores "not applicable" / "not provided" a NaN en la carga.
-- [ ] Convertir campos numéricos (`ph`, `latitude_deg`, etc.) de string a float.
-- [ ] Diseñar pipeline de normalización de metadatos con LLM (campos `env_biome`, `env_feature`, `env_material`).
+- [x] Cargar mapping file con normalización controlada de valores ausentes (`load_mapping()` en `build_sample_table.py`).
+- [x] Convertir columnas numéricas relevantes (coordenadas, métricas físico-químicas, diversidad) con `convert_numeric_columns()`.
+- [ ] Incorporar a `build_sample_table.py` la lógica ya validada en el notebook:
+  - Carga del BIOM con `biom.load_table()`.
+  - Construcción de `sample_stats` (`biom_total_reads`, `biom_observed_asvs`).
+  - Validación formal de IDs entre mapping y BIOM (con `assert`).
+  - Join `mapping_indexed.join(sample_stats, how="inner")`.
+- [ ] Exportar `data/processed/sample_table.csv`.
+- [ ] Decidir qué funciones comunes mover a `src/empkg/` (ver sección de dudas abiertas).
+
+### Fase 1B — Pipeline de normalización con LLM (pendiente)
+
+- [ ] Diseñar pipeline de normalización de metadatos con LLM.
 - [ ] Mapear campos de metadatos a ontologías ENVO, NCBITaxon, GAZ, CHEBI.
 - [ ] Documentar el esquema de nodos y relaciones del KG.
 
-### Fase 2 — Knowledge Graph en Neo4j (pendiente)
+### Fase 2 — Knowledge Graph en GraphDB/SPARQL (pendiente)
 
-- [ ] Instalar y configurar Neo4j.
-- [ ] Definir esquema Cypher (nodos: `Sample`, `Location`, `EnvironmentalFeature`, `Taxon`).
-- [ ] Implementar pipeline de ingestión.
-- [ ] Escribir consultas Cypher de ejemplo.
+- [ ] Instalar y configurar GraphDB.
+- [ ] Definir vocabulario RDF propio (`empkg:`) y prefijos ontológicos.
+- [ ] Generar tripletas RDF/Turtle con `rdflib`.
+- [ ] Cargar `empkg_lite.ttl` en GraphDB.
+- [ ] Escribir consultas SPARQL demostrativas.
+
+---
+
+## Flujo de trabajo aplicado hasta ahora
+
+Resumen del pipeline tal como existe hoy, repartido entre notebook (exploración) y scripts (lógica reproducible):
+
+1. Descarga/carga de los dos ficheros EMP iniciales (mapping TSV + BIOM), con comprobación de existencia previa.
+2. Inspección de la estructura HDF5 del BIOM con `h5py` (grupos, datasets, atributos).
+3. Carga del BIOM con `biom-format` (`biom.load_table()`).
+4. Extracción de IDs de muestra (`axis="sample"`) y de observación/ASV (`axis="observation"`).
+5. Validación de coincidencia exacta de IDs entre BIOM y mapping file (incluye comprobación de espacios invisibles).
+6. Normalización preliminar de valores ausentes en el mapping file, usando una lista controlada de marcadores no estándar (`""`, `"unknown"`, `"Missing: Not provided"`, etc.).
+7. Conversión de columnas numéricas del mapping file (coordenadas, métricas físico-químicas, índices de diversidad) en `build_sample_table.py`.
+8. Construcción exploratoria de `sample_stats` (lecturas totales y ASVs observados por muestra) a partir del BIOM.
+9. Join preliminar entre mapping file y `sample_stats` (`how="inner"`), validado por número de filas resultante.
+
+Este flujo todavía vive repartido entre el notebook y `build_sample_table.py`; el siguiente paso es consolidarlo íntegramente en el script para que sea reproducible sin depender de ejecutar el notebook.
 
 ---
 
 ## Registro de avances
-| Fecha      | Avance                                                                                   |
-| ---------- | ---------------------------------------------------------------------------------------- |
-| *(sem. 1)* | Setup del entorno conda. Descarga de datos EMP. Estructura del repositorio.              |
-| *(sem. 2)* | `inspect_data.py` completado. Inspección HDF5, mapping file, BIOM. Validación de IDs OK. |
+| Fecha        | Avance                                                                                                                                                                                                                                                                                          |
+| ------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| *(sem. 1-3)* | Setup del entorno. Descarga de datos EMP iniciales. Creación de `inspect_data.py`.                                                                                                                                                                                                              |
+| *(sem. 4+)*  | Creación de `inspect_missing_values.py`. Inicio de `build_sample_table.py` (carga, limpieza y conversión numérica del mapping file). Exploración completa del BIOM en `notebooks/00_explore_biom.ipynb` (estadísticas por eje, taxonomía, estructura HDF5, join exploratorio con mapping file). |
 
 > Añadir filas con fecha concreta al ir avanzando.
+
 
 ---
 
@@ -82,10 +111,13 @@ Resultado de ejecutar `inspect_data.py` sobre el subset_2k.
 ```
 /observation/ids               (155002,)      — IDs de ASVs (= secuencias nucleotídicas Deblur)
 /observation/metadata/taxonomy (155002, 7)    — 7 niveles taxonómicos por ASV
-/observation/matrix/           —              — matriz dispersa en formato CSC
+/observation/matrix/ — representación dispersa orientada a observaciones
+/sample/matrix/      — representación dispersa orientada a muestrasdispersa en formato CSC
 /sample/ids                    (2000,)        — IDs de muestras
 /sample/metadata/              — VACÍO        — metadatos en mapping file TSV
 ```
+
+El BIOM 2.x almacena la matriz de abundancias en formato disperso y mantiene dos orientaciones internas para permitir acceso eficiente tanto por observaciones/ASVs como por muestras.
 
 El fichero fue generado con QIIME 1.9.1 (2016), por eso el atributo `type` dice "OTU table". Los IDs de observación son secuencias completas, confirmando que son ASVs de Deblur, no OTUs clásicos.
 
@@ -145,43 +177,51 @@ Todos los IDs de muestra coinciden exactamente entre BIOM y mapping file (2.000/
 
 ## Scripts del proyecto
 
-### `scripts/inspect_data.py`
-**Propósito:** diagnóstico y exploración inicial de los datos crudos. No transforma nada.
+### `scripts/download_data.py`
+Descarga los dos archivos iniciales del EMP si no existen localmente.
 
-**Funciones:**
-- `inspect_hdf5_structure(biom_path)` — recorre la jerarquía HDF5 con `h5py` e imprime grupos y datasets.
-- `inspect_mapping_file(mapping_path)` — carga el TSV con `pandas`, imprime dimensiones, distribución EMPO y cobertura de campos.
-- `inspect_biom_file()` — carga el BIOM con `biom.load_table()`, imprime dimensiones, densidad, IDs de muestra y ASV, taxonomía de la primera observación.
-- `check_sample_ids(mapping, table)` — valida que los IDs de muestra sean idénticos en ambas fuentes.
+### `scripts/inspect_missing_values.py`
+Detecta marcadores no estándar de valores ausentes en el mapping file.
 
-**Output:** solo por pantalla. No escribe ficheros. Resultado guardado en `inspection.txt`.
+### `scripts/build_sample_table.py`
+Pipeline en desarrollo para construir `data/processed/sample_table.csv`.
+
+### `notebooks/00_explore_biom.ipynb`
+Notebook exploratorio; no es pipeline final.
 
 **Uso:**
 ```bash
 conda activate empkg
-python scripts/inspect_data.py
+python scripts/[nombre_del_script].py
 ```
 
 ---
 
 ## Decisiones técnicas tomadas
-| Decisión                                 | Alternativas descartadas   | Motivo                                                                                            |
-| ---------------------------------------- | -------------------------- | ------------------------------------------------------------------------------------------------- |
-| Usar ASVs de Deblur (no OTUs)            | Greengenes 13.8, Silva 123 | Los ASVs son el estándar actual; mayor resolución taxonómica                                      |
-| Subconjunto 2k muestras para exploración | 5k, 10k, dataset completo  | Manejable para Fase 0; escalar después                                                            |
-| Python 3.11 como versión base            | 3.12, 3.13                 | Mayor estabilidad con `biom-format` y `h5py` en bioinformática                                    |
-| Miniconda con solver libmamba            | pip, poetry, venv          | Mejor compatibilidad con paquetes bioinformáticos (canales conda-forge, bioconda)                 |  |
-| Usar Deblur 90bp, rarefaccionado a 5000  | otros parámetros           | Equilibrio entre resolución y manejabilidad; rarefacción permite comparar muestras de forma justa |
+| Decisión                                             | Alternativas descartadas                             | Motivo                                                                                                                                                                                                                  |
+| ---------------------------------------------------- | ---------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Usar ASVs de Deblur (no OTUs)                        | Greengenes 13.8, Silva 123                           | Los ASVs son el estándar actual; mayor resolución taxonómica                                                                                                                                                            |
+| Subconjunto 2k muestras para exploración             | 5k, 10k, dataset completo                            | Manejable para Fase 0; escalar después                                                                                                                                                                                  |
+| Python 3.11 como versión base                        | 3.12, 3.13                                           | Mayor estabilidad con `biom-format` y `h5py` en bioinformática                                                                                                                                                          |
+| Miniconda con solver libmamba                        | pip, poetry, venv                                    | Mejor compatibilidad con paquetes bioinformáticos (canales conda-forge, bioconda)                                                                                                                                       |
+| Usar Deblur 90bp, rarefaccionado a 5000              | otros parámetros                                     | Equilibrio entre resolución y manejabilidad; rarefacción permite comparar muestras de forma justa                                                                                                                       |
+| Separar exploración (notebook) de pipeline (scripts) | hacer todo en notebook                               | El notebook sirve para aprender y validar; solo la lógica estable y reproducible pasa a `build_sample_table.py` y futuros módulos en `src/empkg/`                                                                       |
+| No convertir la matriz BIOM completa a denso         | `table.to_dataframe(dense=True)` sobre toda la tabla | Inviable en memoria (155.002 × 2.000); se usan operaciones dispersas (`sum`, `nonzero_counts`) o se extrae fila/columna individual cuando hace falta                                                                    |
+| Usar `biom-format` como interfaz principal           | Leer el HDF5 directamente con `h5py` para todo       | `biom-format` abstrae la complejidad de la matriz dispersa (CSC/CSR) y ofrece métodos validados (`sum`, `nonzero_counts`, `metadata`)                                                                                   |
+| Usar `h5py` solo para inspección estructural         | Reemplazar `biom-format` por `h5py` puro             | `h5py` es útil para entender/depurar la estructura interna, pero `biom-format` es más seguro y mantenible para el pipeline real                                                                                         |
+| Usar GraphDB + SPARQL en vez de Neo4j + Cypher       | Neo4j + Cypher (propuesta inicial)                   | Indicación del tutor; las ontologías ENVO/NCBITaxon/GAZ ya son RDF/OWL nativo, lo que encaja directamente con GraphDB y permite inferencia; evita reimplementar jerarquías ontológicas a mano como en un property graph |
 
 ---
 
 ## Dudas abiertas
-- [ ] **`empo_v3.csv` inaccesible:** el servidor devuelve 404 para v3 y 403 para v2. ¿Dónde conseguir la ontología EMPO actualizada? Opciones a investigar: repositorio GitHub de EMP, Qiita, contactar con autores. *No bloqueante para la Fase 1.*
-- [x] **¿Es necesario EMPO ahora?** No. Los campos `empo_3` del mapping file ya están codificados como cadenas de texto. EMPO será necesario cuando se mapee a ENVO en la Fase 1.
-- [x] **¿Los IDs coinciden entre BIOM y mapping file?** Sí. Validado: 2.000/2.000 coinciden exactamente.
-- [ ] **Normalización de "not applicable":** ¿cuántos campos del mapping file usan este literal en lugar de NaN real? Verificar antes de construir la tabla base.
+- [ ] **`empo_v3.csv` inaccesible:** el servidor devuelve 404 para v3 y 403 para v2. ¿Dónde conseguir la ontología EMPO actualizada? Opciones a investigar: repositorio GitHub de EMP, Qiita, contactar con autores.
+- [ ] **¿Es necesario EMPO ahora?** Para la Fase 0 no es bloqueante. Los campos `empo_3` del mapping file ya están codificados como cadenas de texto. EMPO será necesario cuando se mapee a ENVO.
 - [ ] **Extensión del TFG:** ¿A/B/C? Decidir antes del mes 4 según el ritmo de avance. No es urgente ahora.
-
+- [x] **Motor de grafos: decidido GraphDB + SPARQL.** Indicación explícita del tutor del TFG: sustituir Neo4j/Cypher por GraphDB/SPARQL en todo el proyecto. Implica trabajar en RDF (tripletas) en lugar de property graph, generar el grafo como Turtle (`.ttl`) con `rdflib`, y consultar con SPARQL (vía interfaz web de GraphDB o `SPARQLWrapper` desde Python). Ventaja clave: las ontologías objetivo (ENVO, NCBITaxon, GAZ) ya están publicadas en RDF/OWL, por lo que se integran de forma nativa y permiten razonamiento (RDFS/OWL-Horst), algo que no es nativo en Neo4j.
+- [ ] **Cómo representar la relación muestra–ASV en el KG:** ¿relación directa `Sample -> contains -> ASV`, relación agregada `Sample -> contains -> Taxon` (colapsando por nivel taxonómico), o un nodo intermedio de tipo "observación" que cuelgue la abundancia como propiedad? Afecta directamente al tamaño del grafo (858.173 valores no nulos si se modela 1:1).
+- [ ] **¿Conviene guardar todos los valores no cero del BIOM como relaciones del KG?** Con 858.173 valores no nulos y una distribución de cola larga (42,8% de ASVs en una sola muestra), modelar todo podría generar un grafo poco manejable para un TFG.
+- [ ] **¿Conviene filtrar ASVs por abundancia o prevalencia antes de construir el grafo?** Por ejemplo, descartar singletons (38.892 ASVs con abundancia total = 1) podría reducir el ruido sin perder señal ecológica relevante. Pendiente de decidir el umbral.
+- [ ] **Qué partes modularizar en `src/empkg/`:** candidatas identificadas en el notebook (`load_biom_table`, `build_biom_sample_stats`, `extract_taxonomy_preview`, `extract_abundance_for_sample`), pero la estructura concreta del paquete (`src/empkg/io/`, `src/empkg/cleaning/`, etc.) todavía no está decidida.
 ---
 
 ## Notas sobre EMP y sus datos
@@ -284,6 +324,58 @@ Normalización que submuestrea todas las muestras al mismo número de lecturas (
 
 ---
 
+## Notebook `00_explore_biom.ipynb`
+
+Notebook exploratorio creado para familiarizarse con el formato BIOM, la librería `biom-format` y la estructura HDF5 subyacente, antes de consolidar la lógica estable en scripts. No es un pipeline final: es un espacio de aprendizaje y validación de conceptos.
+
+**Qué hace el notebook, en orden:**
+
+1. **Setup y rutas:** importa `biom`, `h5py`, `pandas`, `numpy`; detecta automáticamente la raíz del proyecto (funciona tanto desde `notebooks/` como desde la raíz).
+2. **Descarga automática:** si `emp_qiime_mapping_subset_2k.tsv` o el `.biom` no existen localmente, los descarga del FTP del EMP con barra de progreso (`download_if_missing()`).
+3. **Carga del BIOM:** `biom.load_table()` sobre el `.biom`. Resultado: tabla de 155.002 observaciones (ASVs) × 2.000 muestras, con 858.173 valores no nulos (densidad ≈ 0,28%).
+4. **Ejes `sample` vs `observation`:** aclara que `axis="sample"` corresponde a las 2.000 muestras ambientales y `axis="observation"` a los 155.002 ASVs detectados por Deblur. En Deblur, el ID de cada ASV es la propia secuencia nucleotídica (90 pb), no un nombre legible.
+5. **Metadatos de muestra vs. observación:** confirma que el BIOM **no** trae metadatos de muestra embebidos (están en el mapping file TSV, como es habitual en EMP), pero sí trae taxonomía por ASV en 7 niveles (`kingdom` → `species`, notación Greengenes con prefijos `k__`, `p__`, etc.).
+6. **Estadísticas básicas por eje:**
+   - `sample_sums` (`table.sum(axis="sample")`): lecturas totales por muestra. Confirmado: las 2.000 muestras tienen exactamente 5.000 lecturas, coherente con el sufijo `rare_5000` del fichero.
+   - `observation_sums` (`table.sum(axis="observation")`): abundancia total por ASV. Distribución de cola larga: 38.892 ASVs son singletons (abundancia total = 1).
+   - `observed_asvs_per_sample` (`table.nonzero_counts(axis="sample")`): nº de ASVs distintos por muestra. Mediana ≈ 246, rango 1–2.438.
+   - `prevalence_per_asv` (`table.nonzero_counts(axis="observation")`): nº de muestras donde aparece cada ASV. El 42,8% de los ASVs aparece en una sola muestra.
+7. **Tabla `sample_stats`:** construida con `sample_id`, `biom_total_reads`, `biom_observed_asvs`. Es el "puente" entre BIOM y mapping file.
+8. **Taxonomía:** extrae taxonomía de observaciones vía `table.metadata(id=..., axis="observation")`; calcula cobertura por nivel taxonómico sobre una muestra aleatoria de 5.000 ASVs (kingdom 100%, phylum ≈ 88%, hasta species ≈ 1,7%); calcula distribución por filo ponderada por abundancia (Firmicutes y Proteobacteria dominan).
+9. **Inspección HDF5 con `h5py`:** recorre la estructura interna del fichero (`/observation/...`, `/sample/...`), confirma que la matriz se almacena en formato CSC/CSR comprimido (Compressed Sparse Column/Row) y que ambas orientaciones (`observation/matrix` y `sample/matrix`) contienen los mismos valores no nulos organizados de forma distinta.
+10. **Carga del mapping file:** con `dtype=str`, `keep_default_na=False`, `na_filter=False` para controlar manualmente qué se trata como valor ausente (mismo criterio que en `inspect_missing_values.py`).
+11. **Distribución EMPO:** `empo_0` (100% "EMP sample"), `empo_1` (Host-associated 50,9% / Free-living 49,0%), `empo_2` (4 categorías), `empo_3` (17 categorías, de "Animal surface" a "Hypersaline").
+12. **Cobertura de campos clave:** calculada explícitamente para 21 campos relevantes para el KG. Coordenadas GPS ≈ 99,9%, `empo_3`/`env_biome` 100%, pero `ph` solo 14,2%, `temperature_deg_c` 20,5%, `oxygen_mg_per_l` apenas 1,3%.
+13. **Validación formal de IDs:** mediante `assert`, confirma que los 2.000 IDs de muestra coinciden exactamente entre mapping y BIOM, sin IDs exclusivos de un lado ni espacios invisibles.
+14. **Join exploratorio:** `mapping_indexed.join(sample_stats, how="inner")` → prototipo de `sample_table` (2.000 × 77 columnas). Selecciona y previsualiza el subconjunto de 23 columnas relevantes para el KG.
+15. **Cobertura combinada por componente del KG:** estima cuántas muestras servirían para construir cada tipo de nodo/propiedad (p. ej., nodo `Location` con coordenadas: 99,9%; propiedad pH: solo 14,2%).
+16. **Exploración ecológica básica:** compara diversidad observada (`biom_observed_asvs`) entre categorías `empo_3` (p. ej., `Plant rhizosphere` tiene mediana ≈ 1.417 ASVs frente a `Plant corpus` ≈ 12); identifica los ASVs más abundantes de la muestra con mayor riqueza y los asocia a su taxonomía (dominan Proteobacteria/Betaproteobacteria).
+
+**Qué lógica debería pasar a scripts:**
+- A `build_sample_table.py`: carga del mapping, normalización de NA, conversión numérica, carga del BIOM, validación de IDs, construcción de `sample_stats`, join, exportación de `sample_table.csv`.
+- A un futuro `src/empkg/io/biom.py`: `load_biom_table`, `build_biom_sample_stats`, `extract_taxonomy_preview`, `extract_abundance_for_sample`.
+- Se queda solo en el notebook: impresiones didácticas, exploración HDF5 detallada paso a paso, tablas descriptivas extensas, explicaciones largas de conceptos.
+
+---
+
+## Conceptos clave: muestra, lectura, ASV y abundancia
+
+Conviene tener estos cuatro conceptos claros antes de diseñar el esquema del KG, porque se mapean directamente a los futuros nodos `Sample` y `Taxon`, y a la relación `contains_taxon_with_abundance_X`:
+
+- **Muestra (`Sample`):** una unidad ambiental o biológica recogida en el mundo real (un puñado de suelo, un hisopado animal, un volumen de agua). Es la unidad fundamental del mapping file y de uno de los dos ejes del BIOM.
+- **Lectura (`read`):** una secuencia individual generada por el secuenciador a partir del material genético de una muestra. Es la unidad bruta de salida de la secuenciación, antes de cualquier agrupación o clasificación.
+- **ASV (Amplicon Sequence Variant):** una variante de secuencia exacta a la que se asignan lecturas. A diferencia de los OTUs (que agrupan al 97% de similitud), un ASV no agrupa nada: cada secuencia única detectada por Deblur es su propio ASV, y su ID *es* la secuencia nucleotídica.
+- **Abundancia:** el valor numérico en cada celda de la matriz BIOM. Indica cuántas lecturas de una muestra concreta fueron asignadas a un ASV concreto. Es la magnitud que terminará como propiedad numérica de la relación `contains_taxon_with_abundance_X` en el KG.
+
+**Aplicado al fichero `rare_5000` usado en este proyecto:**
+- Todas las muestras tienen exactamente 5.000 lecturas totales (por la rarefacción), pero el número de ASVs *distintos* observados varía mucho entre muestras (de 1 a 2.438).
+- `biom_total_reads` = suma de todas las lecturas de una muestra (constante = 5.000 en este dataset).
+- `biom_observed_asvs` = número de ASVs distintos con al menos una lectura en esa muestra (variable, refleja riqueza/diversidad).
+
+Esta distinción explica por qué dos muestras con el mismo `biom_total_reads` pueden tener una diversidad microbiana muy distinta.
+
+---
+
 ## Notas sobre ontologías (EMPO, ENVO, NCBITaxon…)
 
 ### EMPO (EMP Ontology)
@@ -307,7 +399,7 @@ Se usará en la Fase 1 para normalizar metadatos con el LLM.
 | GAZ       | Geografía / ubicaciones |
 | CHEBI     | Sustancias químicas     |
 
-## Notas sobre Knowledge Graph / Neo4j (vacío por ahora)
+## Notas sobre Knowledge Graph (vacío por ahora)
 Esquema previsto de nodos: `Sample`, `Location`, `EnvironmentalFeature`, `Taxon`.
 Relaciones previstas: `was_collected_at`, `has_feature`, `contains_taxon_with_abundance_X`.
 

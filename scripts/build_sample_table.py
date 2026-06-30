@@ -45,7 +45,7 @@ MISSING_VALUES = [
 
 # Campos del mapping file que nos interesan para el KG.
 # Los dividimos por categoría para que sea fácil añadir o quitar campos.
-FIELDS_IDENTITY = ["#SampleID", "study_id"]
+FIELDS_IDENTITY = ["study_id"]
 
 FIELDS_EMPO = ["empo_1", "empo_2", "empo_3"]
 
@@ -263,9 +263,9 @@ def load_biom_table(biom_path: Path) -> biom.Table:
     """
     Carga el fichero BIOM con biom-format.
 
-    biom.load_table() maneja internamente el formato HDF5 v2.
-    Para construir la tabla de muestras, la API de biom
-    es suficiente.
+    No se convierte la matriz a denso en ningún momento: todas las
+    operaciones posteriores (sum, nonzero_counts) trabajan sobre la
+    representación dispersa interna de biom.Table.
 
     Returns:
         biom.Table con la matriz de abundancias ASV × muestra.
@@ -285,99 +285,222 @@ def load_biom_table(biom_path: Path) -> biom.Table:
     return table
 
 
-def validate_sample_ids(
-        mapping: pd.DataFrame,
-        table: biom.Table,
-        strict: bool = True,
-) -> set[str]:
+def validate_sample_ids(mapping: pd.DataFrame, sample_stats: pd.DataFrame) -> None:
     """
-    Comprueba que los IDs de muestra coinciden entre mapping y BIOM.
+    Comprueba que los IDs de muestra coinciden exactamente entre el mapping
+    file y el BIOM (ambos ya indexados por sample_id).
 
-    Args:
-        mapping: DataFrame indexado por sample_id.
-        table: biom.Table cargado.
-        strict: si True, lanza ValueError si los IDs no coinciden exactamente.
-                si False, devuelve la intersección y emite un aviso.
-
-    Returns:
-        Conjunto de sample_ids comunes y válidos.
+    A diferencia del notebook de exploración (que usa assert), aquí se lanza
+    ValueError con un mensaje explícito: assert puede desactivarse en
+    producción con `python -O` y no es la herramienta adecuada para
+    validación de datos en un pipeline reproducible.
 
     Raises:
-        ValueError: si strict=True y hay IDs que no coinciden.
+        ValueError: si hay IDs exclusivos de un lado o el recuento de IDs
+            comunes no coincide con el total de ambos conjuntos.
     """
+
     print("\n" + "=" * 40)
     print("VALIDATING SAMPLE IDs")
     print("=" * 40)
 
     mapping_ids = set(mapping.index)
-    biom_ids = set(table.ids(axis="sample"))
+    biom_ids = set(sample_stats.index)
 
-    common = mapping_ids & biom_ids
+    common_ids = mapping_ids & biom_ids
     only_mapping = mapping_ids - biom_ids
     only_biom = biom_ids - mapping_ids
 
-    all_match = (len(only_mapping) == 0 and len(only_biom) == 0)
+    print(f"  IDs en mapping: {len(mapping_ids):,}")
+    print(f"  IDs en BIOM:    {len(biom_ids):,}")
+    print(f"  IDs comunes:    {len(common_ids):,}")
 
-    if all_match:
-        print("  OK: todos los IDs coinciden exactamente.")
-    elif strict:
+    if only_mapping:
         raise ValueError(
-            f"Los IDs de muestra no coinciden entre mapping y BIOM.\n"
-            f"Solo en mapping: {len(only_mapping)} | Solo en BIOM: {len(only_biom)}\n"
-            f"Revisa los archivos o cambia strict=False para continuar con la intersección."
+            f"Hay {len(only_mapping)} sample_id en el mapping file que no "
+            f"están en el BIOM. Ejemplos: {list(only_mapping)[:5]}"
         )
-    else:
-        print(f"  AVISO: se usará la intersección ({len(common):,} muestras).")
 
-    return common
+    if only_biom:
+        raise ValueError(
+            f"Hay {len(only_biom)} sample_id en el BIOM que no están en el "
+            f"mapping file. Ejemplos: {list(only_biom)[:5]}"
+        )
+
+    if not (len(common_ids) == len(mapping_ids) == len(biom_ids)):
+        raise ValueError(
+            f"El número de IDs comunes ({len(common_ids):,}) no coincide "
+            f"con el total de mapping ({len(mapping_ids):,}) o BIOM "
+            f"({len(biom_ids):,})."
+        )
+
+    print(f"  OK: los {len(common_ids):,} sample_id coinciden exactamente.")
 
 
-def extract_biom_sample_stats(table: biom.Table) -> pd.DataFrame:
+def build_sample_stats(table: biom.Table) -> pd.DataFrame:
     """
-    Extrae estadísticas básicas por muestra directamente desde el BIOM.
+    Construye una tabla con una fila por muestra y dos métricas derivadas
+    del BIOM:
 
-    Calcula dos métricas:
-    - biom_total_abundance: suma de todas las abundancias en la muestra.
-      Con rarefacción a 5000, todas las muestras deben sumar exactamente 5000.
-      Si alguna difiere, es una señal de alerta.
-
-    - biom_observed_asvs: número de ASVs con abundancia > 0 en la muestra.
-      Equivale a la riqueza observada (alpha diversity cruda, sin corrección).
-
-    Internamente:
-    - table.sum(axis="sample") suma por columna (muestra).
-    - table.pa() convierte la tabla a presencia/ausencia (0/1), luego
-      sumamos por muestra para contar ASVs presentes.
+    - biom_total_reads: lecturas totales de la muestra (suma de la columna).
+      En el fichero rare_5000 debería ser constante = 5000 para todas las
+      muestras, por la rarefacción.
+    - biom_observed_asvs: número de ASVs distintos detectados en la muestra
+      (cuenta de valores no nulos), una medida básica de riqueza/diversidad.
 
     Returns:
-        DataFrame indexado por sample_id con columnas biom_total_abundance
-        y biom_observed_asvs.
+        DataFrame indexado por sample_id con columnas
+        ['biom_total_reads', 'biom_observed_asvs'], ambas en int64.
+    """
+
+    print("\n" + "=" * 40)
+    print("BUILDING SAMPLE STATS FROM BIOM")
+    print("=" * 40)
+
+    sample_stats = pd.DataFrame({
+        "sample_id": table.ids(axis="sample"),
+        "biom_total_reads": table.sum(axis="sample"),
+        "biom_observed_asvs": table.nonzero_counts(axis="sample"),
+    }).set_index("sample_id")
+
+    sample_stats = sample_stats.astype({
+        "biom_total_reads": "int64",
+        "biom_observed_asvs": "int64",
+    })
+
+    print(f"  Muestras procesadas: {sample_stats.shape[0]:,}")
+    print(
+        "  biom_total_reads -> "
+        f"min: {sample_stats['biom_total_reads'].min()}, "
+        f"max: {sample_stats['biom_total_reads'].max()}"
+    )
+    print(
+        "  biom_observed_asvs -> "
+        f"min: {sample_stats['biom_observed_asvs'].min()}, "
+        f"max: {sample_stats['biom_observed_asvs'].max()}, "
+        f"mediana: {sample_stats['biom_observed_asvs'].median():.0f}"
+    )
+    print("")
+    print(sample_stats)
+
+    return sample_stats
+
+
+def join_mapping_with_biom(
+        mapping: pd.DataFrame,
+        sample_stats: pd.DataFrame,
+) -> pd.DataFrame:
+    """
+    Cruza el mapping file (metadatos ambientales) con sample_stats
+    (estadísticas derivadas del BIOM) mediante un join por sample_id.
+
+    Se asume que validate_sample_ids() ya se ha ejecutado sin errores antes
+    de llamar a esta función, por lo que un inner join no debería perder
+    ninguna fila. Aun así, se verifica explícitamente el número de filas
+    resultante como salvaguarda.
+
+    Returns:
+        DataFrame indexado por sample_id con todas las columnas del mapping
+        más 'biom_total_reads' y 'biom_observed_asvs'.
     """
     print("\n" + "=" * 40)
-    print("EXTRACTING BIOM SAMPLE STATS")
+    print("JOINING MAPPING + BIOM SAMPLE STATS")
     print("=" * 40)
+
+    expected_rows = len(set(mapping.index) & set(sample_stats.index))
+
+    sample_table = mapping.join(sample_stats, how="inner")
+
+    if sample_table.shape[0] != expected_rows:
+        raise ValueError(
+            f"El join perdió o duplicó filas: esperábamos {expected_rows:,}, "
+            f"se obtuvieron {sample_table.shape[0]:,}."
+        )
+
+    print(f"  Filas resultantes: {sample_table.shape[0]:,}")
+    print(f"  Columnas resultantes: {sample_table.shape[1]:,}")
+    print("")
+    print(sample_table)
+
+    return sample_table
+
+
+def select_output_columns(sample_table: pd.DataFrame) -> pd.DataFrame:
+    """
+    Selecciona y ordena las columnas principales de la tabla base de muestras.
+
+    Mantiene:
+    - campos ambientales relevantes para el KG
+    - métricas físico-químicas principales
+    - estadísticas derivadas del BIOM
+    - algunas métricas de diversidad ya presentes en el mapping file
+    """
+    print("\n" + "=" * 40)
+    print("SELECTING OUTPUT COLUMNS")
+    print("=" * 40)
+
+    biom_fields = [
+        "biom_total_reads",
+        "biom_observed_asvs",
+    ]
+
+    # diversity_fields = [
+    #     "adiv_observed_otus",
+    #     "adiv_chao1",
+    #     "adiv_shannon",
+    #     "adiv_faith_pd",
+    # ]
+
+    candidate_columns = (
+        FIELDS_IDENTITY
+        + FIELDS_EMPO
+        + FIELDS_ENVO
+        + FIELDS_GEO
+        + FIELDS_PHYSICOCHEMICAL
+        + biom_fields
+    )
+
+    missing_columns = [
+        column for column in candidate_columns
+        if column not in sample_table.columns
+    ]
+
+    if missing_columns:
+        raise ValueError(
+            "Faltan columnas esperadas para la tabla final del KG: "
+            + ", ".join(missing_columns)
+        )
+
+    selected = sample_table[candidate_columns].copy()
+
+    print(f"  Columnas seleccionadas: {selected.shape[1]:,}")
+    print("")
+    print(selected)
+
+    return selected
 
 
 def main() -> None:
-    # 1. Cargar y limpiar mapping file.
+
+    # --- Mapping file: carga, validación y limpieza ---
     mapping = load_mapping(MAPPING_PATH)
     validate_required_columns(mapping)
     mapping = convert_numeric_columns(mapping)
 
-    # 2. Cargar BIOM.s
+    # --- BIOM: carga y estadísticas por muestra ---
     table = load_biom_table(BIOM_PATH)
+    sample_stats = build_sample_stats(table)
 
-    # 3. Validar IDs cruzados.
-    common_ids = validate_sample_ids(mapping, table, strict=True)
+    # --- Validación cruzada e integración ---
+    validate_sample_ids(mapping, sample_stats)
+    sample_table = join_mapping_with_biom(mapping, sample_stats)
 
-    # 4. Extraer estadísticas del BIOM por muestra.
-    df = extract_biom_sample_stats(table)
+    # --- Selección de columnas relevantes para el KG ---
+    sample_table = select_output_columns(sample_table)
 
-    # 5. Construir tabla final.
+    # --- Exportación ---
 
-    # 6. Exportar.
-
-    # 7. Resumen diagnóstico.
+    # --- Resumen diagnóstico ---
 
 
 if __name__ == "__main__":
