@@ -4,72 +4,227 @@
 ---
 
 ## Estado actual del proyecto
-**Fase:** 0 → 1 (transición). La exploración inicial de datos está completada; el proyecto está entrando en la Fase 1 (construcción de la tabla base de muestras).
+
+**Fase:** 1A completada → inicio de diseño del KG mínimo.
+
+La exploración inicial de datos está completada y ya se ha generado el primer artefacto procesado reproducible del proyecto: `data/processed/sample_table.csv`.
 
 **Lo que está hecho:**
-- Entorno conda `empkg` creado y documentado en `environment.yml`.
-- Descargados los dos archivos iniciales del EMP (ver sección "Archivos descargados").
-- Script `inspect_data.py` creado y ejecutado: inspecciona mapping file, BIOM, estructura HDF5 y valida IDs. Exporta CSVs de diagnóstico a `data/inspection/`.
-- Script `inspect_missing_values.py` creado y ejecutado: detecta marcadores de valores ausentes no estándar en el mapping file.
-- Estructura básica del repositorio definida.
-- Exploración programática completa del archivo BIOM con `biom-format` y `h5py`, documentada en el notebook `notebooks/00_explore_biom.ipynb` (ver sección dedicada más abajo).
-- Validado formalmente que los 2.000 IDs de muestra coinciden exactamente entre el BIOM y el mapping file (sin discrepancias ni espacios invisibles).
-- Construido un prototipo de `sample_table` (mapping file + estadísticas derivadas del BIOM) dentro del notebook, como exploración previa a `build_sample_table.py`.
+
+* Entorno conda `empkg` creado y documentado en `environment.yml`.
+* Descargados los dos archivos iniciales del EMP:
+
+  * `emp_qiime_mapping_subset_2k.tsv`
+  * `emp_deblur_90bp.subset_2k.rare_5000.biom`
+* Script `inspect_data.py` creado y ejecutado: inspecciona mapping file, BIOM, estructura HDF5 y valida IDs. Exporta CSVs de diagnóstico a `data/inspection/`.
+* Script `inspect_missing_values.py` creado y ejecutado: detecta marcadores de valores ausentes no estándar en el mapping file.
+* Notebook `notebooks/00_explore_biom.ipynb` desarrollado como exploración técnica y didáctica del formato BIOM, HDF5 y `biom-format`.
+* Validado formalmente que los 2.000 IDs de muestra coinciden exactamente entre el BIOM y el mapping file.
+* Script `build_sample_table.py` finalizado como pipeline reproducible.
+* Generado `data/processed/sample_table.csv`, con una fila por muestra y columnas seleccionadas para el futuro KG.
+* Decidido que el KG se construirá con RDF/Turtle y GraphDB/SPARQL, no con Neo4j/Cypher.
 
 **Lo que está en curso:**
-- `build_sample_table.py`: ya implementa carga y limpieza del mapping file, conversión de columnas numéricas, carga del BIOM, validación de IDs y extracción de `sample_stats`. Falta construir el `sample_table` final mediante join, seleccionar/ordenar columnas relevantes, exportar `data/processed/sample_table.csv` y añadir un resumen diagnóstico final.
+
+* Diseño del Knowledge Graph mínimo a partir de `sample_table.csv`.
+* Definición inicial de entidades RDF:
+
+  * `Sample`
+  * `Study`
+  * `Location`
+  * `Environment`
+* Preparación del siguiente paso: generar un primer Turtle pequeño con unas pocas muestras para validar el modelo RDF antes de escalar.
 
 **Lo que NO está hecho aún:**
-- No se ha exportado todavía `data/processed/sample_table.csv` como artefacto reproducible (sí existe como prototipo dentro del notebook).
-- No se ha construido ningún componente del Knowledge Graph.
-- No se ha realizado ningún procesamiento LLM.
-- No se ha configurado todavía GraphDB ni se ha creado ningún repositorio RDF/SPARQL.
-- No se ha empezado a modularizar código común en `src/empkg/`.
+
+* No se ha generado todavía ningún fichero RDF/Turtle.
+* No se ha configurado todavía GraphDB.
+* No se ha construido todavía `taxonomy_table.csv`.
+* No se ha construido todavía `abundance_table.csv`.
+* No se ha realizado todavía procesamiento LLM ni mapeo automático a ontologías.
+* No se ha modularizado todavía código común en `src/empkg/`.
+
 
 ---
 
 ## Próximas tareas
-### Fase 0 — Setup y exploración (completada)
 
-- [x] Crear entorno conda `empkg` con dependencias base.
-- [x] Descargar `emp_qiime_mapping_subset_2k.tsv`.
-- [x] Descargar `emp_deblur_90bp.subset_2k.rare_5000.biom`.
-- [x] Completar `inspect_biom_file()` en `inspect_data.py`:
-  - Abrir el BIOM con `biom.load_table()`.
-  - Mostrar dimensiones (nº de ASVs × nº de muestras).
-  - Listar IDs de muestra (primeros 5).
-  - Listar IDs de ASV/OTU (primeros 5).
-  - Mostrar si hay metadatos de muestra embebidos.
-- [x] Crear `notebooks/00_explore_biom.ipynb` con exploración interactiva (BIOM, HDF5, mapping file y join exploratorio).
-- [x] Explorar las columnas del mapping file: identificar campos relevantes para el KG (`latitude_deg`, `longitude_deg`, `empo_3`, `ph`, `temperature_deg_c`).
-- [x] Comprobar cobertura de campos clave: cobertura calculada por campo en `inspect_data.py` (CSV `mapping_field_coverage.csv`) y en el notebook (sección "Cobertura de campos críticos para el KG").
-- [ ] Intentar descargar `empo_v3.csv` o encontrar una fuente alternativa (ver dudas — sigue pendiente, no bloqueante).
+### Fase 0 — Setup y exploración inicial
 
-### Fase 1 — Construcción de `sample_table.csv` (en curso)
+* [x] Crear entorno conda `empkg` con dependencias base.
+* [x] Descargar `emp_qiime_mapping_subset_2k.tsv`.
+* [x] Descargar `emp_deblur_90bp.subset_2k.rare_5000.biom`.
+* [x] Crear y ejecutar `inspect_data.py`.
+* [x] Crear y ejecutar `inspect_missing_values.py`.
+* [x] Crear `notebooks/00_explore_biom.ipynb`.
+* [x] Validar coincidencia exacta de IDs entre BIOM y mapping file.
+* [x] Documentar diferencias entre muestra, lectura, ASV y abundancia.
+* [ ] Intentar descargar `empo_v3.csv` o encontrar una fuente alternativa. No bloqueante.
 
-- [x] Cargar mapping file con normalización controlada de valores ausentes (`load_mapping()` en `build_sample_table.py`).
-- [x] Convertir columnas numéricas relevantes (coordenadas, métricas físico-químicas, diversidad) con `convert_numeric_columns()`.
-- [ ] Incorporar a `build_sample_table.py` la lógica ya validada en el notebook:
-  - Carga del BIOM con `biom.load_table()`.
-  - Construcción de `sample_stats` (`biom_total_reads`, `biom_observed_asvs`).
-  - Validación formal de IDs entre mapping y BIOM (con `assert`).
-  - Join `mapping_indexed.join(sample_stats, how="inner")`.
-- [ ] Exportar `data/processed/sample_table.csv`.
-- [ ] Decidir qué funciones comunes mover a `src/empkg/` (ver sección de dudas abiertas).
+### Fase 1A — Tabla base de muestras
 
-### Fase 1B — Pipeline de normalización con LLM (pendiente)
+* [x] Cargar mapping file con normalización controlada de valores ausentes.
+* [x] Convertir columnas numéricas relevantes.
+* [x] Cargar el BIOM con `biom.load_table()`.
+* [x] Construir `sample_stats`:
 
-- [ ] Diseñar pipeline de normalización de metadatos con LLM.
-- [ ] Mapear campos de metadatos a ontologías ENVO, NCBITaxon, GAZ, CHEBI.
-- [ ] Documentar el esquema de nodos y relaciones del KG.
+  * `biom_total_reads`
+  * `biom_observed_asvs`
+* [x] Validar IDs entre mapping file y BIOM.
+* [x] Cruzar mapping file + estadísticas BIOM.
+* [x] Seleccionar columnas relevantes para el KG inicial.
+* [x] Validar la tabla final.
+* [x] Exportar `data/processed/sample_table.csv`.
 
-### Fase 2 — Knowledge Graph en GraphDB/SPARQL (pendiente)
+### Fase 1B — Diseño RDF mínimo desde `sample_table.csv`
 
-- [ ] Instalar y configurar GraphDB.
-- [ ] Definir vocabulario RDF propio (`empkg:`) y prefijos ontológicos.
-- [ ] Generar tripletas RDF/Turtle con `rdflib`.
-- [ ] Cargar `empkg_lite.ttl` en GraphDB.
-- [ ] Escribir consultas SPARQL demostrativas.
+* [ ] Crear `docs/kg_design_v0.md`.
+* [ ] Definir prefijos iniciales:
+
+  * `empkg:`
+  * `rdf:`
+  * `rdfs:`
+  * `xsd:`
+  * `schema:`
+* [ ] Definir clases iniciales:
+
+  * `empkg:Sample`
+  * `empkg:Study`
+  * `empkg:Location`
+  * `empkg:Environment`
+* [ ] Definir relaciones iniciales:
+
+  * `empkg:partOfStudy`
+  * `empkg:wasCollectedAt`
+  * `empkg:hasEnvironment`
+* [ ] Crear un primer RDF/Turtle manual o semi-automático con 3–10 muestras.
+* [ ] Validar el Turtle con `rdflib`.
+* [ ] Crear `scripts/build_sample_rdf.py`.
+* [ ] Generar `data/processed/empkg_samples.ttl` a partir de `sample_table.csv`.
+
+### Fase 1C — Modularización ligera
+
+* [ ] Identificar funciones repetidas entre scripts.
+* [ ] Crear estructura inicial `src/empkg/`.
+* [ ] Mover funciones comunes solo cuando ya estén repetidas y estabilizadas.
+* [ ] Añadir imports desde scripts sin romper la ejecución actual.
+
+### Fase 1D — Normalización con LLM
+
+* [ ] Diseñar prompts para mapear campos ambientales a términos ontológicos.
+* [ ] Empezar con un subconjunto pequeño de valores únicos, no con las 2.000 muestras completas.
+* [ ] Mapear progresivamente:
+
+  * `env_biome`
+  * `env_feature`
+  * `env_material`
+  * `empo_3`
+* [ ] Guardar resultados en una tabla intermedia revisable.
+* [ ] No insertar resultados LLM directamente en el KG sin validación manual parcial.
+
+### Fase 2 — GraphDB/SPARQL
+
+* [ ] Instalar y configurar GraphDB.
+* [ ] Crear repositorio local EMPKG-lite.
+* [ ] Cargar RDF/Turtle inicial.
+* [ ] Escribir consultas SPARQL básicas.
+* [ ] Documentar resultados y limitaciones.
+
+
+---
+
+## Artefacto generado: `sample_table.csv`
+
+`data/processed/sample_table.csv` es el primer artefacto procesado reproducible del proyecto.
+
+Fue generado por `scripts/build_sample_table.py` a partir de:
+
+* mapping file TSV: metadatos ambientales de muestra.
+* BIOM: estadísticas agregadas por muestra.
+
+### Propósito
+
+La tabla sirve como base para construir el primer Knowledge Graph mínimo, centrado en muestras, estudios, localización y ambiente.
+
+No incluye todavía relaciones muestra-ASV. Esas relaciones se generarán más adelante en una tabla separada (`abundance_table.csv`).
+
+### Estructura conceptual
+
+Cada fila representa una muestra del EMP:
+
+```text
+1 fila = 1 sample_id = 1 muestra real
+```
+
+`sample_id` se mantiene como índice de la tabla y será el futuro nodo `empkg:Sample`.
+
+`study_id` se mantiene como columna normal y podrá convertirse en nodo `empkg:Study` o en propiedad de la muestra.
+
+### Columnas principales
+
+La tabla contiene:
+
+* Identidad:
+
+  * `study_id`
+* Clasificación EMPO:
+
+  * `empo_1`
+  * `empo_2`
+  * `empo_3`
+* Descripción ambiental:
+
+  * `env_biome`
+  * `env_feature`
+  * `env_material`
+  * `envo_biome_0`
+  * `envo_biome_1`
+  * `envo_biome_2`
+  * `envo_biome_3`
+* Localización:
+
+  * `country`
+  * `latitude_deg`
+  * `longitude_deg`
+  * `depth_m`
+  * `altitude_m`
+  * `elevation_m`
+* Mediciones físico-químicas:
+
+  * `temperature_deg_c`
+  * `ph`
+  * `salinity_psu`
+  * `oxygen_mg_per_l`
+* Estadísticas derivadas del BIOM:
+
+  * `biom_total_reads`
+  * `biom_observed_asvs`
+
+### Validaciones realizadas
+
+El script valida que:
+
+* El índice se llama `sample_id`.
+* No hay `sample_id` duplicados.
+* Los IDs coinciden entre mapping file y BIOM.
+* Todas las muestras tienen `biom_total_reads = 5000`, coherente con el fichero `rare_5000`.
+* `biom_observed_asvs` tiene valores positivos.
+* Las columnas numéricas relevantes se han convertido correctamente.
+
+### Interpretación
+
+`sample_table.csv` permite construir un KG inicial sin introducir todavía toda la complejidad de las abundancias muestra-ASV.
+
+El primer KG puede modelar:
+
+```text
+Sample → partOfStudy → Study
+Sample → wasCollectedAt → Location
+Sample → hasEnvironment → Environment
+```
+
+Las relaciones con ASVs y taxones se dejarán para fases posteriores, a partir de `taxonomy_table.csv` y `abundance_table.csv`.
+
 
 ---
 
@@ -112,7 +267,7 @@ Resultado de ejecutar `inspect_data.py` sobre el subset_2k.
 /observation/ids               (155002,)      — IDs de ASVs (= secuencias nucleotídicas Deblur)
 /observation/metadata/taxonomy (155002, 7)    — 7 niveles taxonómicos por ASV
 /observation/matrix/ — representación dispersa orientada a observaciones
-/sample/matrix/      — representación dispersa orientada a muestrasdispersa en formato CSC
+/sample/matrix/      — representación dispersa orientada a muestras
 /sample/ids                    (2000,)        — IDs de muestras
 /sample/metadata/              — VACÍO        — metadatos en mapping file TSV
 ```
@@ -184,7 +339,7 @@ Descarga los dos archivos iniciales del EMP si no existen localmente.
 Detecta marcadores no estándar de valores ausentes en el mapping file.
 
 ### `scripts/build_sample_table.py`
-Pipeline en desarrollo para construir `data/processed/sample_table.csv`.
+Pipeline finalizado que construye `sample_table.csv` en `data/processed/`.
 
 ### `notebooks/00_explore_biom.ipynb`
 Notebook exploratorio; no es pipeline final.
@@ -398,6 +553,40 @@ Se usará en la Fase 1 para normalizar metadatos con el LLM.
 | NCBITaxon | Taxonomía microbiana    |
 | GAZ       | Geografía / ubicaciones |
 | CHEBI     | Sustancias químicas     |
+
+## Diseño inicial del Knowledge Graph (Fase 2)
+
+### Estrategia por tablas
+
+El pipeline de ingestión se divide en tres tablas que se construyen
+de forma incremental y corresponden a los tres tipos principales de
+entidades del KG:
+
+| Tabla                 | Script                     | Qué contiene                                                                 | Estado    |
+| --------------------- | -------------------------- | ---------------------------------------------------------------------------- | --------- |
+| `sample_table.csv`    | `build_sample_table.py`    | Una fila por muestra: metadatos, localización, mediciones, estadísticas BIOM | ✅ Listo   |
+| `taxonomy_table.csv`  | `build_taxonomy_table.py`  | Una fila por ASV: taxonomía en 7 niveles (kingdom → species)                 | Pendiente |
+| `abundance_table.csv` | `build_abundance_table.py` | Una fila por par muestra-ASV: lecturas y abundancia relativa                 | Pendiente |
+
+### Mapeo conceptual: tabla → KG
+
+```text
+sample_id          → nodo empkg:Sample
+study_id           → nodo empkg:Study
+country/lat/lon/…  → nodo empkg:Location
+empo_*/env_*/envo_*→ nodo empkg:Environment  (o propiedades de Sample)
+ph/temperature/…   → propiedades numéricas de empkg:Sample
+biom_total_reads   → empkg:biomTotalReads (xsd:integer)
+biom_observed_asvs → empkg:biomObservedASVs (xsd:integer)
+```
+
+### Relaciones iniciales (solo con `sample_table.csv`)
+
+```text
+Sample  → empkg:partOfStudy    → Study
+Sample  → empkg:wasCollectedAt → Location
+Sample  → empkg:hasEnvironment → Environment
+```
 
 ## Notas sobre Knowledge Graph (vacío por ahora)
 Esquema previsto de nodos: `Sample`, `Location`, `EnvironmentalFeature`, `Taxon`.
