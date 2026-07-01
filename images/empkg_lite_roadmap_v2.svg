@@ -1,0 +1,153 @@
+<svg width="100%" viewBox="0 0 680 840" role="img" xmlns="http://www.w3.org/2000/svg">
+  <title>Roadmap EMPKG-lite con GraphDB y SPARQL</title>
+  <desc>Diagrama de fases del proyecto EMPKG-lite: fase 0 setup, fase 1 pipeline RDF, fase 2 construcción del Knowledge Graph en GraphDB con consultas SPARQL, más extensión opcional</desc>
+  <defs>
+    <style>
+      text { font-family: sans-serif; }
+      .th  { font-size: 14px; font-weight: 500; fill: #444441; }
+      .ts  { font-size: 12px; font-weight: 400; fill: #5F5E5A; }
+
+      /* c-gray */
+      .c-gray > rect, .c-gray rect { fill: #F1EFE8; stroke: #5F5E5A; }
+      .c-gray .th { fill: #444441; }
+      .c-gray .ts { fill: #5F5E5A; }
+
+      /* c-teal */
+      .c-teal > rect, .c-teal rect { fill: #E1F5EE; stroke: #0F6E56; }
+      .c-teal .th { fill: #085041; }
+      .c-teal .ts { fill: #0F6E56; }
+
+      /* c-purple */
+      .c-purple > rect, .c-purple rect { fill: #EEEDFE; stroke: #534AB7; }
+      .c-purple .th { fill: #3C3489; }
+      .c-purple .ts { fill: #534AB7; }
+
+      /* c-amber */
+      .c-amber > rect, .c-amber rect { fill: #FAEEDA; stroke: #854F0B; }
+      .c-amber .th { fill: #633806; }
+      .c-amber .ts { fill: #854F0B; }
+
+      .arr { stroke: #888780; fill: none; }
+    </style>
+    <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M2 1L8 5L2 9" fill="none" stroke="#888780" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </marker>
+  </defs>
+
+  <!-- FASE 0 -->
+  <g class="c-gray">
+    <rect x="40" y="30" width="600" height="130" rx="12" stroke-width="0.5"/>
+    <text class="th" x="60" y="56">Fase 0 — Exploración y setup</text>
+    <text class="ts" x="60" y="72">Semanas 1–3 · Entregable: entorno funcional + datos EMP abiertos</text>
+    <g class="c-gray">
+      <rect x="60" y="88" width="168" height="56" rx="8" stroke-width="0.5"/>
+      <text class="th" x="144" y="110" text-anchor="middle" dominant-baseline="central">Entorno Python</text>
+      <text class="ts" x="144" y="128" text-anchor="middle" dominant-baseline="central">conda, biom-format, h5py</text>
+    </g>
+    <g class="c-gray">
+      <rect x="248" y="88" width="168" height="56" rx="8" stroke-width="0.5"/>
+      <text class="th" x="332" y="110" text-anchor="middle" dominant-baseline="central">Descarga EMP</text>
+      <text class="ts" x="332" y="128" text-anchor="middle" dominant-baseline="central">subset_2k, mapping TSV</text>
+    </g>
+    <g class="c-gray">
+      <rect x="436" y="88" width="168" height="56" rx="8" stroke-width="0.5"/>
+      <text class="th" x="520" y="110" text-anchor="middle" dominant-baseline="central">Explorar BIOM/HDF5</text>
+      <text class="ts" x="520" y="128" text-anchor="middle" dominant-baseline="central">estructura, metadatos, nulos</text>
+    </g>
+  </g>
+
+  <!-- Arrow 0→1 -->
+  <line x1="340" y1="160" x2="340" y2="188" class="arr" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <!-- FASE 1 -->
+  <g class="c-teal">
+    <rect x="40" y="190" width="600" height="210" rx="12" stroke-width="0.5"/>
+    <text class="th" x="60" y="216">Fase 1 — Pipeline de datos → RDF/Turtle</text>
+    <text class="ts" x="60" y="232">Semanas 4–10 · Entregable: fichero .ttl limpio con tripletas mapeadas a ontologías</text>
+    <g class="c-teal">
+      <rect x="60" y="248" width="168" height="56" rx="8" stroke-width="0.5"/>
+      <text class="th" x="144" y="270" text-anchor="middle" dominant-baseline="central">EDA y limpieza</text>
+      <text class="ts" x="144" y="288" text-anchor="middle" dominant-baseline="central">pandas, cobertura, nulos</text>
+    </g>
+    <g class="c-teal">
+      <rect x="248" y="248" width="168" height="56" rx="8" stroke-width="0.5"/>
+      <text class="th" x="332" y="270" text-anchor="middle" dominant-baseline="central">Normalización LLM</text>
+      <text class="ts" x="332" y="288" text-anchor="middle" dominant-baseline="central">ENVO, NCBITaxon, GAZ</text>
+    </g>
+    <g class="c-teal">
+      <rect x="436" y="248" width="168" height="56" rx="8" stroke-width="0.5"/>
+      <text class="th" x="520" y="270" text-anchor="middle" dominant-baseline="central">Serialización RDF</text>
+      <text class="ts" x="520" y="288" text-anchor="middle" dominant-baseline="central">rdflib → .ttl (Turtle)</text>
+    </g>
+    <g class="c-teal">
+      <rect x="154" y="320" width="168" height="56" rx="8" stroke-width="0.5"/>
+      <text class="th" x="238" y="342" text-anchor="middle" dominant-baseline="central">Esquema RDF/OWL</text>
+      <text class="ts" x="238" y="360" text-anchor="middle" dominant-baseline="central">clases, propiedades, prefijos</text>
+    </g>
+    <g class="c-teal">
+      <rect x="342" y="320" width="168" height="56" rx="8" stroke-width="0.5"/>
+      <text class="th" x="426" y="342" text-anchor="middle" dominant-baseline="central">Validación Turtle</text>
+      <text class="ts" x="426" y="360" text-anchor="middle" dominant-baseline="central">rapper, rdflib.parse</text>
+    </g>
+  </g>
+
+  <!-- Arrow 1→2 -->
+  <line x1="340" y1="400" x2="340" y2="428" class="arr" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <!-- FASE 2 -->
+  <g class="c-purple">
+    <rect x="40" y="430" width="600" height="210" rx="12" stroke-width="0.5"/>
+    <text class="th" x="60" y="456">Fase 2 — Knowledge Graph en GraphDB + SPARQL</text>
+    <text class="ts" x="60" y="472">Semanas 11–17 · Entregable: KG cargado en GraphDB + consultas SPARQL demostradas</text>
+    <g class="c-purple">
+      <rect x="60" y="488" width="168" height="56" rx="8" stroke-width="0.5"/>
+      <text class="th" x="144" y="510" text-anchor="middle" dominant-baseline="central">Setup GraphDB</text>
+      <text class="ts" x="144" y="528" text-anchor="middle" dominant-baseline="central">repositorio, inferencia OWL</text>
+    </g>
+    <g class="c-purple">
+      <rect x="248" y="488" width="168" height="56" rx="8" stroke-width="0.5"/>
+      <text class="th" x="332" y="510" text-anchor="middle" dominant-baseline="central">Ingestión .ttl</text>
+      <text class="ts" x="332" y="528" text-anchor="middle" dominant-baseline="central">API REST o interfaz web</text>
+    </g>
+    <g class="c-purple">
+      <rect x="436" y="488" width="168" height="56" rx="8" stroke-width="0.5"/>
+      <text class="th" x="520" y="510" text-anchor="middle" dominant-baseline="central">Consultas SPARQL</text>
+      <text class="ts" x="520" y="528" text-anchor="middle" dominant-baseline="central">SELECT, FILTER, GROUP BY</text>
+    </g>
+    <g class="c-purple">
+      <rect x="154" y="560" width="168" height="56" rx="8" stroke-width="0.5"/>
+      <text class="th" x="238" y="582" text-anchor="middle" dominant-baseline="central">Evaluación KG</text>
+      <text class="ts" x="238" y="600" text-anchor="middle" dominant-baseline="central">cobertura, nº tripletas</text>
+    </g>
+    <g class="c-purple">
+      <rect x="342" y="560" width="168" height="56" rx="8" stroke-width="0.5"/>
+      <text class="th" x="426" y="582" text-anchor="middle" dominant-baseline="central">Documentación</text>
+      <text class="ts" x="426" y="600" text-anchor="middle" dominant-baseline="central">README, notebooks, memoria</text>
+    </g>
+  </g>
+
+  <!-- Arrow 2→ext -->
+  <line x1="340" y1="640" x2="340" y2="668" class="arr" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <!-- EXTENSIÓN -->
+  <g class="c-amber">
+    <rect x="40" y="670" width="600" height="140" rx="12" stroke-width="0.5"/>
+    <text class="th" x="60" y="696">Extensión (elegir una)</text>
+    <text class="ts" x="60" y="712">Semanas 18–20 · Entregable: demostración de profundidad técnica</text>
+    <g class="c-amber">
+      <rect x="60" y="724" width="168" height="56" rx="8" stroke-width="0.5"/>
+      <text class="th" x="144" y="746" text-anchor="middle" dominant-baseline="central">A — Hipótesis LLM</text>
+      <text class="ts" x="144" y="764" text-anchor="middle" dominant-baseline="central">generar + validar con SPARQL</text>
+    </g>
+    <g class="c-amber">
+      <rect x="248" y="724" width="168" height="56" rx="8" stroke-width="0.5"/>
+      <text class="th" x="332" y="746" text-anchor="middle" dominant-baseline="central">B — RDF2Vec</text>
+      <text class="ts" x="332" y="764" text-anchor="middle" dominant-baseline="central">embeddings sobre el grafo RDF</text>
+    </g>
+    <g class="c-amber">
+      <rect x="436" y="724" width="168" height="56" rx="8" stroke-width="0.5"/>
+      <text class="th" x="520" y="746" text-anchor="middle" dominant-baseline="central">C — Dashboard SPARQL</text>
+      <text class="ts" x="520" y="764" text-anchor="middle" dominant-baseline="central">Streamlit + SPARQLWrapper</text>
+    </g>
+  </g>
+</svg>

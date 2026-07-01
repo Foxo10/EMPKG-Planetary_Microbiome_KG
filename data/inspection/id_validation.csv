@@ -1,0 +1,7 @@
+check,count
+mapping_ids,2000
+biom_ids,2000
+common_ids,2000
+only_mapping,0
+only_biom,0
+all_match,1

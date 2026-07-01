@@ -17,6 +17,7 @@ dependencies:
 
   - requests
   - tqdm
+  - matplotlib
   - pytest
   - jupyterlab
   - ipykernel

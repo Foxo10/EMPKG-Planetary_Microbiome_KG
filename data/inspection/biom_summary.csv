@@ -1,0 +1,8 @@
+metric,value
+n_asvs,155002
+n_samples,2000
+nnz,858173
+density,0.002768
+table_id,No Table ID
+format_version,"(2, 1)"
+biom_path,data/raw/emp/release1/otu_tables/deblur/emp_deblur_90bp.subset_2k.rare_5000.biom

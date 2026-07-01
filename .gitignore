@@ -7,6 +7,7 @@ venv/
 .env
 *.pyc
 __pycache__/
+*.txt
 
 # Documentación
 /docs/abd-ontology

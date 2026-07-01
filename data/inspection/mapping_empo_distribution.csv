@@ -1,0 +1,25 @@
+empo_level,category,count,pct
+empo_0,EMP sample,2000,100.0
+empo_1,Host-associated,1019,50.9
+empo_1,Free-living,981,49.0
+empo_2,Animal,640,32.0
+empo_2,Non-saline,595,29.8
+empo_2,Saline,386,19.3
+empo_2,Plant,379,19.0
+empo_3,Animal surface,143,7.2
+empo_3,Soil (non-saline),129,6.4
+empo_3,Water (non-saline),129,6.4
+empo_3,Animal distal gut,128,6.4
+empo_3,Animal corpus,128,6.4
+empo_3,Water (saline),128,6.4
+empo_3,Sediment (saline),128,6.4
+empo_3,Sediment (non-saline),128,6.4
+empo_3,Surface (non-saline),128,6.4
+empo_3,Plant surface,128,6.4
+empo_3,Plant rhizosphere,128,6.4
+empo_3,Animal proximal gut,128,6.4
+empo_3,Plant corpus,123,6.2
+empo_3,Surface (saline),117,5.9
+empo_3,Animal secretion,113,5.6
+empo_3,Aerosol (non-saline),81,4.0
+empo_3,Hypersaline (saline),13,0.6
