@@ -5,15 +5,14 @@
 
 ## Estado actual del proyecto
 
-**Fase:** 1A completada → inicio de diseño del KG mínimo.
+**Fase:** 1B-preliminar completada → diseño del KG v0 cerrado, listo para generar el primer RDF de prueba.
 
-La exploración inicial de datos está completada y ya se ha generado el primer artefacto procesado reproducible del proyecto: `data/processed/sample_table.csv`.
+La exploración inicial de datos, la generación de `data/processed/sample_table.csv` y el análisis dirigido de ese artefacto están completados. El diseño v0 del Knowledge Graph está redactado en `docs/kg_design_v0.md`, incluida la sección "Relaciones principales". No quedan decisiones de nomenclatura pendientes; el siguiente paso es `scripts/03_to_rdf.py`.
 
 **Lo que está hecho:**
 
 * Entorno conda `empkg` creado y documentado en `environment.yml`.
 * Descargados los dos archivos iniciales del EMP:
-
   * `emp_qiime_mapping_subset_2k.tsv`
   * `emp_deblur_90bp.subset_2k.rare_5000.biom`
 * Script `inspect_data.py` creado y ejecutado: inspecciona mapping file, BIOM, estructura HDF5 y valida IDs. Exporta CSVs de diagnóstico a `data/inspection/`.
@@ -23,17 +22,27 @@ La exploración inicial de datos está completada y ya se ha generado el primer 
 * Script `build_sample_table.py` finalizado como pipeline reproducible.
 * Generado `data/processed/sample_table.csv`, con una fila por muestra y columnas seleccionadas para el futuro KG.
 * Decidido que el KG se construirá con RDF/Turtle y GraphDB/SPARQL, no con Neo4j/Cypher.
+* Creado y ejecutado `notebooks/01_analyze_sample_table.ipynb`: valida `sample_id`,
+  tipos de datos, cobertura, jerarquía EMPO, coordenadas duplicadas y campos
+  fisicoquímicos sobre el artefacto final (no sobre el mapping crudo).
+* Seleccionado `data/samples/kg_v0_test_samples.csv`: 17 muestras, una por cada categoría `empo_3`, elegidas de forma determinista por completitud de campos (no muestreo aleatorio).
+* Redactado `docs/kg_design_v0.md` con el diseño v0: entidades `Sample`, `Study`, `Location`, `EMPOCategory`, `EnvironmentDescription`.
 
 **Lo que está en curso:**
 
-* Diseño del Knowledge Graph mínimo a partir de `sample_table.csv`.
-* Definición inicial de entidades RDF:
+* Preparar `scripts/03_to_rdf.py` (se abordará en una sesión de trabajo aparte,
+  centrada solo en la generación de RDF).
 
-  * `Sample`
-  * `Study`
-  * `Location`
-  * `Environment`
-* Preparación del siguiente paso: generar un primer Turtle pequeño con unas pocas muestras para validar el modelo RDF antes de escalar.
+**Decisiones de nomenclatura cerradas en esta fase:**
+
+* Relación `Sample -> EMPOCategory`: se descarta `classifiedAs` y se fija
+  `empkg:hasEMPOCategory`, por consistencia de patrón con `hasEnvironmentDescription`.
+* Sección "Relaciones principales" añadida a `docs/kg_design_v0.md`, con las 4
+  relaciones de v0 (`belongsToStudy`, `wasCollectedAt`, `hasEMPOCategory`,
+  `hasEnvironmentDescription`), su dominio/rango y cardinalidad.
+* Terminología residual `EnvironmentalFeature` eliminada de
+  `01_analyze_sample_table.ipynb` (celdas de comprobación EMPO y de candidatos),
+  sustituida por `EMPOCategory` en todo el notebook.
 
 **Lo que NO está hecho aún:**
 
@@ -76,9 +85,19 @@ La exploración inicial de datos está completada y ya se ha generado el primer 
 * [x] Validar la tabla final.
 * [x] Exportar `data/processed/sample_table.csv`.
 
+### Fase 1B-preliminar — Análisis dirigido de sample_table.csv
+- [x] Crear y ejecutar notebooks/01_analyze_sample_table.ipynb
+- [x] Validar sample_id, tipos de datos y cobertura sobre el artefacto final
+- [x] Comprobar consistencia jerárquica empo_1/empo_2/empo_3
+- [x] Analizar duplicidad de coordenadas → decidido: Location compartida y deduplicada
+- [x] Seleccionar subconjunto representativo para el RDF de prueba
+      (17 muestras, una por categoría empo_3 — cobertura completa en vez de 5-10 arbitrarias)
+- [x] Redactar docs/kg_design_v0.md con las conclusiones del notebook,
+      incluida la sección "Relaciones principales"
+
 ### Fase 1B — Diseño RDF mínimo desde `sample_table.csv`
 
-* [ ] Crear `docs/kg_design_v0.md`.
+* [x] Crear `docs/kg_design_v0.md` (ver Fase 1B-preliminar).
 * [ ] Definir prefijos iniciales:
 
   * `empkg:`
@@ -86,21 +105,23 @@ La exploración inicial de datos está completada y ya se ha generado el primer 
   * `rdfs:`
   * `xsd:`
   * `schema:`
-* [ ] Definir clases iniciales:
+* [x] Definir clases iniciales:
 
   * `empkg:Sample`
   * `empkg:Study`
   * `empkg:Location`
-  * `empkg:Environment`
-* [ ] Definir relaciones iniciales:
+  * `empkg:EnvironmentDescription`
+  * `empkg:EMPOCategory`
+* [x] Definir relaciones iniciales:
 
-  * `empkg:partOfStudy`
+  * `empkg:belongsToStudy`
   * `empkg:wasCollectedAt`
-  * `empkg:hasEnvironment`
-* [ ] Crear un primer RDF/Turtle manual o semi-automático con 3–10 muestras.
-* [ ] Validar el Turtle con `rdflib`.
-* [ ] Crear `scripts/build_sample_rdf.py`.
-* [ ] Generar `data/processed/empkg_samples.ttl` a partir de `sample_table.csv`.
+  * `empkg:hasEMPOCategory`
+  * `empkg:hasEnvironmentDescription`
+* [ ] Generar RDF/Turtle de prueba con las 17 muestras de `kg_v0_test_samples.csv`.
+* [ ] Validar el Turtle con `rdflib` (parseo sin errores, 17 `Sample`, 17 `EMPOCategory`, relaciones completas, sin triples para valores ausentes).
+* [ ] Crear `scripts/03_to_rdf.py`.
+* [ ] Generar `data/processed/empkg_v0_test.ttl`.
 
 ### Fase 1C — Modularización ligera
 
@@ -377,6 +398,8 @@ python scripts/[nombre_del_script].py
 - [ ] **¿Conviene guardar todos los valores no cero del BIOM como relaciones del KG?** Con 858.173 valores no nulos y una distribución de cola larga (42,8% de ASVs en una sola muestra), modelar todo podría generar un grafo poco manejable para un TFG.
 - [ ] **¿Conviene filtrar ASVs por abundancia o prevalencia antes de construir el grafo?** Por ejemplo, descartar singletons (38.892 ASVs con abundancia total = 1) podría reducir el ruido sin perder señal ecológica relevante. Pendiente de decidir el umbral.
 - [ ] **Qué partes modularizar en `src/empkg/`:** candidatas identificadas en el notebook (`load_biom_table`, `build_biom_sample_stats`, `extract_taxonomy_preview`, `extract_abundance_for_sample`), pero la estructura concreta del paquete (`src/empkg/io/`, `src/empkg/cleaning/`, etc.) todavía no está decidida.
+- [ ] Pipeline LLM (Fase 1D) queda formalmente aplazado hasta cerrar `docs/kg_design_v0.md`. No se tocará `scripts/02_llm_harmonize.py` hasta entonces.
+
 ---
 
 ## Notas sobre EMP y sus datos
@@ -588,9 +611,12 @@ Sample  → empkg:wasCollectedAt → Location
 Sample  → empkg:hasEnvironment → Environment
 ```
 
-## Notas sobre Knowledge Graph (vacío por ahora)
-Esquema previsto de nodos: `Sample`, `Location`, `EnvironmentalFeature`, `Taxon`.
-Relaciones previstas: `was_collected_at`, `has_feature`, `contains_taxon_with_abundance_X`.
+## Diseño del Knowledge Graph v0
+
+El diseño detallado del KG vive en `docs/kg_design_v0.md` (entidades, propiedades,
+relaciones, estrategia de URIs y decisiones abiertas). Este documento es la fuente
+de verdad; no se duplica aquí para evitar que ambos textos diverjan.
+
 
 ## Entorno y configuración
 | Elemento             | Valor                                    |
