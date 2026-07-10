@@ -1,0 +1,689 @@
+@prefix empkg: <https://w3id.org/empkg/ontology/> .
+@prefix empo: <https://w3id.org/empkg/resource/empo-category/> .
+@prefix envdesc: <https://w3id.org/empkg/resource/environment-description/> .
+@prefix loc: <https://w3id.org/empkg/resource/location/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix sample: <https://w3id.org/empkg/resource/sample/> .
+@prefix schema: <https://schema.org/> .
+@prefix study: <https://w3id.org/empkg/resource/study/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+empkg:EMPOCategory a rdfs:Class ;
+    rdfs:label "EMPO category" .
+
+empkg:EnvironmentDescription a rdfs:Class ;
+    rdfs:label "Environment description" .
+
+empkg:Location a rdfs:Class ;
+    rdfs:label "Location" .
+
+empkg:Sample a rdfs:Class ;
+    rdfs:label "Sample" .
+
+empkg:Study a rdfs:Class ;
+    rdfs:label "Study" .
+
+empkg:belongsToStudy a rdf:Property ;
+    rdfs:label "belongs to study" ;
+    rdfs:domain empkg:Sample ;
+    rdfs:range empkg:Study .
+
+empkg:hasEMPOCategory a rdf:Property ;
+    rdfs:label "has EMPO category" ;
+    rdfs:domain empkg:Sample ;
+    rdfs:range empkg:EMPOCategory .
+
+empkg:hasEnvironmentDescription a rdf:Property ;
+    rdfs:label "has environment description" ;
+    rdfs:domain empkg:Sample ;
+    rdfs:range empkg:EnvironmentDescription .
+
+empkg:wasCollectedAt a rdf:Property ;
+    rdfs:label "was collected at" ;
+    rdfs:domain empkg:Sample ;
+    rdfs:range empkg:Location .
+
+sample:1001_SKB7 a empkg:Sample ;
+    rdfs:label "Sample 1001.SKB7" ;
+    empkg:belongsToStudy study:1001 ;
+    empkg:biomObservedASVs 207 ;
+    empkg:biomTotalReads 5000 ;
+    empkg:hasEMPOCategory empo:plant_rhizosphere ;
+    empkg:hasEnvironmentDescription envdesc:1001_SKB7 ;
+    empkg:ph 6.94 ;
+    empkg:salinityPsu 7.15 ;
+    empkg:sampleId "1001.SKB7" ;
+    empkg:temperatureDegC 15.0 ;
+    empkg:wasCollectedAt loc:united_states_of_america_lat33_194_lonm117_241_depth0_15_alt0_0_elev114_0 .
+
+sample:1001_SKD6 a empkg:Sample ;
+    rdfs:label "Sample 1001.SKD6" ;
+    empkg:belongsToStudy study:1001 ;
+    empkg:biomObservedASVs 1045 ;
+    empkg:biomTotalReads 5000 ;
+    empkg:hasEMPOCategory empo:soil_non_saline ;
+    empkg:hasEnvironmentDescription envdesc:1001_SKD6 ;
+    empkg:ph 6.8 ;
+    empkg:salinityPsu 7.1 ;
+    empkg:sampleId "1001.SKD6" ;
+    empkg:temperatureDegC 15.0 ;
+    empkg:wasCollectedAt loc:united_states_of_america_lat33_194_lonm117_241_depth0_15_alt0_0_elev114_0 .
+
+sample:1035_UQ405 a empkg:Sample ;
+    rdfs:label "Sample 1035.UQ405" ;
+    empkg:belongsToStudy study:1035 ;
+    empkg:biomObservedASVs 276 ;
+    empkg:biomTotalReads 5000 ;
+    empkg:hasEMPOCategory empo:animal_corpus ;
+    empkg:hasEnvironmentDescription envdesc:1035_UQ405 ;
+    empkg:ph 7.98 ;
+    empkg:sampleId "1035.UQ405" ;
+    empkg:wasCollectedAt loc:antarctica_latm78_068_lon164_01_depth0_0_alt0_0_elev563_0 .
+
+sample:1041_M041_100 a empkg:Sample ;
+    rdfs:label "Sample 1041.M041.100" ;
+    empkg:belongsToStudy study:1041 ;
+    empkg:biomObservedASVs 336 ;
+    empkg:biomTotalReads 5000 ;
+    empkg:hasEMPOCategory empo:water_non_saline ;
+    empkg:hasEnvironmentDescription envdesc:1041_M041_100 ;
+    empkg:ph 8.203 ;
+    empkg:salinityPsu 0.1359 ;
+    empkg:sampleId "1041.M041.100" ;
+    empkg:temperatureDegC 3.5477 ;
+    empkg:wasCollectedAt loc:united_states_of_america_lat44_737_lonm86_721_depth100_0_alt0_0_elev98_61 .
+
+sample:1453_54432SDZ2_A4_Tfran_feces a empkg:Sample ;
+    rdfs:label "Sample 1453.54432SDZ2.A4.Tfran.feces" ;
+    empkg:belongsToStudy study:1453 ;
+    empkg:biomObservedASVs 221 ;
+    empkg:biomTotalReads 5000 ;
+    empkg:hasEMPOCategory empo:animal_proximal_gut ;
+    empkg:hasEnvironmentDescription envdesc:1453_54432SDZ2_A4_Tfran_feces ;
+    empkg:sampleId "1453.54432SDZ2.A4.Tfran.feces" ;
+    empkg:wasCollectedAt loc:united_states_of_america_lat32_72_lonm117_16_depth0_0_alt0_0_elev18_57 .
+
+sample:1521_C2_s_8_1_sequences a empkg:Sample ;
+    rdfs:label "Sample 1521.C2.s.8.1.sequences" ;
+    empkg:belongsToStudy study:1521 ;
+    empkg:biomObservedASVs 136 ;
+    empkg:biomTotalReads 5000 ;
+    empkg:hasEMPOCategory empo:aerosol_non_saline ;
+    empkg:hasEnvironmentDescription envdesc:1521_C2_s_8_1_sequences ;
+    empkg:sampleId "1521.C2.s.8.1.sequences" ;
+    empkg:temperatureDegC 22.5 ;
+    empkg:wasCollectedAt loc:united_states_of_america_lat40_15_lonm105_03_depth0_0_altna_elev1518_6 .
+
+sample:1580_A23_number1_filt_D1 a empkg:Sample ;
+    rdfs:label "Sample 1580.A23.number1.filt.D1" ;
+    empkg:belongsToStudy study:1580 ;
+    empkg:biomObservedASVs 55 ;
+    empkg:biomTotalReads 5000 ;
+    empkg:hasEMPOCategory empo:hypersaline_saline ;
+    empkg:hasEnvironmentDescription envdesc:1580_A23_number1_filt_D1 ;
+    empkg:ph 7.33 ;
+    empkg:sampleId "1580.A23.number1.filt.D1" ;
+    empkg:wasCollectedAt loc:united_states_of_america_lat37_475383_lonm121_9729_depth0_0_alt0_0_elev0_152 .
+
+sample:1883_2011_491_Crump_Artic_LTREB_main_lane4_NoIndex a empkg:Sample ;
+    rdfs:label "Sample 1883.2011.491.Crump.Artic.LTREB.main.lane4.NoIndex" ;
+    empkg:belongsToStudy study:1883 ;
+    empkg:biomObservedASVs 94 ;
+    empkg:biomTotalReads 5000 ;
+    empkg:hasEMPOCategory empo:water_saline ;
+    empkg:hasEnvironmentDescription envdesc:1883_2011_491_Crump_Artic_LTREB_main_lane4_NoIndex ;
+    empkg:oxygenMgPerL 13.2 ;
+    empkg:ph 7.8 ;
+    empkg:salinityPsu 30.0 ;
+    empkg:sampleId "1883.2011.491.Crump.Artic.LTREB.main.lane4.NoIndex" ;
+    empkg:temperatureDegC 5.2 ;
+    empkg:wasCollectedAt loc:united_states_of_america_lat70_06601667_lonm143_1903833_depth0_5_alt0_0_elev0_0 .
+
+sample:2300_BB_4087_anus a empkg:Sample ;
+    rdfs:label "Sample 2300.BB.4087.anus" ;
+    empkg:belongsToStudy study:2300 ;
+    empkg:biomObservedASVs 49 ;
+    empkg:biomTotalReads 5000 ;
+    empkg:hasEMPOCategory empo:animal_distal_gut ;
+    empkg:hasEnvironmentDescription envdesc:2300_BB_4087_anus ;
+    empkg:sampleId "2300.BB.4087.anus" ;
+    empkg:temperatureDegC 35.0555555556 ;
+    empkg:wasCollectedAt loc:united_states_of_america_lat47_93713_lonm95_98628_depth0_0_alt0_0_elev341_816 .
+
+sample:550_L2S103_s_2_sequence a empkg:Sample ;
+    rdfs:label "Sample 550.L2S103.s.2.sequence" ;
+    empkg:belongsToStudy study:550 ;
+    empkg:biomObservedASVs 635 ;
+    empkg:biomTotalReads 5000 ;
+    empkg:hasEMPOCategory empo:animal_surface ;
+    empkg:hasEnvironmentDescription envdesc:550_L2S103_s_2_sequence ;
+    empkg:sampleId "550.L2S103.s.2.sequence" ;
+    empkg:wasCollectedAt loc:united_states_of_america_lat40_015_lonm105_271_depth0_0_alt0_0_elev1624_1 .
+
+sample:550_L5S119_s_5_sequence a empkg:Sample ;
+    rdfs:label "Sample 550.L5S119.s.5.sequence" ;
+    empkg:belongsToStudy study:550 ;
+    empkg:biomObservedASVs 51 ;
+    empkg:biomTotalReads 5000 ;
+    empkg:hasEMPOCategory empo:animal_secretion ;
+    empkg:hasEnvironmentDescription envdesc:550_L5S119_s_5_sequence ;
+    empkg:sampleId "550.L5S119.s.5.sequence" ;
+    empkg:wasCollectedAt loc:united_states_of_america_lat40_015_lonm105_271_depth0_0_alt0_0_elev1624_1 .
+
+sample:678_OA_mesocosm_362 a empkg:Sample ;
+    rdfs:label "Sample 678.OA.mesocosm.362" ;
+    empkg:belongsToStudy study:678 ;
+    empkg:biomObservedASVs 1052 ;
+    empkg:biomTotalReads 5000 ;
+    empkg:hasEMPOCategory empo:sediment_saline ;
+    empkg:hasEnvironmentDescription envdesc:678_OA_mesocosm_362 ;
+    empkg:ph 8.03 ;
+    empkg:salinityPsu 35.4 ;
+    empkg:sampleId "678.OA.mesocosm.362" ;
+    empkg:temperatureDegC 11.0 ;
+    empkg:wasCollectedAt loc:england_lat50_338_lonm4_148_depth15_0_alt0_0_elev0_0 .
+
+sample:804_3869_1446 a empkg:Sample ;
+    rdfs:label "Sample 804.3869.1446" ;
+    empkg:belongsToStudy study:804 ;
+    empkg:biomObservedASVs 214 ;
+    empkg:biomTotalReads 5000 ;
+    empkg:hasEMPOCategory empo:surface_saline ;
+    empkg:hasEnvironmentDescription envdesc:804_3869_1446 ;
+    empkg:ph 10.1 ;
+    empkg:sampleId "804.3869.1446" ;
+    empkg:temperatureDegC 70.0 ;
+    empkg:wasCollectedAt loc:north_atlantic_ocean_lat30_123934_lonm42_120154_depth780_0_alt0_0_elev0_0 .
+
+sample:807_C_F_10_b a empkg:Sample ;
+    rdfs:label "Sample 807.C.F.10.b" ;
+    empkg:belongsToStudy study:807 ;
+    empkg:biomObservedASVs 1328 ;
+    empkg:biomTotalReads 5000 ;
+    empkg:hasEMPOCategory empo:sediment_non_saline ;
+    empkg:hasEnvironmentDescription envdesc:807_C_F_10_b ;
+    empkg:ph 8.69 ;
+    empkg:sampleId "807.C.F.10.b" ;
+    empkg:temperatureDegC 10.5 ;
+    empkg:wasCollectedAt loc:united_states_of_america_lat45_942894_lonm106_949183_depth0_0_alt0_0_elev1058_71 .
+
+sample:895_Puhimau_mat_3 a empkg:Sample ;
+    rdfs:label "Sample 895.Puhimau.mat.3" ;
+    empkg:belongsToStudy study:895 ;
+    empkg:biomObservedASVs 64 ;
+    empkg:biomTotalReads 5000 ;
+    empkg:hasEMPOCategory empo:surface_non_saline ;
+    empkg:hasEnvironmentDescription envdesc:895_Puhimau_mat_3 ;
+    empkg:ph 3.77 ;
+    empkg:sampleId "895.Puhimau.mat.3" ;
+    empkg:temperatureDegC 45.7 ;
+    empkg:wasCollectedAt loc:united_states_of_america_lat19_389_lonm155_25_depth0_0_alt0_0_elev88_89 .
+
+sample:910_CuracaoCCA5C a empkg:Sample ;
+    rdfs:label "Sample 910.CuracaoCCA5C" ;
+    empkg:belongsToStudy study:910 ;
+    empkg:biomObservedASVs 9 ;
+    empkg:biomTotalReads 5000 ;
+    empkg:hasEMPOCategory empo:plant_corpus ;
+    empkg:hasEnvironmentDescription envdesc:910_CuracaoCCA5C ;
+    empkg:sampleId "910.CuracaoCCA5C" ;
+    empkg:wasCollectedAt loc:curacao_island_lat12_10975_lonm68_95636_depth10_0_alt0_0_elev0_0 .
+
+sample:933_Lu225 a empkg:Sample ;
+    rdfs:label "Sample 933.Lu225" ;
+    empkg:belongsToStudy study:933 ;
+    empkg:biomObservedASVs 362 ;
+    empkg:biomTotalReads 5000 ;
+    empkg:hasEMPOCategory empo:plant_surface ;
+    empkg:hasEnvironmentDescription envdesc:933_Lu225 ;
+    empkg:sampleId "933.Lu225" ;
+    empkg:temperatureDegC 22.16 ;
+    empkg:wasCollectedAt loc:australia_latm33_966608_lon151_257253_depth9_1_alt0_0_elev0_0 .
+
+empo:aerosol_non_saline a empkg:EMPOCategory ;
+    rdfs:label "Aerosol (non-saline)" ;
+    empkg:empo1 "Free-living" ;
+    empkg:empo2 "Non-saline" ;
+    empkg:empo3 "Aerosol (non-saline)" .
+
+empo:animal_corpus a empkg:EMPOCategory ;
+    rdfs:label "Animal corpus" ;
+    empkg:empo1 "Host-associated" ;
+    empkg:empo2 "Animal" ;
+    empkg:empo3 "Animal corpus" .
+
+empo:animal_distal_gut a empkg:EMPOCategory ;
+    rdfs:label "Animal distal gut" ;
+    empkg:empo1 "Host-associated" ;
+    empkg:empo2 "Animal" ;
+    empkg:empo3 "Animal distal gut" .
+
+empo:animal_proximal_gut a empkg:EMPOCategory ;
+    rdfs:label "Animal proximal gut" ;
+    empkg:empo1 "Host-associated" ;
+    empkg:empo2 "Animal" ;
+    empkg:empo3 "Animal proximal gut" .
+
+empo:animal_secretion a empkg:EMPOCategory ;
+    rdfs:label "Animal secretion" ;
+    empkg:empo1 "Host-associated" ;
+    empkg:empo2 "Animal" ;
+    empkg:empo3 "Animal secretion" .
+
+empo:animal_surface a empkg:EMPOCategory ;
+    rdfs:label "Animal surface" ;
+    empkg:empo1 "Host-associated" ;
+    empkg:empo2 "Animal" ;
+    empkg:empo3 "Animal surface" .
+
+empo:hypersaline_saline a empkg:EMPOCategory ;
+    rdfs:label "Hypersaline (saline)" ;
+    empkg:empo1 "Free-living" ;
+    empkg:empo2 "Saline" ;
+    empkg:empo3 "Hypersaline (saline)" .
+
+empo:plant_corpus a empkg:EMPOCategory ;
+    rdfs:label "Plant corpus" ;
+    empkg:empo1 "Host-associated" ;
+    empkg:empo2 "Plant" ;
+    empkg:empo3 "Plant corpus" .
+
+empo:plant_rhizosphere a empkg:EMPOCategory ;
+    rdfs:label "Plant rhizosphere" ;
+    empkg:empo1 "Host-associated" ;
+    empkg:empo2 "Plant" ;
+    empkg:empo3 "Plant rhizosphere" .
+
+empo:plant_surface a empkg:EMPOCategory ;
+    rdfs:label "Plant surface" ;
+    empkg:empo1 "Host-associated" ;
+    empkg:empo2 "Plant" ;
+    empkg:empo3 "Plant surface" .
+
+empo:sediment_non_saline a empkg:EMPOCategory ;
+    rdfs:label "Sediment (non-saline)" ;
+    empkg:empo1 "Free-living" ;
+    empkg:empo2 "Non-saline" ;
+    empkg:empo3 "Sediment (non-saline)" .
+
+empo:sediment_saline a empkg:EMPOCategory ;
+    rdfs:label "Sediment (saline)" ;
+    empkg:empo1 "Free-living" ;
+    empkg:empo2 "Saline" ;
+    empkg:empo3 "Sediment (saline)" .
+
+empo:soil_non_saline a empkg:EMPOCategory ;
+    rdfs:label "Soil (non-saline)" ;
+    empkg:empo1 "Free-living" ;
+    empkg:empo2 "Non-saline" ;
+    empkg:empo3 "Soil (non-saline)" .
+
+empo:surface_non_saline a empkg:EMPOCategory ;
+    rdfs:label "Surface (non-saline)" ;
+    empkg:empo1 "Free-living" ;
+    empkg:empo2 "Non-saline" ;
+    empkg:empo3 "Surface (non-saline)" .
+
+empo:surface_saline a empkg:EMPOCategory ;
+    rdfs:label "Surface (saline)" ;
+    empkg:empo1 "Free-living" ;
+    empkg:empo2 "Saline" ;
+    empkg:empo3 "Surface (saline)" .
+
+empo:water_non_saline a empkg:EMPOCategory ;
+    rdfs:label "Water (non-saline)" ;
+    empkg:empo1 "Free-living" ;
+    empkg:empo2 "Non-saline" ;
+    empkg:empo3 "Water (non-saline)" .
+
+empo:water_saline a empkg:EMPOCategory ;
+    rdfs:label "Water (saline)" ;
+    empkg:empo1 "Free-living" ;
+    empkg:empo2 "Saline" ;
+    empkg:empo3 "Water (saline)" .
+
+envdesc:1001_SKB7 a empkg:EnvironmentDescription ;
+    empkg:envBiome "cropland biome" ;
+    empkg:envFeature "plant-associated habitat" ;
+    empkg:envMaterial "organic material" ;
+    empkg:envoBiome0 "biome" ;
+    empkg:envoBiome1 "terrestrial biome" ;
+    empkg:envoBiome2 "anthropogenic terrestrial biome" ;
+    empkg:envoBiome3 "cropland biome" .
+
+envdesc:1001_SKD6 a empkg:EnvironmentDescription ;
+    empkg:envBiome "cropland biome" ;
+    empkg:envFeature "plant-associated habitat" ;
+    empkg:envMaterial "soil" ;
+    empkg:envoBiome0 "biome" ;
+    empkg:envoBiome1 "terrestrial biome" ;
+    empkg:envoBiome2 "anthropogenic terrestrial biome" ;
+    empkg:envoBiome3 "cropland biome" .
+
+envdesc:1035_UQ405 a empkg:EnvironmentDescription ;
+    empkg:envBiome "polar desert biome" ;
+    empkg:envFeature "cold temperature habitat" ;
+    empkg:envMaterial "carcass" ;
+    empkg:envoBiome0 "biome" ;
+    empkg:envoBiome1 "terrestrial biome" ;
+    empkg:envoBiome2 "desert biome" ;
+    empkg:envoBiome3 "polar desert biome" .
+
+envdesc:1041_M041_100 a empkg:EnvironmentDescription ;
+    empkg:envBiome "Large lake biome" ;
+    empkg:envFeature "freshwater lake" ;
+    empkg:envMaterial "fresh water" ;
+    empkg:envoBiome0 "biome" ;
+    empkg:envoBiome1 "aquatic biome" ;
+    empkg:envoBiome2 "freshwater biome" ;
+    empkg:envoBiome3 "freshwater lake biome" .
+
+envdesc:1453_54432SDZ2_A4_Tfran_feces a empkg:EnvironmentDescription ;
+    empkg:envBiome "urban biome" ;
+    empkg:envFeature "animal-associated habitat" ;
+    empkg:envMaterial "organic material" ;
+    empkg:envoBiome0 "biome" ;
+    empkg:envoBiome1 "terrestrial biome" ;
+    empkg:envoBiome2 "anthropogenic terrestrial biome" ;
+    empkg:envoBiome3 "dense settlement biome" .
+
+envdesc:1521_C2_s_8_1_sequences a empkg:EnvironmentDescription ;
+    empkg:envBiome "urban biome" ;
+    empkg:envFeature "city" ;
+    empkg:envMaterial "air" ;
+    empkg:envoBiome0 "biome" ;
+    empkg:envoBiome1 "terrestrial biome" ;
+    empkg:envoBiome2 "anthropogenic terrestrial biome" ;
+    empkg:envoBiome3 "dense settlement biome" .
+
+envdesc:1580_A23_number1_filt_D1 a empkg:EnvironmentDescription ;
+    empkg:envBiome "Small lake biome" ;
+    empkg:envFeature "haline habitat" ;
+    empkg:envMaterial "hypersaline water" ;
+    empkg:envoBiome0 "biome" ;
+    empkg:envoBiome1 "aquatic biome" ;
+    empkg:envoBiome2 "freshwater biome" ;
+    empkg:envoBiome3 "freshwater lake biome" .
+
+envdesc:1883_2011_491_Crump_Artic_LTREB_main_lane4_NoIndex a empkg:EnvironmentDescription ;
+    empkg:envBiome "marine biome" ;
+    empkg:envFeature "coastal water body" ;
+    empkg:envMaterial "coastal water" ;
+    empkg:envoBiome0 "biome" ;
+    empkg:envoBiome1 "aquatic biome" ;
+    empkg:envoBiome2 "marine biome" .
+
+envdesc:2300_BB_4087_anus a empkg:EnvironmentDescription ;
+    empkg:envBiome "mixed forest biome" ;
+    empkg:envFeature "animal-associated habitat" ;
+    empkg:envMaterial "feces" ;
+    empkg:envoBiome0 "biome" ;
+    empkg:envoBiome1 "terrestrial biome" ;
+    empkg:envoBiome2 "forest biome" ;
+    empkg:envoBiome3 "mixed forest biome" .
+
+envdesc:550_L2S103_s_2_sequence a empkg:EnvironmentDescription ;
+    empkg:envBiome "urban biome" ;
+    empkg:envFeature "human-associated habitat" ;
+    empkg:envMaterial "sebum" ;
+    empkg:envoBiome0 "biome" ;
+    empkg:envoBiome1 "terrestrial biome" ;
+    empkg:envoBiome2 "anthropogenic terrestrial biome" ;
+    empkg:envoBiome3 "dense settlement biome" .
+
+envdesc:550_L5S119_s_5_sequence a empkg:EnvironmentDescription ;
+    empkg:envBiome "urban biome" ;
+    empkg:envFeature "human-associated habitat" ;
+    empkg:envMaterial "saliva" ;
+    empkg:envoBiome0 "biome" ;
+    empkg:envoBiome1 "terrestrial biome" ;
+    empkg:envoBiome2 "anthropogenic terrestrial biome" ;
+    empkg:envoBiome3 "dense settlement biome" .
+
+envdesc:678_OA_mesocosm_362 a empkg:EnvironmentDescription ;
+    empkg:envBiome "marine biome" ;
+    empkg:envFeature "neritic zone" ;
+    empkg:envMaterial "marine sediment" ;
+    empkg:envoBiome0 "biome" ;
+    empkg:envoBiome1 "aquatic biome" ;
+    empkg:envoBiome2 "marine biome" .
+
+envdesc:804_3869_1446 a empkg:EnvironmentDescription ;
+    empkg:envBiome "marine benthic biome" ;
+    empkg:envFeature "hydrothermal vent" ;
+    empkg:envMaterial "biofilm" ;
+    empkg:envoBiome0 "biome" ;
+    empkg:envoBiome1 "aquatic biome" ;
+    empkg:envoBiome2 "marine biome" ;
+    empkg:envoBiome3 "marine benthic biome" .
+
+envdesc:807_C_F_10_b a empkg:EnvironmentDescription ;
+    empkg:envBiome "Small river biome" ;
+    empkg:envFeature "fresh water" ;
+    empkg:envMaterial "stream sediment" ;
+    empkg:envoBiome0 "biome" ;
+    empkg:envoBiome1 "aquatic biome" ;
+    empkg:envoBiome2 "freshwater biome" ;
+    empkg:envoBiome3 "freshwater river biome" .
+
+envdesc:895_Puhimau_mat_3 a empkg:EnvironmentDescription ;
+    empkg:envBiome "tropical coniferous forest biome" ;
+    empkg:envFeature "high temperature habitat" ;
+    empkg:envMaterial "biofilm" ;
+    empkg:envoBiome0 "biome" ;
+    empkg:envoBiome1 "terrestrial biome" ;
+    empkg:envoBiome2 "forest biome" ;
+    empkg:envoBiome3 "coniferous forest biome" .
+
+envdesc:910_CuracaoCCA5C a empkg:EnvironmentDescription ;
+    empkg:envBiome "marine coral reef biome" ;
+    empkg:envFeature "coral reef" ;
+    empkg:envMaterial "organic material" ;
+    empkg:envoBiome0 "biome" ;
+    empkg:envoBiome1 "aquatic biome" ;
+    empkg:envoBiome2 "marine biome" ;
+    empkg:envoBiome3 "marine benthic biome" .
+
+envdesc:933_Lu225 a empkg:EnvironmentDescription ;
+    empkg:envBiome "marine biome" ;
+    empkg:envFeature "kelp forest" ;
+    empkg:envMaterial "biofilm" ;
+    empkg:envoBiome0 "biome" ;
+    empkg:envoBiome1 "aquatic biome" ;
+    empkg:envoBiome2 "marine biome" .
+
+loc:antarctica_latm78_068_lon164_01_depth0_0_alt0_0_elev563_0 a empkg:Location ;
+    rdfs:label "Location -78.068, 164.01" ;
+    schema:latitude -78.068 ;
+    schema:longitude 164.01 ;
+    empkg:altitudeM 0.0 ;
+    empkg:country "GAZ:Antarctica" ;
+    empkg:depthM 0.0 ;
+    empkg:elevationM 563.0 .
+
+loc:australia_latm33_966608_lon151_257253_depth9_1_alt0_0_elev0_0 a empkg:Location ;
+    rdfs:label "Location -33.966608, 151.257253" ;
+    schema:latitude -33.966608 ;
+    schema:longitude 151.257253 ;
+    empkg:altitudeM 0.0 ;
+    empkg:country "GAZ:Australia" ;
+    empkg:depthM 9.1 ;
+    empkg:elevationM 0.0 .
+
+loc:curacao_island_lat12_10975_lonm68_95636_depth10_0_alt0_0_elev0_0 a empkg:Location ;
+    rdfs:label "Location 12.10975, -68.95636" ;
+    schema:latitude 12.10975 ;
+    schema:longitude -68.95636 ;
+    empkg:altitudeM 0.0 ;
+    empkg:country "GAZ:Curacao Island" ;
+    empkg:depthM 10.0 ;
+    empkg:elevationM 0.0 .
+
+loc:england_lat50_338_lonm4_148_depth15_0_alt0_0_elev0_0 a empkg:Location ;
+    rdfs:label "Location 50.338, -4.148" ;
+    schema:latitude 50.338 ;
+    schema:longitude -4.148 ;
+    empkg:altitudeM 0.0 ;
+    empkg:country "GAZ:England" ;
+    empkg:depthM 15.0 ;
+    empkg:elevationM 0.0 .
+
+loc:north_atlantic_ocean_lat30_123934_lonm42_120154_depth780_0_alt0_0_elev0_0 a empkg:Location ;
+    rdfs:label "Location 30.123934, -42.120154" ;
+    schema:latitude 30.123934 ;
+    schema:longitude -42.120154 ;
+    empkg:altitudeM 0.0 ;
+    empkg:country "GAZ:North Atlantic Ocean" ;
+    empkg:depthM 780.0 ;
+    empkg:elevationM 0.0 .
+
+loc:united_states_of_america_lat19_389_lonm155_25_depth0_0_alt0_0_elev88_89 a empkg:Location ;
+    rdfs:label "Location 19.389, -155.25" ;
+    schema:latitude 19.389 ;
+    schema:longitude -155.25 ;
+    empkg:altitudeM 0.0 ;
+    empkg:country "GAZ:United States of America" ;
+    empkg:depthM 0.0 ;
+    empkg:elevationM 88.89 .
+
+loc:united_states_of_america_lat32_72_lonm117_16_depth0_0_alt0_0_elev18_57 a empkg:Location ;
+    rdfs:label "Location 32.72, -117.16" ;
+    schema:latitude 32.72 ;
+    schema:longitude -117.16 ;
+    empkg:altitudeM 0.0 ;
+    empkg:country "GAZ:United States of America" ;
+    empkg:depthM 0.0 ;
+    empkg:elevationM 18.57 .
+
+loc:united_states_of_america_lat37_475383_lonm121_9729_depth0_0_alt0_0_elev0_152 a empkg:Location ;
+    rdfs:label "Location 37.475383, -121.9729" ;
+    schema:latitude 37.475383 ;
+    schema:longitude -121.9729 ;
+    empkg:altitudeM 0.0 ;
+    empkg:country "GAZ:United States of America" ;
+    empkg:depthM 0.0 ;
+    empkg:elevationM 0.152 .
+
+loc:united_states_of_america_lat40_15_lonm105_03_depth0_0_altna_elev1518_6 a empkg:Location ;
+    rdfs:label "Location 40.15, -105.03" ;
+    schema:latitude 40.15 ;
+    schema:longitude -105.03 ;
+    empkg:country "GAZ:United States of America" ;
+    empkg:depthM 0.0 ;
+    empkg:elevationM 1518.6 .
+
+loc:united_states_of_america_lat44_737_lonm86_721_depth100_0_alt0_0_elev98_61 a empkg:Location ;
+    rdfs:label "Location 44.737, -86.721" ;
+    schema:latitude 44.737 ;
+    schema:longitude -86.721 ;
+    empkg:altitudeM 0.0 ;
+    empkg:country "GAZ:United States of America" ;
+    empkg:depthM 100.0 ;
+    empkg:elevationM 98.61 .
+
+loc:united_states_of_america_lat45_942894_lonm106_949183_depth0_0_alt0_0_elev1058_71 a empkg:Location ;
+    rdfs:label "Location 45.942894, -106.949183" ;
+    schema:latitude 45.942894 ;
+    schema:longitude -106.949183 ;
+    empkg:altitudeM 0.0 ;
+    empkg:country "GAZ:United States of America" ;
+    empkg:depthM 0.0 ;
+    empkg:elevationM 1058.71 .
+
+loc:united_states_of_america_lat47_93713_lonm95_98628_depth0_0_alt0_0_elev341_816 a empkg:Location ;
+    rdfs:label "Location 47.93713, -95.98628" ;
+    schema:latitude 47.93713 ;
+    schema:longitude -95.98628 ;
+    empkg:altitudeM 0.0 ;
+    empkg:country "GAZ:United States of America" ;
+    empkg:depthM 0.0 ;
+    empkg:elevationM 341.816 .
+
+loc:united_states_of_america_lat70_06601667_lonm143_1903833_depth0_5_alt0_0_elev0_0 a empkg:Location ;
+    rdfs:label "Location 70.06601667, -143.1903833" ;
+    schema:latitude 70.06601667 ;
+    schema:longitude -143.1903833 ;
+    empkg:altitudeM 0.0 ;
+    empkg:country "GAZ:United States of America" ;
+    empkg:depthM 0.5 ;
+    empkg:elevationM 0.0 .
+
+study:1035 a empkg:Study ;
+    rdfs:label "Study 1035" ;
+    empkg:studyId "1035" .
+
+study:1041 a empkg:Study ;
+    rdfs:label "Study 1041" ;
+    empkg:studyId "1041" .
+
+study:1453 a empkg:Study ;
+    rdfs:label "Study 1453" ;
+    empkg:studyId "1453" .
+
+study:1521 a empkg:Study ;
+    rdfs:label "Study 1521" ;
+    empkg:studyId "1521" .
+
+study:1580 a empkg:Study ;
+    rdfs:label "Study 1580" ;
+    empkg:studyId "1580" .
+
+study:1883 a empkg:Study ;
+    rdfs:label "Study 1883" ;
+    empkg:studyId "1883" .
+
+study:2300 a empkg:Study ;
+    rdfs:label "Study 2300" ;
+    empkg:studyId "2300" .
+
+study:678 a empkg:Study ;
+    rdfs:label "Study 678" ;
+    empkg:studyId "678" .
+
+study:804 a empkg:Study ;
+    rdfs:label "Study 804" ;
+    empkg:studyId "804" .
+
+study:807 a empkg:Study ;
+    rdfs:label "Study 807" ;
+    empkg:studyId "807" .
+
+study:895 a empkg:Study ;
+    rdfs:label "Study 895" ;
+    empkg:studyId "895" .
+
+study:910 a empkg:Study ;
+    rdfs:label "Study 910" ;
+    empkg:studyId "910" .
+
+study:933 a empkg:Study ;
+    rdfs:label "Study 933" ;
+    empkg:studyId "933" .
+
+loc:united_states_of_america_lat33_194_lonm117_241_depth0_15_alt0_0_elev114_0 a empkg:Location ;
+    rdfs:label "Location 33.194, -117.241" ;
+    schema:latitude 33.194 ;
+    schema:longitude -117.241 ;
+    empkg:altitudeM 0.0 ;
+    empkg:country "GAZ:United States of America" ;
+    empkg:depthM 0.15 ;
+    empkg:elevationM 114.0 .
+
+loc:united_states_of_america_lat40_015_lonm105_271_depth0_0_alt0_0_elev1624_1 a empkg:Location ;
+    rdfs:label "Location 40.015, -105.271" ;
+    schema:latitude 40.015 ;
+    schema:longitude -105.271 ;
+    empkg:altitudeM 0.0 ;
+    empkg:country "GAZ:United States of America" ;
+    empkg:depthM 0.0 ;
+    empkg:elevationM 1624.1 .
+
+study:1001 a empkg:Study ;
+    rdfs:label "Study 1001" ;
+    empkg:studyId "1001" .
+
+study:550 a empkg:Study ;
+    rdfs:label "Study 550" ;
+    empkg:studyId "550" .
+

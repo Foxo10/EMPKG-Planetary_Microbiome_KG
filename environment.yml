@@ -22,6 +22,8 @@ dependencies:
   - jupyterlab
   - ipykernel
 
+  - rdflib
+
   - pip:
     - biom-format
     - python-dotenv
