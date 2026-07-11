@@ -1,0 +1,83 @@
+@prefix empkg: <https://w3id.org/empkg/ontology/> .
+@prefix sample:  <https://w3id.org/empkg/resource/sample/> .
+@prefix study:   <https://w3id.org/empkg/resource/study/> .
+@prefix loc:     <https://w3id.org/empkg/resource/location/> .
+@prefix empo:    <https://w3id.org/empkg/resource/empo-category/> .
+@prefix envdesc: <https://w3id.org/empkg/resource/environment-description/> .
+
+@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
+@prefix schema: <https://schema.org/> .
+
+
+empkg:Sample a rdfs:Class .
+empkg:Study a rdfs:Class .
+empkg:Location a rdfs:Class .
+empkg:EMPOCategory a rdfs:Class .
+empkg:EnvironmentDescription a rdfs:Class .
+
+empkg:belongsToStudy a rdf:Property ;
+    rdfs:domain empkg:Sample ;
+    rdfs:range empkg:Study .
+
+empkg:wasCollectedAt a rdf:Property ;
+    rdfs:domain empkg:Sample ;
+    rdfs:range empkg:Location .
+
+empkg:hasEMPOCategory a rdf:Property ;
+    rdfs:domain empkg:Sample ;
+    rdfs:range empkg:EMPOCategory .
+
+empkg:hasEnvironmentDescription a rdf:Property ;
+    rdfs:domain empkg:Sample ;
+    rdfs:range empkg:EnvironmentDescription .
+
+sample:1883_2011_491_Crump_Artic_LTREB_main_lane4_NoIndex
+    a empkg:Sample ;
+    rdfs:label "Sample 1883.2011.491.Crump.Artic.LTREB.main.lane4.NoIndex" ;
+    empkg:sampleId "1883.2011.491.Crump.Artic.LTREB.main.lane4.NoIndex" ;
+    empkg:belongsToStudy study:1883 ;
+    empkg:hasEMPOCategory empo:water_saline ;
+    empkg:hasEnvironmentDescription envdesc:1883_2011_491_Crump_Artic_LTREB_main_lane4_NoIndex ;
+    empkg:wasCollectedAt loc:loc_us_70_06601667_m143_1903833_depth_0_5_elev_0_0 ;
+    empkg:temperatureDegC "5.2"^^xsd:decimal ;
+    empkg:ph "7.8"^^xsd:decimal ;
+    empkg:salinityPsu "30.0"^^xsd:decimal ;
+    empkg:oxygenMgPerL "13.2"^^xsd:decimal ;
+    empkg:biomTotalReads "5000"^^xsd:integer ;
+    empkg:biomObservedASVs "94"^^xsd:integer .
+
+study:1883
+    a empkg:Study ;
+    rdfs:label "Study 1883" ;
+    empkg:studyId "1883" .
+
+empo:water_saline
+    a empkg:EMPOCategory ;
+    rdfs:label "Water (saline)" ;
+    empkg:empo1 "Free-living" ;
+    empkg:empo2 "Saline" ;
+    empkg:empo3 "Water (saline)" .
+
+envdesc:1883_2011_491_Crump_Artic_LTREB_main_lane4_NoIndex
+    a empkg:EnvironmentDescription ;
+    empkg:envBiome "marine biome" ;
+    empkg:envFeature "coastal water body" ;
+    empkg:envMaterial "coastal water" ;
+    empkg:envoBiome0 "biome" ;
+    empkg:envoBiome1 "aquatic biome" ;
+    empkg:envoBiome2 "marine biome" .
+
+loc:loc_us_70_06601667_m143_1903833_depth_0_5_elev_0_0
+    a empkg:Location ;
+    rdfs:label "Location 70.06601667, -143.1903833" ;
+    empkg:country "GAZ:United States of America" ;
+    schema:latitude "70.06601667"^^xsd:decimal ;
+    schema:longitude "-143.1903833"^^xsd:decimal ;
+    empkg:depthM "0.5"^^xsd:decimal ;
+    empkg:altitudeM "0.0"^^xsd:decimal ;
+    empkg:elevationM "0.0"^^xsd:decimal .
+
+
+
