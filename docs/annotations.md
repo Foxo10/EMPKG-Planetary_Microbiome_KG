@@ -5,9 +5,11 @@
 
 ## Estado actual del proyecto
 
-**Fase:** 1B-preliminar completada → diseño del KG v0 cerrado, listo para generar el primer RDF de prueba.
+**Fase:** 1B completada a nivel de notebook → primer RDF/Turtle v0 generado y validado.
 
-La exploración inicial de datos, la generación de `data/processed/sample_table.csv` y el análisis dirigido de ese artefacto están completados. El diseño v0 del Knowledge Graph está redactado en `docs/kg_design_v0.md`, incluida la sección "Relaciones principales". No quedan decisiones de nomenclatura pendientes; el siguiente paso es `scripts/03_to_rdf.py`.
+La exploración inicial de datos, la generación de `data/processed/sample_table.csv`, el análisis dirigido de ese artefacto y el diseño conceptual del KG v0 están completados. Además, se ha desarrollado `notebooks/03_to_rdf.ipynb`, que transforma el subconjunto `data/samples/kg_v0_test_samples.csv` en un primer grafo RDF/Turtle validable.
+
+El siguiente paso inmediato es consolidar la lógica estable del notebook en `scripts/03_to_rdf.py`, para que la generación de RDF no dependa de la ejecución manual del notebook.
 
 **Lo que está hecho:**
 
@@ -27,11 +29,15 @@ La exploración inicial de datos, la generación de `data/processed/sample_table
   fisicoquímicos sobre el artefacto final (no sobre el mapping crudo).
 * Seleccionado `data/samples/kg_v0_test_samples.csv`: 17 muestras, una por cada categoría `empo_3`, elegidas de forma determinista por completitud de campos (no muestreo aleatorio).
 * Redactado `docs/kg_design_v0.md` con el diseño v0: entidades `Sample`, `Study`, `Location`, `EMPOCategory`, `EnvironmentDescription`.
+* Creado y ejecutado `notebooks/03_to_rdf.ipynb`: convierte `kg_v0_test_samples.csv` a RDF/Turtle usando `rdflib`.
+* Generado `data/processed/empkg_v0_test.ttl` como primer Turtle de prueba del KG v0.
+* Implementadas funciones de limpieza, sanitización de URIs, construcción de nodos RDF y generación de literales tipados.
+* Validado el RDF generado: parseo correcto con `rdflib`, 17 `Sample`, 17 `EMPOCategory`, 17 `EnvironmentDescription`, 15 `Study`, 15 `Location`, 17 relaciones principales de cada tipo y 0 literales problemáticos.
 
 **Lo que está en curso:**
 
-* Preparar `scripts/03_to_rdf.py` (se abordará en una sesión de trabajo aparte,
-  centrada solo en la generación de RDF).
+* Preparar `scripts/03_to_rdf.py` a partir de la lógica ya estabilizada en `notebooks/03_to_rdf.ipynb`.
+* Mantener el notebook como evidencia didáctica y de validación, pero pasar la generación final del RDF a un script reproducible.
 
 **Decisiones de nomenclatura cerradas en esta fase:**
 
@@ -46,8 +52,10 @@ La exploración inicial de datos, la generación de `data/processed/sample_table
 
 **Lo que NO está hecho aún:**
 
-* No se ha generado todavía ningún fichero RDF/Turtle.
+* No se ha creado todavía `scripts/03_to_rdf.py` como pipeline reproducible independiente del notebook.
 * No se ha configurado todavía GraphDB.
+* No se ha cargado todavía el Turtle generado en GraphDB.
+* No se han escrito todavía consultas SPARQL sobre el KG v0.
 * No se ha construido todavía `taxonomy_table.csv`.
 * No se ha construido todavía `abundance_table.csv`.
 * No se ha realizado todavía procesamiento LLM ni mapeo automático a ontologías.
@@ -98,9 +106,14 @@ La exploración inicial de datos, la generación de `data/processed/sample_table
 ### Fase 1B — Diseño RDF mínimo desde `sample_table.csv`
 
 * [x] Crear `docs/kg_design_v0.md` (ver Fase 1B-preliminar).
-* [ ] Definir prefijos iniciales:
+* [x] Definir prefijos iniciales:
 
   * `empkg:`
+  * `sample:`
+  * `study:`
+  * `loc:`
+  * `empo:`
+  * `envdesc:`
   * `rdf:`
   * `rdfs:`
   * `xsd:`
@@ -118,16 +131,19 @@ La exploración inicial de datos, la generación de `data/processed/sample_table
   * `empkg:wasCollectedAt`
   * `empkg:hasEMPOCategory`
   * `empkg:hasEnvironmentDescription`
-* [ ] Generar RDF/Turtle de prueba con las 17 muestras de `kg_v0_test_samples.csv`.
-* [ ] Validar el Turtle con `rdflib` (parseo sin errores, 17 `Sample`, 17 `EMPOCategory`, relaciones completas, sin triples para valores ausentes).
-* [ ] Crear `scripts/03_to_rdf.py`.
-* [ ] Generar `data/processed/empkg_v0_test.ttl`.
+* [x] Crear y ejecutar `notebooks/03_to_rdf.ipynb`.
+* [x] Generar RDF/Turtle de prueba con las 17 muestras de `kg_v0_test_samples.csv`.
+* [x] Generar `data/processed/empkg_v0_test.ttl`.
+* [x] Validar el Turtle con `rdflib` (parseo sin errores, 17 `Sample`, 17 `EMPOCategory`, relaciones completas, sin triples para valores ausentes).
+* [ ] Crear `scripts/03_to_rdf.py` a partir del notebook.
 
-### Fase 1C — Modularización ligera
+### Fase 1C — Consolidación y modularización ligera
 
+* [ ] Crear `scripts/03_to_rdf.py` con la lógica estable de `notebooks/03_to_rdf.ipynb`.
+* [ ] Ejecutar el script desde cero y comprobar que genera el mismo `empkg_v0_test.ttl`.
 * [ ] Identificar funciones repetidas entre scripts.
-* [ ] Crear estructura inicial `src/empkg/`.
-* [ ] Mover funciones comunes solo cuando ya estén repetidas y estabilizadas.
+* [ ] Crear estructura inicial `src/empkg/` solo cuando haya funciones suficientemente estables.
+* [ ] Mover funciones comunes sin romper la ejecución actual.
 * [ ] Añadir imports desde scripts sin romper la ejecución actual.
 
 ### Fase 1D — Normalización con LLM
@@ -145,6 +161,7 @@ La exploración inicial de datos, la generación de `data/processed/sample_table
 
 ### Fase 2 — GraphDB/SPARQL
 
+* [ ] Decidir si se carga primero el RDF v0 de 17 muestras o una versión ampliada generada desde `sample_table.csv` completo.
 * [ ] Instalar y configurar GraphDB.
 * [ ] Crear repositorio local EMPKG-lite.
 * [ ] Cargar RDF/Turtle inicial.
@@ -239,9 +256,10 @@ El script valida que:
 El primer KG puede modelar:
 
 ```text
-Sample → partOfStudy → Study
+Sample → belongsToStudy → Study
 Sample → wasCollectedAt → Location
-Sample → hasEnvironment → Environment
+Sample → hasEMPOCategory → EMPOCategory
+Sample → hasEnvironmentDescription → EnvironmentDescription
 ```
 
 Las relaciones con ASVs y taxones se dejarán para fases posteriores, a partir de `taxonomy_table.csv` y `abundance_table.csv`.
@@ -249,9 +267,61 @@ Las relaciones con ASVs y taxones se dejarán para fases posteriores, a partir d
 
 ---
 
+## Artefacto generado: `empkg_v0_test.ttl`
+
+`data/processed/empkg_v0_test.ttl` es el primer artefacto RDF/Turtle del proyecto.
+
+Fue generado por `notebooks/03_to_rdf.ipynb` a partir de:
+
+* `data/samples/kg_v0_test_samples.csv`: subconjunto de 17 muestras, una por cada categoría `empo_3`.
+* `docs/kg_design_v0.md`: diseño conceptual del KG v0.
+
+### Propósito
+
+El Turtle sirve como prueba controlada del modelo RDF v0. No pretende representar todavía el EMP completo ni incluir ASVs, taxones o abundancias. Su objetivo es validar que las entidades, relaciones, URIs, literales tipados y reglas de ausencia funcionan correctamente antes de escalar a más muestras.
+
+### Contenido del grafo generado
+
+Validación obtenida en el notebook:
+
+| Métrica | Valor |
+| ------- | ----- |
+| Triples totales | 588 |
+| `empkg:Sample` | 17 |
+| `empkg:Study` | 15 |
+| `empkg:Location` | 15 |
+| `empkg:EMPOCategory` | 17 |
+| `empkg:EnvironmentDescription` | 17 |
+| `empkg:belongsToStudy` | 17 |
+| `empkg:wasCollectedAt` | 17 |
+| `empkg:hasEMPOCategory` | 17 |
+| `empkg:hasEnvironmentDescription` | 17 |
+| Literales problemáticos (`nan`, `None`, vacío, `unknown`) | 0 |
+
+El número de estudios no coincide con 17 porque varias muestras pueden compartir `study_id`. El número de localizaciones tampoco tiene por qué coincidir con el número de muestras porque `Location` se deduplica mediante la clave geográfica.
+
+### Validaciones realizadas
+
+El notebook valida que:
+
+* El CSV de entrada contiene 17 muestras y las columnas esperadas.
+* No hay `sample_id` duplicados.
+* Las 17 categorías `empo_3` están representadas.
+* Las URIs generadas son deterministas y seguras para Turtle.
+* Los campos ausentes no generan triples RDF.
+* Los campos fisicoquímicos y geográficos se serializan como literales numéricos cuando existen.
+* `biom_total_reads` y `biom_observed_asvs` se serializan como enteros.
+* El Turtle generado puede parsearse de nuevo con `rdflib` sin errores.
+
+### Interpretación
+
+Este artefacto cierra la primera prueba completa CSV → RDF/Turtle del proyecto. La lógica ya está validada en notebook, pero todavía debe consolidarse en un script reproducible (`scripts/03_to_rdf.py`) antes de pasar a GraphDB o a fases más complejas.
+
+---
+
 ## Flujo de trabajo aplicado hasta ahora
 
-Resumen del pipeline tal como existe hoy, repartido entre notebook (exploración) y scripts (lógica reproducible):
+Resumen del pipeline tal como existe hoy, repartido entre notebooks de exploración y scripts reproducibles:
 
 1. Descarga/carga de los dos ficheros EMP iniciales (mapping TSV + BIOM), con comprobación de existencia previa.
 2. Inspección de la estructura HDF5 del BIOM con `h5py` (grupos, datasets, atributos).
@@ -260,18 +330,23 @@ Resumen del pipeline tal como existe hoy, repartido entre notebook (exploración
 5. Validación de coincidencia exacta de IDs entre BIOM y mapping file (incluye comprobación de espacios invisibles).
 6. Normalización preliminar de valores ausentes en el mapping file, usando una lista controlada de marcadores no estándar (`""`, `"unknown"`, `"Missing: Not provided"`, etc.).
 7. Conversión de columnas numéricas del mapping file (coordenadas, métricas físico-químicas, índices de diversidad) en `build_sample_table.py`.
-8. Construcción exploratoria de `sample_stats` (lecturas totales y ASVs observados por muestra) a partir del BIOM.
-9. Join preliminar entre mapping file y `sample_stats` (`how="inner"`), validado por número de filas resultante.
+8. Construcción de `sample_stats` (lecturas totales y ASVs observados por muestra) a partir del BIOM.
+9. Join entre mapping file y `sample_stats`, validado por número de filas resultante.
+10. Selección de `kg_v0_test_samples.csv`: 17 muestras representativas, una por cada `empo_3`.
+11. Diseño RDF v0 en `docs/kg_design_v0.md`.
+12. Conversión de `kg_v0_test_samples.csv` a RDF/Turtle en `notebooks/03_to_rdf.ipynb`.
+13. Generación y validación de `data/processed/empkg_v0_test.ttl`.
 
-Este flujo todavía vive repartido entre el notebook y `build_sample_table.py`; el siguiente paso es consolidarlo íntegramente en el script para que sea reproducible sin depender de ejecutar el notebook.
+El flujo ya demuestra la cadena completa CSV → RDF/Turtle en un subconjunto controlado. El siguiente paso es convertir la lógica del notebook `03_to_rdf.ipynb` en un script reproducible.
 
 ---
 
 ## Registro de avances
-| Fecha        | Avance                                                                                                                                                                                                                                                                                          |
-| ------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| *(sem. 1-3)* | Setup del entorno. Descarga de datos EMP iniciales. Creación de `inspect_data.py`.                                                                                                                                                                                                              |
+| Fecha        | Avance |
+| ------------ | ------ |
+| *(sem. 1-3)* | Setup del entorno. Descarga de datos EMP iniciales. Creación de `inspect_data.py`. |
 | *(sem. 4+)*  | Creación de `inspect_missing_values.py`. Inicio de `build_sample_table.py` (carga, limpieza y conversión numérica del mapping file). Exploración completa del BIOM en `notebooks/00_explore_biom.ipynb` (estadísticas por eje, taxonomía, estructura HDF5, join exploratorio con mapping file). |
+| 2026-07-11 | Completado `notebooks/03_to_rdf.ipynb`: generación del primer RDF/Turtle v0 desde `kg_v0_test_samples.csv`, validación local con `rdflib` y exportación de `data/processed/empkg_v0_test.ttl`. |
 
 > Añadir filas con fecha concreta al ir avanzando.
 
@@ -365,6 +440,15 @@ Pipeline finalizado que construye `sample_table.csv` en `data/processed/`.
 ### `notebooks/00_explore_biom.ipynb`
 Notebook exploratorio; no es pipeline final.
 
+### `notebooks/01_analyze_sample_table.ipynb`
+Notebook de análisis dirigido sobre `sample_table.csv`. Valida cobertura, tipos de datos, consistencia EMPO y selección del subconjunto `kg_v0_test_samples.csv`.
+
+### `notebooks/03_to_rdf.ipynb`
+Notebook de generación RDF v0. Convierte `kg_v0_test_samples.csv` en `empkg_v0_test.ttl`, define namespaces, crea el modelo RDF mínimo, genera nodos y relaciones con `rdflib`, valida conteos y comprueba que no se generan triples para valores ausentes.
+
+### `scripts/03_to_rdf.py`
+Pendiente. Debe consolidar la lógica estable de `notebooks/03_to_rdf.ipynb` en un script reproducible.
+
 **Uso:**
 ```bash
 conda activate empkg
@@ -386,6 +470,7 @@ python scripts/[nombre_del_script].py
 | Usar `biom-format` como interfaz principal           | Leer el HDF5 directamente con `h5py` para todo       | `biom-format` abstrae la complejidad de la matriz dispersa (CSC/CSR) y ofrece métodos validados (`sum`, `nonzero_counts`, `metadata`)                                                                                   |
 | Usar `h5py` solo para inspección estructural         | Reemplazar `biom-format` por `h5py` puro             | `h5py` es útil para entender/depurar la estructura interna, pero `biom-format` es más seguro y mantenible para el pipeline real                                                                                         |
 | Usar GraphDB + SPARQL en vez de Neo4j + Cypher       | Neo4j + Cypher (propuesta inicial)                   | Indicación del tutor; las ontologías ENVO/NCBITaxon/GAZ ya son RDF/OWL nativo, lo que encaja directamente con GraphDB y permite inferencia; evita reimplementar jerarquías ontológicas a mano como en un property graph |
+| Desarrollar primero RDF v0 en notebook antes de script | Crear directamente un script cerrado                  | El notebook ha permitido aprender RDF/RDFLib, validar cada bloque y depurar decisiones de modelado antes de consolidar código reproducible. |
 
 ---
 
@@ -398,7 +483,7 @@ python scripts/[nombre_del_script].py
 - [ ] **¿Conviene guardar todos los valores no cero del BIOM como relaciones del KG?** Con 858.173 valores no nulos y una distribución de cola larga (42,8% de ASVs en una sola muestra), modelar todo podría generar un grafo poco manejable para un TFG.
 - [ ] **¿Conviene filtrar ASVs por abundancia o prevalencia antes de construir el grafo?** Por ejemplo, descartar singletons (38.892 ASVs con abundancia total = 1) podría reducir el ruido sin perder señal ecológica relevante. Pendiente de decidir el umbral.
 - [ ] **Qué partes modularizar en `src/empkg/`:** candidatas identificadas en el notebook (`load_biom_table`, `build_biom_sample_stats`, `extract_taxonomy_preview`, `extract_abundance_for_sample`), pero la estructura concreta del paquete (`src/empkg/io/`, `src/empkg/cleaning/`, etc.) todavía no está decidida.
-- [ ] Pipeline LLM (Fase 1D) queda formalmente aplazado hasta cerrar `docs/kg_design_v0.md`. No se tocará `scripts/02_llm_harmonize.py` hasta entonces.
+- [ ] Pipeline LLM queda formalmente aplazado hasta consolidar primero `scripts/03_to_rdf.py` y validar la carga básica del Turtle en GraphDB. No se tocará `scripts/02_llm_harmonize.py` hasta tener un flujo RDF reproducible.
 
 ---
 
@@ -597,7 +682,8 @@ entidades del KG:
 sample_id          → nodo empkg:Sample
 study_id           → nodo empkg:Study
 country/lat/lon/…  → nodo empkg:Location
-empo_*/env_*/envo_*→ nodo empkg:Environment  (o propiedades de Sample)
+empo_*             → nodo empkg:EMPOCategory
+env_*/envo_*       → nodo empkg:EnvironmentDescription
 ph/temperature/…   → propiedades numéricas de empkg:Sample
 biom_total_reads   → empkg:biomTotalReads (xsd:integer)
 biom_observed_asvs → empkg:biomObservedASVs (xsd:integer)
@@ -606,9 +692,10 @@ biom_observed_asvs → empkg:biomObservedASVs (xsd:integer)
 ### Relaciones iniciales (solo con `sample_table.csv`)
 
 ```text
-Sample  → empkg:partOfStudy    → Study
-Sample  → empkg:wasCollectedAt → Location
-Sample  → empkg:hasEnvironment → Environment
+Sample  → empkg:belongsToStudy            → Study
+Sample  → empkg:wasCollectedAt            → Location
+Sample  → empkg:hasEMPOCategory           → EMPOCategory
+Sample  → empkg:hasEnvironmentDescription → EnvironmentDescription
 ```
 
 ## Diseño del Knowledge Graph v0
@@ -617,6 +704,25 @@ El diseño detallado del KG vive en `docs/kg_design_v0.md` (entidades, propiedad
 relaciones, estrategia de URIs y decisiones abiertas). Este documento es la fuente
 de verdad; no se duplica aquí para evitar que ambos textos diverjan.
 
+
+## Siguiente paso recomendado
+
+El siguiente paso no debería ser todavía el procesamiento LLM ni las abundancias ASV. La prioridad inmediata es convertir la lógica validada en `notebooks/03_to_rdf.ipynb` en un script reproducible:
+
+```text
+notebooks/03_to_rdf.ipynb  →  scripts/03_to_rdf.py
+```
+
+Objetivos del script:
+
+* Leer `data/samples/kg_v0_test_samples.csv` o, más adelante, `data/processed/sample_table.csv`.
+* Generar `data/processed/empkg_v0_test.ttl` de forma reproducible.
+* Incluir validaciones críticas: conteo de clases, conteo de relaciones principales, parseo Turtle y ausencia de literales problemáticos.
+* Separar progresivamente funciones comunes si empiezan a repetirse (`src/empkg/rdf/`, `src/empkg/cleaning/`, etc.).
+
+Después de tener `scripts/03_to_rdf.py`, el siguiente hito lógico será cargar el Turtle en GraphDB y escribir consultas SPARQL básicas sobre el KG v0. Solo después tiene sentido decidir si avanzar hacia mapeo LLM/ENVO o hacia taxonomía/abundancias.
+
+---
 
 ## Entorno y configuración
 | Elemento             | Valor                                    |
