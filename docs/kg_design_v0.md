@@ -116,14 +116,15 @@ Y otro para el vocabulario propio del proyecto:
 https://w3id.org/empkg/ontology/
 ```
 
-Las URIs de recursos seguirán patrones estables y legibles:
+Las URIs de recursos seguirán patrones estables y legibles. En la implementación v0
+se usan sub-namespaces con prefijos `sample:`, `study:`, `loc:`, `empo:` y `envdesc:`:
 
 ```text
-empkg:sample/{sample_id_sanitized}
-empkg:study/{study_id}
-empkg:location/{location_hash}
-empkg:empo-category/{empo_3_sanitized}
-empkg:environment-description/{sample_id_sanitized}
+sample:{sample_id_sanitized}
+study:{study_id_sanitized}
+loc:{country}_lat{lat}_lon{lon}_depth{depth}_alt{alt}_elev{elev}
+empo:{empo_3_sanitized}
+envdesc:{sample_id_sanitized}
 ```
 
 Los valores usados en URIs deberán sanitizarse para evitar espacios, paréntesis, puntos u otros caracteres problemáticos. La sanitización deberá ser determinista, es decir, el mismo valor original siempre debe producir la misma URI.

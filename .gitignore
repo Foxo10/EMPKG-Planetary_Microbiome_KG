@@ -6,8 +6,11 @@
 venv/
 .env
 *.pyc
+*.pytest_cache/
 __pycache__/
 *.txt
+.cursor*
 
 # Documentación
 /docs/abd-ontology
+/docs/CURSOR_WORKFLOW.md
