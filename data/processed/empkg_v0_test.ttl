@@ -55,7 +55,7 @@ sample:1001_SKB7 a empkg:Sample ;
     empkg:salinityPsu 7.15 ;
     empkg:sampleId "1001.SKB7" ;
     empkg:temperatureDegC 15.0 ;
-    empkg:wasCollectedAt loc:united_states_of_america_lat33_194_lonm117_241_depth0_15_alt0_0_elev114_0 .
+    empkg:wasCollectedAt loc:7b67969d8598017d .
 
 sample:1001_SKD6 a empkg:Sample ;
     rdfs:label "Sample 1001.SKD6" ;
@@ -68,7 +68,7 @@ sample:1001_SKD6 a empkg:Sample ;
     empkg:salinityPsu 7.1 ;
     empkg:sampleId "1001.SKD6" ;
     empkg:temperatureDegC 15.0 ;
-    empkg:wasCollectedAt loc:united_states_of_america_lat33_194_lonm117_241_depth0_15_alt0_0_elev114_0 .
+    empkg:wasCollectedAt loc:7b67969d8598017d .
 
 sample:1035_UQ405 a empkg:Sample ;
     rdfs:label "Sample 1035.UQ405" ;
@@ -79,7 +79,7 @@ sample:1035_UQ405 a empkg:Sample ;
     empkg:hasEnvironmentDescription envdesc:1035_UQ405 ;
     empkg:ph 7.98 ;
     empkg:sampleId "1035.UQ405" ;
-    empkg:wasCollectedAt loc:antarctica_latm78_068_lon164_01_depth0_0_alt0_0_elev563_0 .
+    empkg:wasCollectedAt loc:2f468c44361c6ae4 .
 
 sample:1041_M041_100 a empkg:Sample ;
     rdfs:label "Sample 1041.M041.100" ;
@@ -92,7 +92,7 @@ sample:1041_M041_100 a empkg:Sample ;
     empkg:salinityPsu 0.1359 ;
     empkg:sampleId "1041.M041.100" ;
     empkg:temperatureDegC 3.5477 ;
-    empkg:wasCollectedAt loc:united_states_of_america_lat44_737_lonm86_721_depth100_0_alt0_0_elev98_61 .
+    empkg:wasCollectedAt loc:1d8881975e1564b4 .
 
 sample:1453_54432SDZ2_A4_Tfran_feces a empkg:Sample ;
     rdfs:label "Sample 1453.54432SDZ2.A4.Tfran.feces" ;
@@ -102,7 +102,7 @@ sample:1453_54432SDZ2_A4_Tfran_feces a empkg:Sample ;
     empkg:hasEMPOCategory empo:animal_proximal_gut ;
     empkg:hasEnvironmentDescription envdesc:1453_54432SDZ2_A4_Tfran_feces ;
     empkg:sampleId "1453.54432SDZ2.A4.Tfran.feces" ;
-    empkg:wasCollectedAt loc:united_states_of_america_lat32_72_lonm117_16_depth0_0_alt0_0_elev18_57 .
+    empkg:wasCollectedAt loc:c825a93044e3f5f4 .
 
 sample:1521_C2_s_8_1_sequences a empkg:Sample ;
     rdfs:label "Sample 1521.C2.s.8.1.sequences" ;
@@ -113,7 +113,7 @@ sample:1521_C2_s_8_1_sequences a empkg:Sample ;
     empkg:hasEnvironmentDescription envdesc:1521_C2_s_8_1_sequences ;
     empkg:sampleId "1521.C2.s.8.1.sequences" ;
     empkg:temperatureDegC 22.5 ;
-    empkg:wasCollectedAt loc:united_states_of_america_lat40_15_lonm105_03_depth0_0_altna_elev1518_6 .
+    empkg:wasCollectedAt loc:95006212fd6102dc .
 
 sample:1580_A23_number1_filt_D1 a empkg:Sample ;
     rdfs:label "Sample 1580.A23.number1.filt.D1" ;
@@ -124,7 +124,7 @@ sample:1580_A23_number1_filt_D1 a empkg:Sample ;
     empkg:hasEnvironmentDescription envdesc:1580_A23_number1_filt_D1 ;
     empkg:ph 7.33 ;
     empkg:sampleId "1580.A23.number1.filt.D1" ;
-    empkg:wasCollectedAt loc:united_states_of_america_lat37_475383_lonm121_9729_depth0_0_alt0_0_elev0_152 .
+    empkg:wasCollectedAt loc:2752bbd17fa68073 .
 
 sample:1883_2011_491_Crump_Artic_LTREB_main_lane4_NoIndex a empkg:Sample ;
     rdfs:label "Sample 1883.2011.491.Crump.Artic.LTREB.main.lane4.NoIndex" ;
@@ -138,7 +138,7 @@ sample:1883_2011_491_Crump_Artic_LTREB_main_lane4_NoIndex a empkg:Sample ;
     empkg:salinityPsu 30.0 ;
     empkg:sampleId "1883.2011.491.Crump.Artic.LTREB.main.lane4.NoIndex" ;
     empkg:temperatureDegC 5.2 ;
-    empkg:wasCollectedAt loc:united_states_of_america_lat70_06601667_lonm143_1903833_depth0_5_alt0_0_elev0_0 .
+    empkg:wasCollectedAt loc:34e017ee811f4c31 .
 
 sample:2300_BB_4087_anus a empkg:Sample ;
     rdfs:label "Sample 2300.BB.4087.anus" ;
@@ -149,7 +149,7 @@ sample:2300_BB_4087_anus a empkg:Sample ;
     empkg:hasEnvironmentDescription envdesc:2300_BB_4087_anus ;
     empkg:sampleId "2300.BB.4087.anus" ;
     empkg:temperatureDegC 35.0555555556 ;
-    empkg:wasCollectedAt loc:united_states_of_america_lat47_93713_lonm95_98628_depth0_0_alt0_0_elev341_816 .
+    empkg:wasCollectedAt loc:955557caa50f4c34 .
 
 sample:550_L2S103_s_2_sequence a empkg:Sample ;
     rdfs:label "Sample 550.L2S103.s.2.sequence" ;
@@ -159,7 +159,7 @@ sample:550_L2S103_s_2_sequence a empkg:Sample ;
     empkg:hasEMPOCategory empo:animal_surface ;
     empkg:hasEnvironmentDescription envdesc:550_L2S103_s_2_sequence ;
     empkg:sampleId "550.L2S103.s.2.sequence" ;
-    empkg:wasCollectedAt loc:united_states_of_america_lat40_015_lonm105_271_depth0_0_alt0_0_elev1624_1 .
+    empkg:wasCollectedAt loc:b9a6bf0ebdaad90e .
 
 sample:550_L5S119_s_5_sequence a empkg:Sample ;
     rdfs:label "Sample 550.L5S119.s.5.sequence" ;
@@ -169,7 +169,7 @@ sample:550_L5S119_s_5_sequence a empkg:Sample ;
     empkg:hasEMPOCategory empo:animal_secretion ;
     empkg:hasEnvironmentDescription envdesc:550_L5S119_s_5_sequence ;
     empkg:sampleId "550.L5S119.s.5.sequence" ;
-    empkg:wasCollectedAt loc:united_states_of_america_lat40_015_lonm105_271_depth0_0_alt0_0_elev1624_1 .
+    empkg:wasCollectedAt loc:b9a6bf0ebdaad90e .
 
 sample:678_OA_mesocosm_362 a empkg:Sample ;
     rdfs:label "Sample 678.OA.mesocosm.362" ;
@@ -182,7 +182,7 @@ sample:678_OA_mesocosm_362 a empkg:Sample ;
     empkg:salinityPsu 35.4 ;
     empkg:sampleId "678.OA.mesocosm.362" ;
     empkg:temperatureDegC 11.0 ;
-    empkg:wasCollectedAt loc:england_lat50_338_lonm4_148_depth15_0_alt0_0_elev0_0 .
+    empkg:wasCollectedAt loc:0ec3b751290abd0e .
 
 sample:804_3869_1446 a empkg:Sample ;
     rdfs:label "Sample 804.3869.1446" ;
@@ -194,7 +194,7 @@ sample:804_3869_1446 a empkg:Sample ;
     empkg:ph 10.1 ;
     empkg:sampleId "804.3869.1446" ;
     empkg:temperatureDegC 70.0 ;
-    empkg:wasCollectedAt loc:north_atlantic_ocean_lat30_123934_lonm42_120154_depth780_0_alt0_0_elev0_0 .
+    empkg:wasCollectedAt loc:67e6cd94a39dea3b .
 
 sample:807_C_F_10_b a empkg:Sample ;
     rdfs:label "Sample 807.C.F.10.b" ;
@@ -206,7 +206,7 @@ sample:807_C_F_10_b a empkg:Sample ;
     empkg:ph 8.69 ;
     empkg:sampleId "807.C.F.10.b" ;
     empkg:temperatureDegC 10.5 ;
-    empkg:wasCollectedAt loc:united_states_of_america_lat45_942894_lonm106_949183_depth0_0_alt0_0_elev1058_71 .
+    empkg:wasCollectedAt loc:158dae09c069068c .
 
 sample:895_Puhimau_mat_3 a empkg:Sample ;
     rdfs:label "Sample 895.Puhimau.mat.3" ;
@@ -218,7 +218,7 @@ sample:895_Puhimau_mat_3 a empkg:Sample ;
     empkg:ph 3.77 ;
     empkg:sampleId "895.Puhimau.mat.3" ;
     empkg:temperatureDegC 45.7 ;
-    empkg:wasCollectedAt loc:united_states_of_america_lat19_389_lonm155_25_depth0_0_alt0_0_elev88_89 .
+    empkg:wasCollectedAt loc:e46faf72391bc459 .
 
 sample:910_CuracaoCCA5C a empkg:Sample ;
     rdfs:label "Sample 910.CuracaoCCA5C" ;
@@ -228,7 +228,7 @@ sample:910_CuracaoCCA5C a empkg:Sample ;
     empkg:hasEMPOCategory empo:plant_corpus ;
     empkg:hasEnvironmentDescription envdesc:910_CuracaoCCA5C ;
     empkg:sampleId "910.CuracaoCCA5C" ;
-    empkg:wasCollectedAt loc:curacao_island_lat12_10975_lonm68_95636_depth10_0_alt0_0_elev0_0 .
+    empkg:wasCollectedAt loc:871582e809a5d48f .
 
 sample:933_Lu225 a empkg:Sample ;
     rdfs:label "Sample 933.Lu225" ;
@@ -239,7 +239,7 @@ sample:933_Lu225 a empkg:Sample ;
     empkg:hasEnvironmentDescription envdesc:933_Lu225 ;
     empkg:sampleId "933.Lu225" ;
     empkg:temperatureDegC 22.16 ;
-    empkg:wasCollectedAt loc:australia_latm33_966608_lon151_257253_depth9_1_alt0_0_elev0_0 .
+    empkg:wasCollectedAt loc:e4c0c5be343b65ea .
 
 empo:aerosol_non_saline a empkg:EMPOCategory ;
     rdfs:label "Aerosol (non-saline)" ;
@@ -493,34 +493,7 @@ envdesc:933_Lu225 a empkg:EnvironmentDescription ;
     empkg:envoBiome1 "aquatic biome" ;
     empkg:envoBiome2 "marine biome" .
 
-loc:antarctica_latm78_068_lon164_01_depth0_0_alt0_0_elev563_0 a empkg:Location ;
-    rdfs:label "Location -78.068, 164.01" ;
-    schema:latitude -78.068 ;
-    schema:longitude 164.01 ;
-    empkg:altitudeM 0.0 ;
-    empkg:country "GAZ:Antarctica" ;
-    empkg:depthM 0.0 ;
-    empkg:elevationM 563.0 .
-
-loc:australia_latm33_966608_lon151_257253_depth9_1_alt0_0_elev0_0 a empkg:Location ;
-    rdfs:label "Location -33.966608, 151.257253" ;
-    schema:latitude -33.966608 ;
-    schema:longitude 151.257253 ;
-    empkg:altitudeM 0.0 ;
-    empkg:country "GAZ:Australia" ;
-    empkg:depthM 9.1 ;
-    empkg:elevationM 0.0 .
-
-loc:curacao_island_lat12_10975_lonm68_95636_depth10_0_alt0_0_elev0_0 a empkg:Location ;
-    rdfs:label "Location 12.10975, -68.95636" ;
-    schema:latitude 12.10975 ;
-    schema:longitude -68.95636 ;
-    empkg:altitudeM 0.0 ;
-    empkg:country "GAZ:Curacao Island" ;
-    empkg:depthM 10.0 ;
-    empkg:elevationM 0.0 .
-
-loc:england_lat50_338_lonm4_148_depth15_0_alt0_0_elev0_0 a empkg:Location ;
+loc:0ec3b751290abd0e a empkg:Location ;
     rdfs:label "Location 50.338, -4.148" ;
     schema:latitude 50.338 ;
     schema:longitude -4.148 ;
@@ -529,60 +502,7 @@ loc:england_lat50_338_lonm4_148_depth15_0_alt0_0_elev0_0 a empkg:Location ;
     empkg:depthM 15.0 ;
     empkg:elevationM 0.0 .
 
-loc:north_atlantic_ocean_lat30_123934_lonm42_120154_depth780_0_alt0_0_elev0_0 a empkg:Location ;
-    rdfs:label "Location 30.123934, -42.120154" ;
-    schema:latitude 30.123934 ;
-    schema:longitude -42.120154 ;
-    empkg:altitudeM 0.0 ;
-    empkg:country "GAZ:North Atlantic Ocean" ;
-    empkg:depthM 780.0 ;
-    empkg:elevationM 0.0 .
-
-loc:united_states_of_america_lat19_389_lonm155_25_depth0_0_alt0_0_elev88_89 a empkg:Location ;
-    rdfs:label "Location 19.389, -155.25" ;
-    schema:latitude 19.389 ;
-    schema:longitude -155.25 ;
-    empkg:altitudeM 0.0 ;
-    empkg:country "GAZ:United States of America" ;
-    empkg:depthM 0.0 ;
-    empkg:elevationM 88.89 .
-
-loc:united_states_of_america_lat32_72_lonm117_16_depth0_0_alt0_0_elev18_57 a empkg:Location ;
-    rdfs:label "Location 32.72, -117.16" ;
-    schema:latitude 32.72 ;
-    schema:longitude -117.16 ;
-    empkg:altitudeM 0.0 ;
-    empkg:country "GAZ:United States of America" ;
-    empkg:depthM 0.0 ;
-    empkg:elevationM 18.57 .
-
-loc:united_states_of_america_lat37_475383_lonm121_9729_depth0_0_alt0_0_elev0_152 a empkg:Location ;
-    rdfs:label "Location 37.475383, -121.9729" ;
-    schema:latitude 37.475383 ;
-    schema:longitude -121.9729 ;
-    empkg:altitudeM 0.0 ;
-    empkg:country "GAZ:United States of America" ;
-    empkg:depthM 0.0 ;
-    empkg:elevationM 0.152 .
-
-loc:united_states_of_america_lat40_15_lonm105_03_depth0_0_altna_elev1518_6 a empkg:Location ;
-    rdfs:label "Location 40.15, -105.03" ;
-    schema:latitude 40.15 ;
-    schema:longitude -105.03 ;
-    empkg:country "GAZ:United States of America" ;
-    empkg:depthM 0.0 ;
-    empkg:elevationM 1518.6 .
-
-loc:united_states_of_america_lat44_737_lonm86_721_depth100_0_alt0_0_elev98_61 a empkg:Location ;
-    rdfs:label "Location 44.737, -86.721" ;
-    schema:latitude 44.737 ;
-    schema:longitude -86.721 ;
-    empkg:altitudeM 0.0 ;
-    empkg:country "GAZ:United States of America" ;
-    empkg:depthM 100.0 ;
-    empkg:elevationM 98.61 .
-
-loc:united_states_of_america_lat45_942894_lonm106_949183_depth0_0_alt0_0_elev1058_71 a empkg:Location ;
+loc:158dae09c069068c a empkg:Location ;
     rdfs:label "Location 45.942894, -106.949183" ;
     schema:latitude 45.942894 ;
     schema:longitude -106.949183 ;
@@ -591,7 +511,69 @@ loc:united_states_of_america_lat45_942894_lonm106_949183_depth0_0_alt0_0_elev105
     empkg:depthM 0.0 ;
     empkg:elevationM 1058.71 .
 
-loc:united_states_of_america_lat47_93713_lonm95_98628_depth0_0_alt0_0_elev341_816 a empkg:Location ;
+loc:1d8881975e1564b4 a empkg:Location ;
+    rdfs:label "Location 44.737, -86.721" ;
+    schema:latitude 44.737 ;
+    schema:longitude -86.721 ;
+    empkg:altitudeM 0.0 ;
+    empkg:country "GAZ:United States of America" ;
+    empkg:depthM 100.0 ;
+    empkg:elevationM 98.61 .
+
+loc:2752bbd17fa68073 a empkg:Location ;
+    rdfs:label "Location 37.475383, -121.9729" ;
+    schema:latitude 37.475383 ;
+    schema:longitude -121.9729 ;
+    empkg:altitudeM 0.0 ;
+    empkg:country "GAZ:United States of America" ;
+    empkg:depthM 0.0 ;
+    empkg:elevationM 0.152 .
+
+loc:2f468c44361c6ae4 a empkg:Location ;
+    rdfs:label "Location -78.068, 164.01" ;
+    schema:latitude -78.068 ;
+    schema:longitude 164.01 ;
+    empkg:altitudeM 0.0 ;
+    empkg:country "GAZ:Antarctica" ;
+    empkg:depthM 0.0 ;
+    empkg:elevationM 563.0 .
+
+loc:34e017ee811f4c31 a empkg:Location ;
+    rdfs:label "Location 70.06601667, -143.1903833" ;
+    schema:latitude 70.06601667 ;
+    schema:longitude -143.1903833 ;
+    empkg:altitudeM 0.0 ;
+    empkg:country "GAZ:United States of America" ;
+    empkg:depthM 0.5 ;
+    empkg:elevationM 0.0 .
+
+loc:67e6cd94a39dea3b a empkg:Location ;
+    rdfs:label "Location 30.123934, -42.120154" ;
+    schema:latitude 30.123934 ;
+    schema:longitude -42.120154 ;
+    empkg:altitudeM 0.0 ;
+    empkg:country "GAZ:North Atlantic Ocean" ;
+    empkg:depthM 780.0 ;
+    empkg:elevationM 0.0 .
+
+loc:871582e809a5d48f a empkg:Location ;
+    rdfs:label "Location 12.10975, -68.95636" ;
+    schema:latitude 12.10975 ;
+    schema:longitude -68.95636 ;
+    empkg:altitudeM 0.0 ;
+    empkg:country "GAZ:Curacao Island" ;
+    empkg:depthM 10.0 ;
+    empkg:elevationM 0.0 .
+
+loc:95006212fd6102dc a empkg:Location ;
+    rdfs:label "Location 40.15, -105.03" ;
+    schema:latitude 40.15 ;
+    schema:longitude -105.03 ;
+    empkg:country "GAZ:United States of America" ;
+    empkg:depthM 0.0 ;
+    empkg:elevationM 1518.6 .
+
+loc:955557caa50f4c34 a empkg:Location ;
     rdfs:label "Location 47.93713, -95.98628" ;
     schema:latitude 47.93713 ;
     schema:longitude -95.98628 ;
@@ -600,13 +582,31 @@ loc:united_states_of_america_lat47_93713_lonm95_98628_depth0_0_alt0_0_elev341_81
     empkg:depthM 0.0 ;
     empkg:elevationM 341.816 .
 
-loc:united_states_of_america_lat70_06601667_lonm143_1903833_depth0_5_alt0_0_elev0_0 a empkg:Location ;
-    rdfs:label "Location 70.06601667, -143.1903833" ;
-    schema:latitude 70.06601667 ;
-    schema:longitude -143.1903833 ;
+loc:c825a93044e3f5f4 a empkg:Location ;
+    rdfs:label "Location 32.72, -117.16" ;
+    schema:latitude 32.72 ;
+    schema:longitude -117.16 ;
     empkg:altitudeM 0.0 ;
     empkg:country "GAZ:United States of America" ;
-    empkg:depthM 0.5 ;
+    empkg:depthM 0.0 ;
+    empkg:elevationM 18.57 .
+
+loc:e46faf72391bc459 a empkg:Location ;
+    rdfs:label "Location 19.389, -155.25" ;
+    schema:latitude 19.389 ;
+    schema:longitude -155.25 ;
+    empkg:altitudeM 0.0 ;
+    empkg:country "GAZ:United States of America" ;
+    empkg:depthM 0.0 ;
+    empkg:elevationM 88.89 .
+
+loc:e4c0c5be343b65ea a empkg:Location ;
+    rdfs:label "Location -33.966608, 151.257253" ;
+    schema:latitude -33.966608 ;
+    schema:longitude 151.257253 ;
+    empkg:altitudeM 0.0 ;
+    empkg:country "GAZ:Australia" ;
+    empkg:depthM 9.1 ;
     empkg:elevationM 0.0 .
 
 study:1035 a empkg:Study ;
@@ -661,7 +661,7 @@ study:933 a empkg:Study ;
     rdfs:label "Study 933" ;
     empkg:studyId "933" .
 
-loc:united_states_of_america_lat33_194_lonm117_241_depth0_15_alt0_0_elev114_0 a empkg:Location ;
+loc:7b67969d8598017d a empkg:Location ;
     rdfs:label "Location 33.194, -117.241" ;
     schema:latitude 33.194 ;
     schema:longitude -117.241 ;
@@ -670,7 +670,7 @@ loc:united_states_of_america_lat33_194_lonm117_241_depth0_15_alt0_0_elev114_0 a 
     empkg:depthM 0.15 ;
     empkg:elevationM 114.0 .
 
-loc:united_states_of_america_lat40_015_lonm105_271_depth0_0_alt0_0_elev1624_1 a empkg:Location ;
+loc:b9a6bf0ebdaad90e a empkg:Location ;
     rdfs:label "Location 40.015, -105.271" ;
     schema:latitude 40.015 ;
     schema:longitude -105.271 ;

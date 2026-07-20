@@ -1,5 +1,5 @@
 """
-03_to_rdf.py
+csv_to_rdf.py
 
 Genera el RDF/Turtle v0 de EMPKG-lite a partir de un CSV de muestras.
 
@@ -13,13 +13,15 @@ Alcance v0:
     Sample, Study, Location, EMPOCategory, EnvironmentDescription
 
 Uso:
-    python scripts/03_to_rdf.py
-    python scripts/03_to_rdf.py --input data/samples/kg_v0_test_samples.csv --output data/processed/empkg_v0_test.ttl
+    python scripts/csv_to_rdf.py
+    python scripts/csv_to_rdf.py --input data/samples/kg_v0_test_samples.csv --output data/processed/empkg_v0_test.ttl
 """
 
 from __future__ import annotations
 
 import argparse
+import hashlib
+import json
 import re
 import sys
 from decimal import Decimal, InvalidOperation
@@ -134,23 +136,23 @@ EMPO = Namespace("https://w3id.org/empkg/resource/empo-category/")
 ENVDESC = Namespace("https://w3id.org/empkg/resource/environment-description/")
 SCHEMA = Namespace("https://schema.org/")
 
+PROJECT_ROOT = Path(__file__).resolve().parents[1]
 
-def project_root() -> Path:
-    """Detecta la raíz del repositorio desde el cwd o desde scripts/."""
-    cwd = Path.cwd()
-    if cwd.name == "notebooks":
-        return cwd.parent
-    if cwd.name == "scripts" and (cwd.parent / "data").exists():
-        return cwd.parent
-    return cwd
+REQUIRED_NON_NULL_COLUMNS = [
+    "sample_id",
+    "study_id",
+    "empo_1",
+    "empo_2",
+    "empo_3",
+]
 
 
 def default_input_path() -> Path:
-    return project_root() / "data" / "samples" / "kg_v0_test_samples.csv"
+    return PROJECT_ROOT / "data" / "samples" / "kg_v0_test_samples.csv"
 
 
 def default_output_path() -> Path:
-    return project_root() / "data" / "processed" / "empkg_v0_test.ttl"
+    return PROJECT_ROOT / "data" / "processed" / "empkg_v0_test.ttl"
 
 
 # ---------------------------------------------------------------------------
@@ -196,39 +198,43 @@ def sanitize_label_for_uri(value: Any) -> str:
     return text
 
 
-def sanitize_number_for_uri(value: Any) -> str:
-    """Convierte un número en un fragmento seguro para URI."""
+def canonical_decimal_for_location(value: Any) -> str | None:
+    """Normaliza un número para construir una clave de Location estable."""
     if is_missing(value):
-        return "na"
+        return None
 
     try:
         number = Decimal(str(value).strip())
     except (InvalidOperation, ValueError) as exc:
-        raise ValueError(
-            f"No se puede sanitizar como número para URI: {value!r}"
-        ) from exc
+        raise ValueError(f"No se puede normalizar el valor espacial {value!r}") from exc
 
-    text = format(number, "f")
-    if text.startswith("-"):
-        text = "m" + text[1:]
-    text = text.replace(".", "_")
+    if not number.is_finite():
+        raise ValueError(f"El valor espacial no es finito: {value!r}")
+
+    # Evita diferencias entre 0, 0.0 y -0.0.
+    if number == 0:
+        return "0"
+
+    text = format(number.normalize(), "f")
+
+    if "." in text:
+        text = text.rstrip("0").rstrip(".")
+
     return text
 
 
-def sanitize_country_for_location_uri(value: Any) -> str:
-    """Sanitiza el país para usarlo dentro de una URI de Location."""
+def canonical_country_for_location(value: Any) -> str | None:
+    """Normaliza el país para la clave interna de Location."""
     if is_missing(value):
-        return "country_na"
+        return None
 
     text = str(value).strip()
-    if text.startswith("GAZ:"):
-        text = text.replace("GAZ:", "", 1)
 
-    text = text.lower()
-    text = re.sub(r"[^a-zA-Z0-9]+", "_", text)
-    text = text.strip("_")
-    text = re.sub(r"_+", "_", text)
-    return text
+    if text.startswith("GAZ:"):
+        text = text.removeprefix("GAZ:")
+
+    # Normaliza espacios y mayúsculas.
+    return " ".join(text.split()).casefold()
 
 
 # ---------------------------------------------------------------------------
@@ -252,15 +258,38 @@ def make_environment_description_uri(sample_id: Any) -> URIRef:
     return ENVDESC[sanitize_id_for_uri(sample_id)]
 
 
+def make_location_key(row: pd.Series) -> str:
+    """
+    Construye una representación canónica y determinista de la localización.
+    """
+    values = {
+        "country": canonical_country_for_location(row["country"]),
+        "latitude_deg": canonical_decimal_for_location(row["latitude_deg"]),
+        "longitude_deg": canonical_decimal_for_location(row["longitude_deg"]),
+        "depth_m": canonical_decimal_for_location(row["depth_m"]),
+        "altitude_m": canonical_decimal_for_location(row["altitude_m"]),
+        "elevation_m": canonical_decimal_for_location(row["elevation_m"]),
+    }
+
+    # Sin coordenadas no hay evidencia suficiente para afirmar que dos
+    # muestras del mismo país proceden exactamente del mismo lugar.
+    if values["latitude_deg"] is None or values["longitude_deg"] is None:
+        values["sample_id_fallback"] = str(row["sample_id"]).strip()
+
+    return json.dumps(
+        values,
+        ensure_ascii=False,
+        sort_keys=True,
+        separators=(",", ":"),
+    )
+
+
 def make_location_uri(row: pd.Series) -> URIRef:
-    country = sanitize_country_for_location_uri(row["country"])
-    lat = f"lat{sanitize_number_for_uri(row['latitude_deg'])}"
-    lon = f"lon{sanitize_number_for_uri(row['longitude_deg'])}"
-    depth = f"depth{sanitize_number_for_uri(row['depth_m'])}"
-    alt = f"alt{sanitize_number_for_uri(row['altitude_m'])}"
-    elev = f"elev{sanitize_number_for_uri(row['elevation_m'])}"
-    key = "_".join([country, lat, lon, depth, alt, elev])
-    return LOC[key]
+    location_key = make_location_key(row)
+
+    location_hash = hashlib.sha256(location_key.encode("utf-8")).hexdigest()[:16]
+
+    return LOC[location_hash]
 
 
 def make_location_label(row: pd.Series) -> str:
@@ -479,6 +508,12 @@ def load_csv(path: Path) -> pd.DataFrame:
         duplicated = df.loc[df["sample_id"].duplicated(), "sample_id"].tolist()
         raise ValueError(f"Hay sample_id duplicados: {duplicated}")
 
+    for column in REQUIRED_NON_NULL_COLUMNS:
+        missing_mask = df[column].apply(is_missing)
+
+        if missing_mask.any():
+            raise ValueError(f"Hay {int(missing_mask.sum())} filas sin {column}")
+
     return df
 
 
@@ -525,25 +560,46 @@ def _validate_sample_relations(graph: Graph) -> None:
                 )
 
 
-def _validate_location_reuse(graph: Graph) -> None:
-    location_by_sample: dict[URIRef, URIRef] = {}
+def _validate_location_mapping(graph: Graph, df: pd.DataFrame) -> None:
+    """
+    Valida que cada Sample apunte a la Location derivada de su fila de origen.
 
-    for sample_uri in graph.subjects(RDF.type, EMPKG.Sample):
-        locations = list(graph.objects(sample_uri, EMPKG.wasCollectedAt))
-        if len(locations) != 1:
-            continue
-        location_by_sample[sample_uri] = locations[0]
+    Esta comprobación no exige que haya localizaciones reutilizadas: un CSV con
+    una sola muestra o con todas las localizaciones distintas es válido. Cuando
+    dos filas producen la misma clave canónica, ambas deben apuntar a la misma
+    URI. También se detectaría una eventual colisión del hash abreviado si dos
+    claves canónicas diferentes produjeran la misma URI.
+    """
+    key_by_location_uri: dict[URIRef, str] = {}
 
-    location_values = list(location_by_sample.values())
-    if len(location_values) < 2:
-        raise ValueError(
-            "No hay suficientes muestras para comprobar reutilización de Location"
-        )
+    for _, row in df.iterrows():
+        sample_uri = make_sample_uri(row["sample_id"])
+        actual_locations = list(graph.objects(sample_uri, EMPKG.wasCollectedAt))
 
-    if len(set(location_values)) == len(location_values):
-        raise ValueError(
-            "No se detectó reutilización de Location: cada muestra apunta a una URI distinta"
-        )
+        if len(actual_locations) != 1:
+            raise ValueError(
+                f"El Sample {sample_uri} tiene {len(actual_locations)} relaciones "
+                "wasCollectedAt; se esperaba 1"
+            )
+
+        actual_location_uri = actual_locations[0]
+        expected_location_key = make_location_key(row)
+        expected_location_uri = make_location_uri(row)
+
+        if actual_location_uri != expected_location_uri:
+            raise ValueError(
+                f"El Sample {sample_uri} apunta a {actual_location_uri}, pero la "
+                f"Location esperada es {expected_location_uri}"
+            )
+
+        previous_key = key_by_location_uri.get(actual_location_uri)
+        if previous_key is not None and previous_key != expected_location_key:
+            raise ValueError(
+                "Se detectó una colisión de URI de Location: dos claves "
+                f"canónicas distintas producen {actual_location_uri}"
+            )
+
+        key_by_location_uri[actual_location_uri] = expected_location_key
 
 
 def validate_graph(graph: Graph, df: pd.DataFrame) -> dict[str, int]:
@@ -567,6 +623,7 @@ def validate_graph(graph: Graph, df: pd.DataFrame) -> dict[str, int]:
 
     expected_samples = len(df)
     expected_studies = df["study_id"].nunique()
+    expected_locations = len({make_location_key(row) for _, row in df.iterrows()})
     expected_empo = df["empo_3"].nunique()
 
     if summary["samples"] != expected_samples:
@@ -576,6 +633,10 @@ def validate_graph(graph: Graph, df: pd.DataFrame) -> dict[str, int]:
     if summary["studies"] != expected_studies:
         raise ValueError(
             f"Se esperaban {expected_studies} Study, pero hay {summary['studies']}"
+        )
+    if summary["locations"] != expected_locations:
+        raise ValueError(
+            f"Se esperaban {expected_locations} Location, pero hay {summary['locations']}"
         )
     if summary["empo_categories"] != expected_empo:
         raise ValueError(
@@ -605,7 +666,7 @@ def validate_graph(graph: Graph, df: pd.DataFrame) -> dict[str, int]:
         )
 
     _validate_sample_relations(graph)
-    _validate_location_reuse(graph)
+    _validate_location_mapping(graph, df)
 
     return summary
 

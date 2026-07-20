@@ -1,14 +1,26 @@
+# Diseño del Knowledge Graph EMPKG-lite v0
+
+> **Estado: IMPLEMENTADO Y CERRADO.**
+> Este documento describe la especificación del modelo RDF v0 tal como fue diseñado e implementado.
+> Para el diseño del modelo v1 (con ASVs, taxonomía y abundancias) véase `docs/kg_design_v1.md` (pendiente).
+
+---
+
 ## Objetivo
 
 El objetivo de EMPKG-lite v0 es definir un primer modelo RDF pequeño, trazable y validable a partir de `sample_table.csv`. Esta versión no pretende representar todavía todo el Earth Microbiome Project ni incorporar todos los ASVs del fichero BIOM. Su finalidad es establecer una estructura inicial estable para representar muestras, estudios, localizaciones, categorías ambientales EMPO y descripciones ambientales originales.
 
 Se considera una versión v0 porque prioriza simplicidad, validación y aprendizaje del modelo RDF. El mapeo a ontologías externas como ENVO, GAZ o NCBITaxon queda aplazado para fases posteriores.
 
+---
+
 ## Fuentes de datos
 
-El diseño se basa en `data/processed/sample_table.csv`, generado previamente a partir del mapping file de EMP y del fichero BIOM. Para el primer RDF de prueba se utilizará el subconjunto `data/samples/kg_v0_test_samples.csv`, que contiene 17 muestras seleccionadas en el notebook `notebooks/01_analyze_sample_table.ipynb`.
+El diseño se basa en `data/processed/sample_table.csv`, generado a partir del mapping file de EMP y del fichero BIOM. Para el primer RDF de prueba se utilizó el subconjunto `data/samples/kg_v0_test_samples.csv`, que contiene 17 muestras seleccionadas en `notebooks/01_analyze_sample_table.ipynb`.
 
-Este subconjunto incluye una muestra por cada una de las 17 categorías `empo_3`, por lo que permite probar que el modelo inicial cubre todos los tipos ambientales presentes en el subset de 2.000 muestras.
+Este subconjunto incluye una muestra por cada una de las 17 categorías `empo_3`, cubriendo todos los tipos ambientales presentes en el subset de 2.000 muestras.
+
+---
 
 ## Entidades principales
 
@@ -18,16 +30,22 @@ Este subconjunto incluye una muestra por cada una de las 17 categorías `empo_3`
 * `EMPOCategory`: representa la categoría ambiental controlada del EMP, usando `empo_3` como nivel principal.
 * `EnvironmentDescription`: conserva los metadatos ambientales originales de la muestra (`env_biome`, `env_feature`, `env_material` y `envo_biome_*`) sin normalizarlos todavía.
 
+---
+
 ## Relaciones principales
 
-Todo `Sample` se conecta a las otras cuatro entidades mediante exactamente cuatro relaciones. Ninguna de ellas es opcional: si `sample_table.csv` tiene el dato de origen, la relación se genera; si no lo tiene (caso de `Study`, `Location` o `EMPOCategory`, que en la práctica siempre están presentes, o de campos ambientales concretos dentro de `EnvironmentDescription`), no se genera el triple correspondiente, siguiendo el mismo criterio ya fijado para los literales.
+Todo Sample se conecta mediante exactamente cuatro relaciones. El script
+crea los nodos Study, Location, EMPOCategory y EnvironmentDescription para
+cada muestra válida. Cuando falta un valor opcional, se omite únicamente
+el triple de la propiedad literal correspondiente; no se elimina la
+relación principal del Sample.
 
-| Relación                          | Dominio  | Rango                    | Cardinalidad (Sample →) | Nodo destino                                                                     |
-| --------------------------------- | -------- | ------------------------ | ----------------------- | -------------------------------------------------------------------------------- |
-| `empkg:belongsToStudy`            | `Sample` | `Study`                  | exactamente 1           | reutilizable (95 estudios para 2.000 muestras)                                   |
-| `empkg:wasCollectedAt`            | `Sample` | `Location`               | exactamente 1           | reutilizable y deduplicado (~75% de las muestras comparten coordenadas con otra) |
-| `empkg:hasEMPOCategory`           | `Sample` | `EMPOCategory`           | exactamente 1           | reutilizable (17 categorías `empo_3` para 2.000 muestras)                        |
-| `empkg:hasEnvironmentDescription` | `Sample` | `EnvironmentDescription` | exactamente 1           | 1:1 con `Sample` en v0 (ver "Decisiones abiertas")                               |
+| Relación                          | Dominio  | Rango                    | Cardinalidad (Sample →) | Nodo destino                                                            |
+| --------------------------------- | -------- | ------------------------ | ----------------------- | ----------------------------------------------------------------------- |
+| `empkg:belongsToStudy`            | `Sample` | `Study`                  | exactamente 1           | reutilizable (95 estudios para 2.000 muestras)                          |
+| `empkg:wasCollectedAt`            | `Sample` | `Location`               | exactamente 1           | reutilizable y deduplicado (~75% de las muestras comparten coordenadas) |
+| `empkg:hasEMPOCategory`           | `Sample` | `EMPOCategory`           | exactamente 1           | reutilizable (17 categorías `empo_3`)                                   |
+| `empkg:hasEnvironmentDescription` | `Sample` | `EnvironmentDescription` | exactamente 1           | 1:1 con `Sample` en v0                                                  |
 
 ```text
 Sample ──belongsToStudy──────────────> Study
@@ -38,167 +56,196 @@ Sample ──hasEnvironmentDescription───> EnvironmentDescription
 
 **Notas sobre cardinalidad:**
 
-- `belongsToStudy`, `wasCollectedAt` y `hasEMPOCategory` apuntan a nodos **compartidos**: varias muestras del mismo estudio, del mismo punto de muestreo o de la misma categoría EMPO deben apuntar al *mismo* nodo destino, no a copias. Esto es lo que justifica que `Study`, `Location` y `EMPOCategory` sean nodos independientes en vez de propiedades planas de `Sample`.
-- `hasEnvironmentDescription` es, de momento, 1:1 con `Sample` — cada muestra tiene su propia descripción ambiental sin deduplicar. Queda como decisión abierta si en una versión posterior conviene deduplicar por combinación exacta de `env_*`.
-- `empkg:hasEMPOCategory` es el nombre definitivo elegido para esta relación (sustituye a `classifiedAs`, que aparecía como propuesta alternativa en las conclusiones de `01_analyze_sample_table.ipynb`).
+- `belongsToStudy`, `wasCollectedAt` y `hasEMPOCategory` apuntan a nodos **compartidos**: varias muestras del mismo estudio, del mismo punto de muestreo o de la misma categoría EMPO apuntan al *mismo* nodo destino.
+- `hasEnvironmentDescription` es 1:1 con `Sample` en v0. Queda abierto si en v1 conviene deduplicar por combinación exacta de `env_*`.
+- `empkg:hasEMPOCategory` es el nombre definitivo (sustituye a `classifiedAs`, propuesta descartada).
+
+---
 
 ## Literales y propiedades
 
 ### Propiedades de `Sample`
 
 ```text
-sample_id
-ph
-temperature_deg_c
-salinity_psu
-oxygen_mg_per_l
-biom_total_reads
-biom_observed_asvs
+empkg:sampleId          (literal textual)
+empkg:ph                (xsd:decimal, opcional)
+empkg:temperatureDegC   (xsd:decimal, opcional)
+empkg:salinityPsu       (xsd:decimal, opcional)
+empkg:oxygenMgPerL      (xsd:decimal, opcional)
+empkg:biomTotalReads    (xsd:integer)
+empkg:biomObservedASVs  (xsd:integer)
 ```
 
-Los campos fisicoquímicos se consideran opcionales. Si una muestra no tiene valor para una de estas variables, no se generará el triple RDF correspondiente.
+Los campos fisicoquímicos son opcionales. Si una muestra no tiene valor, no se genera el triple.
 
 ### Propiedades de `Study`
 
 ```text
-study_id
+empkg:studyId  (literal textual)
+rdfs:label     (literal textual)
 ```
 
 ### Propiedades de `Location`
 
 ```text
-country
-latitude_deg
-longitude_deg
-depth_m
-elevation_m
-altitude_m
+empkg:country    (literal textual)
+schema:latitude  (xsd:decimal)
+schema:longitude (xsd:decimal)
+empkg:depthM     (xsd:decimal, opcional)
+empkg:altitudeM  (xsd:decimal, opcional)
+empkg:elevationM (xsd:decimal, opcional)
+rdfs:label       (literal textual)
 ```
 
-`Location` se modelará como un nodo reutilizable y deduplicado. La clave de deduplicación inicial combinará país, latitud, longitud, profundidad y elevación cuando estén disponibles.
+`Location` es un nodo reutilizable y deduplicado mediante hash de la clave geográfica (ver sección "Estrategia de URIs").
 
 ### Propiedades de `EMPOCategory`
 
 ```text
-empo_1
-empo_2
-empo_3
-label
+empkg:empo1  (literal textual)
+empkg:empo2  (literal textual)
+empkg:empo3  (literal textual)
+rdfs:label   (literal textual)
 ```
 
-`empo_3` será el identificador principal de la categoría. `empo_1` y `empo_2` se conservarán como contexto jerárquico.
+`empo_3` es el identificador principal. `empo_1` y `empo_2` se conservan como contexto jerárquico.
 
 ### Propiedades de `EnvironmentDescription`
 
 ```text
-env_biome
-env_feature
-env_material
-envo_biome_0
-envo_biome_1
-envo_biome_2
-envo_biome_3
+empkg:envBiome    (literal textual, opcional)
+empkg:envFeature  (literal textual, opcional)
+empkg:envMaterial (literal textual, opcional)
+empkg:envoBiome0  (literal textual, opcional)
+empkg:envoBiome1  (literal textual, opcional)
+empkg:envoBiome2  (literal textual, opcional)
+empkg:envoBiome3  (literal textual, opcional)
 ```
 
-Estos campos se conservarán como literales originales. No se mapearán todavía a URIs ENVO en v0.
+Estos campos se conservan como literales originales. No se mapean todavía a URIs ENVO.
+
+---
 
 ## Estrategia de URIs
 
-Se usará un namespace propio para los recursos del proyecto:
+### Namespaces
 
 ```text
-https://w3id.org/empkg/resource/
+https://w3id.org/empkg/ontology/   → prefijo empkg: (clases y propiedades)
+https://w3id.org/empkg/resource/sample/       → prefijo sample:
+https://w3id.org/empkg/resource/study/        → prefijo study:
+https://w3id.org/empkg/resource/location/     → prefijo loc:
+https://w3id.org/empkg/resource/empo-category/ → prefijo empo:
+https://w3id.org/empkg/resource/environment-description/ → prefijo envdesc:
 ```
 
-Y otro para el vocabulario propio del proyecto:
+### Patrones de URI por entidad
 
 ```text
-https://w3id.org/empkg/ontology/
+sample:   {sample_id_sanitized}
+study:    {study_id_sanitized}
+empo:     {empo_3_sanitized}
+envdesc:  {sample_id_sanitized}
+loc:      {hash_sha256_abreviado}
 ```
 
-Las URIs de recursos seguirán patrones estables y legibles. En la implementación v0
-se usan sub-namespaces con prefijos `sample:`, `study:`, `loc:`, `empo:` y `envdesc:`:
+### Sanitización
 
-```text
-sample:{sample_id_sanitized}
-study:{study_id_sanitized}
-loc:{country}_lat{lat}_lon{lon}_depth{depth}_alt{alt}_elev{elev}
-empo:{empo_3_sanitized}
-envdesc:{sample_id_sanitized}
-```
+Los valores usados en URIs se sanitizan de forma **determinista**:
 
-Los valores usados en URIs deberán sanitizarse para evitar espacios, paréntesis, puntos u otros caracteres problemáticos. La sanitización deberá ser determinista, es decir, el mismo valor original siempre debe producir la misma URI.
+- Para IDs técnicos (`sample_id`, `study_id`): se preservan mayúsculas/minúsculas, se reemplazan caracteres no alfanuméricos por `_`.
+- Para etiquetas controladas (`empo_3`): se convierten a minúsculas, se expanden `(non-saline)` → `non_saline`, `(saline)` → `saline`.
+- ~~Para números en URIs de `Location`: los negativos llevan prefijo `m`, el punto decimal se convierte en `_`.~~
+- Para números en URIs de `Location`: loc:{hash_sha256_abreviado}
 
 Ejemplos:
 
 ```text
-sample_id original:
-550.L1S116.s.1.sequence
-
-URI:
-empkg:sample/550_L1S116_s_1_sequence
+sample_id: 550.L1S116.s.1.sequence → sample:550_L1S116_s_1_sequence
+empo_3:    Soil (non-saline)        → empo:soil_non_saline
 ```
+
+### Deduplicación de `Location`
+
+Las URIs de `Location` se generan mediante un **hash SHA-256 abreviado** calculado sobre una clave canónica que incluye:
 
 ```text
-empo_3 original:
-Soil (non-saline)
-
-URI:
-empkg:empo-category/soil_non_saline
+country + latitude_deg + longitude_deg + depth_m + altitude_m + elevation_m
 ```
 
-Para `Location`, se recomienda generar una clave a partir de los campos normalizados:
+Los valores ausentes se mantienen como valores nulos dentro de la
+representación JSON canónica usada para calcular el hash.
 
-```text
-country + latitude_deg + longitude_deg + depth_m + elevation_m
-```
+**Fallback:** si faltan latitud o longitud, se añade `sample_id` a la clave para evitar fusionar muestras sin evidencia geográfica suficiente de que pertenecen al mismo lugar.
 
-y convertir esa clave en un hash corto o en un identificador sanitizado. Esto permite reutilizar el mismo nodo `Location` cuando varias muestras comparten exactamente el mismo sitio de muestreo.
+---
 
 ## Qué queda fuera de v0
 
-Quedan fuera de EMPKG-lite v0:
+- Los 155.002 ASVs del fichero BIOM y sus abundancias.
+- Los nodos `Taxon` y `TaxonOccurrence`.
+- El mapeo automático de `env_biome`, `env_feature` y `env_material` a ENVO.
+- El mapeo de `country` a URIs GAZ reales.
+- El mapeo de taxonomía microbiana a NCBITaxon.
+- El uso de LLM para armonización de metadatos.
+- La validación SHACL.
+- Consultas SPARQL avanzadas.
 
-* La carga completa de los 155.002 ASVs del fichero BIOM.
-* Las ocurrencias muestra-taxón y sus abundancias.
-* El mapeo automático de `env_biome`, `env_feature` y `env_material` a ENVO.
-* El mapeo de `country` a URIs GAZ reales.
-* El mapeo de taxonomía microbiana a NCBITaxon.
-* El uso de LLM para armonización de metadatos.
-* La validación SHACL.
-* La carga en GraphDB.
-* Consultas SPARQL avanzadas.
+La incorporación de ASVs, taxonomía y abundancias se diseñará en `docs/kg_design_v1.md`.
 
-Estos elementos se aplazan para fases posteriores. La prioridad de v0 es generar un RDF mínimo, correcto y fácil de inspeccionar.
+---
 
-## Decisiones abiertas
+## Estado de implementación
 
-- Decidir si `EnvironmentDescription` será siempre 1:1 con `Sample` o si en futuras versiones se deduplicará por combinación exacta de `env_*`.
-- Decidir si `country`, que aparece con formato tipo `GAZ:United States of America`, se conservará como literal o se mapeará a una URI GAZ/Wikidata.
-- Decidir si `altitude_m` y `elevation_m` deben conservarse ambas en v0 o si una de ellas es redundante.
-- Decidir si `biom_total_reads`, al ser constante, se mantiene como propiedad de cada `Sample` o se mueve más adelante a metadato del dataset.
-- Decidir en qué fase se incorporarán los ASVs y abundancias mediante nodos `TaxonOccurrence`.
+### Script
 
-## Próximo paso: RDF mínimo
+```text
+scripts/csv_to_rdf.py
+```
 
-El siguiente paso será implementar un primer generador RDF que lea `data/samples/kg_v0_test_samples.csv` y produzca un archivo Turtle pequeño, por ejemplo:
+Transforma `data/samples/kg_v0_test_samples.csv` en `data/processed/empkg_v0_test.ttl`.
+Probado también sobre las 2.000 muestras de `data/processed/sample_table.csv`.
 
-`data/processed/empkg_v0_test.ttl`
+### Métricas del grafo generado (subconjunto de 17 muestras)
 
-Este RDF incluirá únicamente:
+| Métrica                           | Valor |
+| --------------------------------- | ----- |
+| Triples totales                   | 588   |
+| `empkg:Sample`                    | 17    |
+| `empkg:Study`                     | 15    |
+| `empkg:Location`                  | 15    |
+| `empkg:EMPOCategory`              | 17    |
+| `empkg:EnvironmentDescription`    | 17    |
+| `empkg:belongsToStudy`            | 17    |
+| `empkg:wasCollectedAt`            | 17    |
+| `empkg:hasEMPOCategory`           | 17    |
+| `empkg:hasEnvironmentDescription` | 17    |
+| Literales problemáticos           | 0     |
 
-- `Sample`
-- `Study`
-- `Location`
-- `EMPOCategory`
-- `EnvironmentDescription`
+El número de `Study` (15) es menor que el de `Sample` (17) porque varias muestras comparten `study_id`. El número de `Location` (15) es menor porque `Location` se deduplica.
 
-No incluirá todavía taxones, ASVs ni abundancias.
+### Validaciones realizadas
 
-Después de generar el Turtle, se validará localmente con `rdflib` comprobando:
+* El Turtle puede parsearse de nuevo con `rdflib` sin errores.
+* Cada `Sample` tiene exactamente las 4 relaciones principales.
+* No se generan triples para valores ausentes (`NaN`, cadenas vacías, `unknown`, etc.).
+* Las URIs de `Location` son deterministas mediante hash SHA-256.
+* Las 17 categorías `empo_3` están representadas como nodos `EMPOCategory`.
+* Los literales numéricos usan los datatypes correctos (`xsd:decimal`, `xsd:integer`).
 
-- que el archivo se puede parsear sin errores;
-- que contiene 17 nodos `Sample`;
-- que contiene 17 categorías `EMPOCategory`;
-- que cada `Sample` tiene exactamente una relación con `Study`, `Location`, `EMPOCategory` y `EnvironmentDescription`;
-- que no se generan triples para valores ausentes.
+### Limitaciones conocidas
+
+* `EnvironmentDescription` es 1:1 con `Sample`: no hay deduplicación aunque dos muestras compartan los mismos campos `env_*`.
+* `country` se conserva como literal con formato `GAZ:United States of America`, sin mapear a URIs GAZ reales.
+* La taxonomía asignada a cada ASV no está todavía en el grafo.
+* El grafo no está cargado todavía en GraphDB.
+
+---
+
+## Decisiones abiertas (para v1)
+
+- ¿`EnvironmentDescription` se deduplicará por combinación exacta de `env_*` en v1?
+- ¿`country` se mapeará a una URI GAZ/Wikidata?
+- ¿`altitude_m` y `elevation_m` son ambos necesarios, o uno es redundante?
+- ¿`biom_total_reads` (constante = 5000) se mantiene por muestra o pasa a metadato del dataset?
+- ¿La relación muestra–ASV se modela como `Sample → hasOccurrence → TaxonOccurrence → observedASV → ASV`?
