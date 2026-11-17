@@ -1,3 +1,13 @@
+# Apuntes de Administración de Bases de Datos aplicados a EMPKG-lite
+
+> **Nota:** 
+> estos apuntes recogen conceptos y propuestas de modelado de la etapa inicial del proyecto.
+>
+> Las decisiones relacionadas con sample_table.csv y RDF v0 son antecedentes históricos 
+> y no constituyen el diseño vigente de la futura ontología OWL.
+>
+> Consultar ../roadmap.md y ../decisions.md para conocer
+> el planteamiento actual del proyecto.
 ## Tema ABD 1 — NoSQL y grafos aplicados a EMPKG-lite
 
 El modelo relacional representa los datos como tablas, filas y columnas. Es útil para la limpieza inicial del EMP, pero el objetivo del TFG requiere representar relaciones entre muestras, estudios, localizaciones, entornos, taxones y ontologías. Por eso el proyecto evoluciona desde `sample_table.csv` hacia un Knowledge Graph.

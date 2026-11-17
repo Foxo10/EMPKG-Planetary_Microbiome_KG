@@ -11,50 +11,52 @@ Este documento reúne los fundamentos científicos, computacionales y semántico
 
 ## Índice
 
-- [Parte I. Fundamentos de bioinformática](#parte-i-fundamentos-de-bioinformatica)
-  - [1.1. Microbiología y microbiomas](#1-1-microbiologia-y-microbiomas)
-  - [1.2. Metataxonomía frente a metagenómica shotgun](#1-2-metataxonomia-frente-a-metagenomica-shotgun)
-  - [1.3. Secuenciación de amplicones y gen 16S](#1-3-secuenciacion-de-amplicones-y-gen-16s)
-  - [1.4. Lecturas, ASVs y OTUs](#1-4-lecturas-asvs-y-otus)
-  - [1.5. Deblur, DADA2 y procesamiento bioinformático](#1-5-deblur-dada2-y-procesamiento-bioinformatico)
-- [Parte II. Datos del Earth Microbiome Project](#parte-ii-datos-del-earth-microbiome-project)
-  - [2.1. Introducción al EMP](#2-1-introduccion-al-emp)
-  - [2.2. EMP Release 1 y datasets disponibles](#2-2-emp-release-1-y-datasets-disponibles)
-  - [2.3. Formato BIOM](#2-3-formato-biom)
-  - [2.4. Formato HDF5](#2-4-formato-hdf5)
-  - [2.5. Matrices dispersas: CSR y CSC](#2-5-matrices-dispersas-csr-y-csc)
-  - [2.6. Librerías biom-format, h5py y Pandas](#2-6-librerias-biom-format-h5py-y-pandas)
-- [Parte III. Interpretación de los datos biológicos](#parte-iii-interpretacion-de-los-datos-biologicos)
-  - [3.1. Recuentos de lecturas](#3-1-recuentos-de-lecturas)
-  - [3.2. Abundancia relativa](#3-2-abundancia-relativa)
-  - [3.3. Riqueza y diversidad](#3-3-riqueza-y-diversidad)
-  - [3.4. Prevalencia](#3-4-prevalencia)
-  - [3.5. Rarefacción](#3-5-rarefaccion)
-  - [3.6. Taxonomía y linajes taxonómicos](#3-6-taxonomia-y-linajes-taxonomicos)
-  - [3.7. Greengenes, SILVA y NCBI Taxonomy](#3-7-greengenes-silva-y-ncbi-taxonomy)
-- [Parte IV. Metadatos ambientales](#parte-iv-metadatos-ambientales)
-  - [4.1. Estructura del mapping file](#4-1-estructura-del-mapping-file)
-  - [4.2. Clasificación EMPO](#4-2-clasificacion-empo)
-  - [4.3. Environment Ontology (ENVO)](#4-3-environment-ontology-envo)
-  - [4.4. Estándar MIxS](#4-4-estandar-mixs)
-  - [4.5. Contexto ambiental y mediciones](#4-5-contexto-ambiental-y-mediciones)
-  - [4.6. Valores ausentes y calidad de datos](#4-6-valores-ausentes-y-calidad-de-datos)
-- [Parte V. Aplicación a EMPKG-lite](#parte-v-aplicacion-a-empkg-lite)
-  - [5.1. Integración de BIOM y mapping file](#5-1-integracion-de-biom-y-mapping-file)
-  - [5.2. Identidad de los recursos](#5-2-identidad-de-los-recursos)
-  - [5.3. Relaciones múltiples y recuentos](#5-3-relaciones-multiples-y-recuentos)
-  - [5.4. Open World Assumption](#5-4-open-world-assumption)
-  - [5.5. Taxonomías y ontologías](#5-5-taxonomias-y-ontologias)
-  - [5.6. Diferencias entre RDF, OWL y SHACL](#5-6-diferencias-entre-rdf-owl-y-shacl)
-  - [5.7. Limitaciones y futuras ampliaciones](#5-7-limitaciones-y-futuras-ampliaciones)
-- [Apéndice A. Organización técnica y reproducibilidad](#apendice-a-organizacion-tecnica-y-reproducibilidad)
-- [Apéndice B. Preguntas de repaso y respuestas corregidas](#apendice-b-preguntas-de-repaso-y-respuestas-corregidas)
-  - [B.1. Fuentes, BIOM y almacenamiento](#b-1-fuentes-biom-y-almacenamiento)
-  - [B.2. Metataxonomía y métricas](#b-2-metataxonomia-y-metricas)
-  - [B.3. Taxonomía](#b-3-taxonomia)
-  - [B.4. Metadatos y semántica](#b-4-metadatos-y-semantica)
-- [Glosario](#glosario)
-- [Referencias y fuentes de estudio](#referencias-y-fuentes-de-estudio)
+- [Fundamentos bioinformáticos y semánticos del Earth Microbiome Project](#fundamentos-bioinformáticos-y-semánticos-del-earth-microbiome-project)
+  - [Índice](#índice)
+  - [Parte I. Fundamentos de bioinformática](#parte-i-fundamentos-de-bioinformática)
+    - [1.1. Microbiología y microbiomas](#11-microbiología-y-microbiomas)
+    - [1.2. Metataxonomía frente a metagenómica shotgun](#12-metataxonomía-frente-a-metagenómica-shotgun)
+    - [1.3. Secuenciación de amplicones y gen 16S](#13-secuenciación-de-amplicones-y-gen-16s)
+    - [1.4. Lecturas, ASVs y OTUs](#14-lecturas-asvs-y-otus)
+    - [1.5. Deblur, DADA2 y procesamiento bioinformático](#15-deblur-dada2-y-procesamiento-bioinformático)
+  - [Parte II. Datos del Earth Microbiome Project](#parte-ii-datos-del-earth-microbiome-project)
+    - [2.1. Introducción al EMP](#21-introducción-al-emp)
+    - [2.2. EMP Release 1 y datasets disponibles](#22-emp-release-1-y-datasets-disponibles)
+    - [2.3. Formato BIOM](#23-formato-biom)
+    - [2.4. Formato HDF5](#24-formato-hdf5)
+    - [2.5. Matrices dispersas: CSR y CSC](#25-matrices-dispersas-csr-y-csc)
+    - [2.6. Librerías biom-format, h5py y Pandas](#26-librerías-biom-format-h5py-y-pandas)
+  - [Parte III. Interpretación de los datos biológicos](#parte-iii-interpretación-de-los-datos-biológicos)
+    - [3.1. Recuentos de lecturas](#31-recuentos-de-lecturas)
+    - [3.2. Abundancia relativa](#32-abundancia-relativa)
+    - [3.3. Riqueza y diversidad](#33-riqueza-y-diversidad)
+    - [3.4. Prevalencia](#34-prevalencia)
+    - [3.5. Rarefacción](#35-rarefacción)
+    - [3.6. Taxonomía y linajes taxonómicos](#36-taxonomía-y-linajes-taxonómicos)
+    - [3.7. Greengenes, SILVA y NCBI Taxonomy](#37-greengenes-silva-y-ncbi-taxonomy)
+  - [Parte IV. Metadatos ambientales](#parte-iv-metadatos-ambientales)
+    - [4.1. Estructura del mapping file](#41-estructura-del-mapping-file)
+    - [4.2. Clasificación EMPO](#42-clasificación-empo)
+    - [4.3. Environment Ontology (ENVO)](#43-environment-ontology-envo)
+    - [4.4. Estándar MIxS](#44-estándar-mixs)
+    - [4.5. Contexto ambiental y mediciones](#45-contexto-ambiental-y-mediciones)
+    - [4.6. Valores ausentes y calidad de datos](#46-valores-ausentes-y-calidad-de-datos)
+  - [Parte V. Aplicación a EMPKG-lite](#parte-v-aplicación-a-empkg-lite)
+    - [5.1. Integración de BIOM y mapping file](#51-integración-de-biom-y-mapping-file)
+    - [5.2. Identidad de los recursos](#52-identidad-de-los-recursos)
+    - [5.3. Relaciones múltiples y recuentos](#53-relaciones-múltiples-y-recuentos)
+    - [5.4. Open World Assumption](#54-open-world-assumption)
+    - [5.5. Taxonomías y ontologías](#55-taxonomías-y-ontologías)
+    - [5.6. Diferencias entre RDF, OWL y SHACL](#56-diferencias-entre-rdf-owl-y-shacl)
+    - [5.7. Limitaciones y futuras ampliaciones](#57-limitaciones-y-futuras-ampliaciones)
+  - [Apéndice A. Organización técnica y reproducibilidad](#apéndice-a-organización-técnica-y-reproducibilidad)
+  - [Apéndice B. Preguntas de repaso y respuestas corregidas](#apéndice-b-preguntas-de-repaso-y-respuestas-corregidas)
+    - [B.1. Fuentes, BIOM y almacenamiento](#b1-fuentes-biom-y-almacenamiento)
+    - [B.2. Metataxonomía y métricas](#b2-metataxonomía-y-métricas)
+    - [B.3. Taxonomía](#b3-taxonomía)
+    - [B.4. Metadatos y semántica](#b4-metadatos-y-semántica)
+  - [Glosario](#glosario)
+  - [Referencias y fuentes de estudio](#referencias-y-fuentes-de-estudio)
 
 ---
 
@@ -70,13 +72,13 @@ La microbiología estudia los microorganismos y sus interacciones. Bacterias, ar
 
 Conviene distinguir:
 
-| Concepto | Significado |
-|---|---|
-| Microorganismo | Organismo microscópico individual. |
-| Microbiota | Conjunto de microorganismos que habitan un entorno. |
-| Microbioma | Comunidad microbiana y, según la definición empleada, su material genético, actividad e interacciones con el entorno. |
-| Muestra (*sample*) | Porción de material recogida para su análisis; no representa necesariamente todo el ecosistema. |
-| Estudio (*study*) | Investigación de procedencia que aporta contexto, objetivos y metodología a un conjunto de muestras. |
+| Concepto           | Significado                                                                                                           |
+| ------------------ | --------------------------------------------------------------------------------------------------------------------- |
+| Microorganismo     | Organismo microscópico individual.                                                                                    |
+| Microbiota         | Conjunto de microorganismos que habitan un entorno.                                                                   |
+| Microbioma         | Comunidad microbiana y, según la definición empleada, su material genético, actividad e interacciones con el entorno. |
+| Muestra (*sample*) | Porción de material recogida para su análisis; no representa necesariamente todo el ecosistema.                       |
+| Estudio (*study*)  | Investigación de procedencia que aporta contexto, objetivos y metodología a un conjunto de muestras.                  |
 
 Un conjunto de muestras constituye una aproximación observacional a las comunidades naturales. La diversidad detectada depende del lugar, el momento, la cantidad de material recogida y el método analítico. La presencia de ADN tampoco demuestra por sí sola que los organismos estén vivos o sean metabólicamente activos.
 
@@ -88,13 +90,13 @@ EMPKG-lite busca integrar datos sobre las comunidades con su contexto. El signif
 
 Ambos enfoques permiten estudiar comunidades microbianas sin cultivar individualmente todos sus miembros, pero analizan información diferente.
 
-| Aspecto | Metataxonomía (amplicones) | Metagenómica shotgun |
-|---|---|---|
-| Material secuenciado | Regiones marcadoras seleccionadas mediante amplificación | Fragmentos del ADN total extraído de la muestra |
-| Objetivo habitual | Caracterizar la composición taxonómica | Caracterizar composición y potencial funcional/genético |
-| Ejemplos de marcadores | 16S rRNA (bacterias/arqueas), ITS (hongos), 18S rRNA (eucariotas) | No depende de un único marcador |
-| Resolución | Limitada por el marcador, longitud y referencia | Puede mejorar la resolución, condicionada por cobertura, referencias y métodos |
-| Procesamiento | Filtrado, inferencia de ASVs o agrupación en OTUs, clasificación | Filtrado, clasificación de lecturas, ensamblaje y/o anotación, entre otras estrategias |
+| Aspecto                | Metataxonomía (amplicones)                                        | Metagenómica shotgun                                                                   |
+| ---------------------- | ----------------------------------------------------------------- | -------------------------------------------------------------------------------------- |
+| Material secuenciado   | Regiones marcadoras seleccionadas mediante amplificación          | Fragmentos del ADN total extraído de la muestra                                        |
+| Objetivo habitual      | Caracterizar la composición taxonómica                            | Caracterizar composición y potencial funcional/genético                                |
+| Ejemplos de marcadores | 16S rRNA (bacterias/arqueas), ITS (hongos), 18S rRNA (eucariotas) | No depende de un único marcador                                                        |
+| Resolución             | Limitada por el marcador, longitud y referencia                   | Puede mejorar la resolución, condicionada por cobertura, referencias y métodos         |
+| Procesamiento          | Filtrado, inferencia de ASVs o agrupación en OTUs, clasificación  | Filtrado, clasificación de lecturas, ensamblaje y/o anotación, entre otras estrategias |
 
 **Alcance del TFG:** el dataset actual procede de secuenciación de amplicones de la región V4 del gen 16S rRNA, con secuencias procesadas de 90 bases [1]. Es metataxonomía, no metagenómica shotgun. No permite deducir por sí solo el genoma completo ni la capacidad metabólica detallada de cada organismo.
 
@@ -128,12 +130,12 @@ El diagrama resume conceptualmente las etapas; no pretende reproducir todos los 
 
 Una **lectura** (*read*) es una secuencia obtenida por el instrumento. Una **ASV** (*Amplicon Sequence Variant*) es una variante de secuencia inferida a partir de las lecturas después de controlar errores. Una **OTU** (*Operational Taxonomic Unit*) es una unidad operacional que agrupa secuencias según un procedimiento definido, frecuentemente basado en similitud.
 
-| ASV | OTU tradicional |
-|---|---|
-| Identificada por una secuencia concreta en el contexto de la región procesada | Identificada por un clúster, referencia o secuencia representativa |
-| Puede distinguir diferencias reales de un nucleótido | Puede reunir secuencias parecidas bajo un umbral |
-| Se obtiene mediante inferencia/denoising | Se obtiene mediante agrupación o asignación a clústeres de referencia |
-| No equivale necesariamente a una especie | Tampoco equivale necesariamente a una especie |
+| ASV                                                                           | OTU tradicional                                                       |
+| ----------------------------------------------------------------------------- | --------------------------------------------------------------------- |
+| Identificada por una secuencia concreta en el contexto de la región procesada | Identificada por un clúster, referencia o secuencia representativa    |
+| Puede distinguir diferencias reales de un nucleótido                          | Puede reunir secuencias parecidas bajo un umbral                      |
+| Se obtiene mediante inferencia/denoising                                      | Se obtiene mediante agrupación o asignación a clústeres de referencia |
+| No equivale necesariamente a una especie                                      | Tampoco equivale necesariamente a una especie                         |
 
 El 97 % utilizado históricamente para muchas OTUs es un umbral de **identidad de secuencia**, no una medida de sensibilidad ni de certeza taxonómica. Los algoritmos y sus parámetros pueden variar. Los métodos ASV surgieron como alternativa de mayor resolución a las OTUs tradicionales; no hay una regla general de que las OTUs estén sustituyendo a las ASVs [2].
 
@@ -175,10 +177,10 @@ La publicación de Release 1 incluye tablas de variantes Deblur y tablas de OTUs
 
 **Archivos utilizados en el notebook:**
 
-| Archivo | Contenido | Tamaño observado |
-|---|---|---:|
-| `emp_deblur_90bp.subset_2k.rare_5000.biom` | Matriz de recuentos y taxonomía por ASV | 53,8 MiB |
-| `emp_qiime_mapping_subset_2k.tsv` | Metadatos de las muestras | 1,5 MiB |
+| Archivo                                    | Contenido                               | Tamaño observado |
+| ------------------------------------------ | --------------------------------------- | ---------------: |
+| `emp_deblur_90bp.subset_2k.rare_5000.biom` | Matriz de recuentos y taxonomía por ASV |         53,8 MiB |
+| `emp_qiime_mapping_subset_2k.tsv`          | Metadatos de las muestras               |          1,5 MiB |
 
 Fuente: [EMP Release 1](https://ftp.microbio.me/emp/release1/). Se almacenan en `data/raw/emp/release1/` y no se versionan en Git. El archivo BIOM actual tiene profundidad 5.000 lecturas y 2.000 muestras; no debe extrapolarse ese requisito a todas las tablas EMP.
 
@@ -215,27 +217,27 @@ BIOM (*Biological Observation Matrix*) define una estructura para matrices de ob
 
 Ejemplo ficticio de una matriz de recuentos:
 
-| Observación | S1 | S2 | S3 |
-|---|---:|---:|---:|
-| ASV1 | 25 | 0 | 75 |
-| ASV2 | 0 | 10 | 20 |
-| ASV3 | 30 | 40 | 0 |
+| Observación |   S1 |   S2 |   S3 |
+| ----------- | ---: | ---: | ---: |
+| ASV1        |   25 |    0 |   75 |
+| ASV2        |    0 |   10 |   20 |
+| ASV3        |   30 |   40 |    0 |
 
 La celda ASV1–S1 contiene 25 lecturas. No almacena la secuencia, los metadatos ambientales ni 25 microorganismos. Los IDs de ambas dimensiones y las anotaciones se almacenan aparte. El valor cero significa que no se registran lecturas para ese par en la tabla procesada: no demuestra la ausencia biológica en el entorno.
 
 **Resultados EMP (notebook, secciones 4, 5 y 6):**
 
-| Magnitud | Valor |
-|---|---:|
-| Versión BIOM | 2.1 |
-| Filas (ASVs distintas) | 155.002 |
-| Columnas (muestras) | 2.000 |
-| Posiciones posibles | 310.004.000 |
-| Elementos no cero (`nnz`) | 858.173 |
-| Densidad | 0,2768 % |
-| Longitud de todas las secuencias | 90 bases |
-| Lecturas totales retenidas | 10.000.000 |
-| Lecturas por muestra | 5.000 |
+| Magnitud                         |       Valor |
+| -------------------------------- | ----------: |
+| Versión BIOM                     |         2.1 |
+| Filas (ASVs distintas)           |     155.002 |
+| Columnas (muestras)              |       2.000 |
+| Posiciones posibles              | 310.004.000 |
+| Elementos no cero (`nnz`)        |     858.173 |
+| Densidad                         |    0,2768 % |
+| Longitud de todas las secuencias |    90 bases |
+| Lecturas totales retenidas       |  10.000.000 |
+| Lecturas por muestra             |       5.000 |
 
 `nnz` significa *number of nonzero elements*, no número de valores no nulos ni número de lecturas. Cada ASV puede contribuir a muchas posiciones no cero. El atributo `type = OTU table` es una categoría de la especificación BIOM, no evidencia de que las observaciones se hayan construido por clustering de OTUs.
 
@@ -293,11 +295,11 @@ BIOM mantiene dos orientaciones de la matriz para acceso eficiente a ambos ejes 
 
 La misma información se ordena de manera distinta; no son dos conjuntos independientes de abundancias. Ambas orientaciones utilizan tres arrays:
 
-| Array | Significado |
-|---|---|
-| `data` | Recuentos almacenados (en nuestro caso positivos). |
+| Array     | Significado                                                  |
+| --------- | ------------------------------------------------------------ |
+| `data`    | Recuentos almacenados (en nuestro caso positivos).           |
 | `indices` | Posiciones del eje contrario: columnas en CSR, filas en CSC. |
-| `indptr` | Límites de cada fila o columna dentro de `data` e `indices`. |
+| `indptr`  | Límites de cada fila o columna dentro de `data` e `indices`. |
 
 Ejemplo ficticio:
 
@@ -328,14 +330,14 @@ La matriz dispersa permite evitar materializar los más de 310 millones de pares
 
 `biom-format` proporciona una API especializada, mientras que `h5py` facilita el acceso a la estructura física. Pandas permite trabajar con tablas, series indexadas, filtros, uniones y agregaciones. NumPy aporta operaciones numéricas; Matplotlib permite visualizar resultados de manera exploratoria.
 
-| Operación | API |
-|---|---|
-| Cargar tabla | `biom.load_table(str(BIOM_PATH))` |
-| Dimensiones | `table.shape` |
-| Identificadores | `table.ids(axis="sample")` o `axis="observation"` |
-| Vector de recuentos | `table.data(id, axis=...)` |
-| Recuento de un par | `table.get_value_by_ids(asv_id, sample_id)` |
-| Metadatos | `table.metadata(id=asv_id, axis="observation")` |
+| Operación                           | API                                                     |
+| ----------------------------------- | ------------------------------------------------------- |
+| Cargar tabla                        | `biom.load_table(str(BIOM_PATH))`                       |
+| Dimensiones                         | `table.shape`                                           |
+| Identificadores                     | `table.ids(axis="sample")` o `axis="observation"`       |
+| Vector de recuentos                 | `table.data(id, axis=...)`                              |
+| Recuento de un par                  | `table.get_value_by_ids(asv_id, sample_id)`             |
+| Metadatos                           | `table.metadata(id=asv_id, axis="observation")`         |
 | Sumas y número de elementos no cero | `table.sum(axis=...)`, `table.nonzero_counts(axis=...)` |
 
 Ejemplo aplicado al notebook:
@@ -401,14 +403,14 @@ Las proporciones son composicionales: si aumenta una parte manteniendo un total 
 
 La riqueza observada de una muestra es el número de ASVs con recuento positivo. Dos muestras con cinco ASVs pueden tener igual riqueza y distinta distribución de lecturas: una con cinco recuentos iguales y otra dominada por una sola ASV.
 
-| ASV | Muestra A | Muestra B |
-|---|---:|---:|
-| A | 20 | 96 |
-| B | 20 | 1 |
-| C | 20 | 1 |
-| D | 20 | 1 |
-| E | 20 | 1 |
-| Total | 100 | 100 |
+| ASV   | Muestra A | Muestra B |
+| ----- | --------: | --------: |
+| A     |        20 |        96 |
+| B     |        20 |         1 |
+| C     |        20 |         1 |
+| D     |        20 |         1 |
+| E     |        20 |         1 |
+| Total |       100 |       100 |
 
 Ambas tienen riqueza 5. La diversidad alfa describe características de una comunidad dentro de una muestra: índices como Shannon incorporan riqueza y distribución relativa; Simpson también considera la dominancia. La diversidad beta describe diferencias entre comunidades. Estos índices no se han calculado en profundidad en el notebook porque el TFG se centra en la integración semántica.
 
@@ -465,15 +467,15 @@ La taxonomía clasifica organismos. Un **taxón** es un grupo concreto de organi
 
 **Ejemplo real de la primera ASV del BIOM:**
 
-| Rango en el dataset | Anotación original | Interpretación |
-|---|---|---|
-| kingdom | `k__Bacteria` | Bacteria |
-| phylum | `p__Proteobacteria` | Proteobacteria |
-| class | `c__Gammaproteobacteria` | Gammaproteobacteria |
-| order | `o__Alteromonadales` | Alteromonadales |
-| family | `f__Alteromonadaceae` | Alteromonadaceae |
-| genus | `g__Marinimicrobium` | Marinimicrobium |
-| species | `s__` | Sin asignación |
+| Rango en el dataset | Anotación original       | Interpretación      |
+| ------------------- | ------------------------ | ------------------- |
+| kingdom             | `k__Bacteria`            | Bacteria            |
+| phylum              | `p__Proteobacteria`      | Proteobacteria      |
+| class               | `c__Gammaproteobacteria` | Gammaproteobacteria |
+| order               | `o__Alteromonadales`     | Alteromonadales     |
+| family              | `f__Alteromonadaceae`    | Alteromonadaceae    |
+| genus               | `g__Marinimicrobium`     | Marinimicrobium     |
+| species             | `s__`                    | Sin asignación      |
 
 `kingdom` y `k__` son etiquetas del esquema original; Bacteria y Archaea se suelen considerar dominios. Se conserva la nomenclatura de origen antes de armonizarla. Una asignación vacía no afirma que el organismo carezca de especie o género. La presencia de una etiqueta tampoco demuestra certeza de clasificación.
 
@@ -481,15 +483,15 @@ La función `parse_taxonomy()` del notebook separa prefijos y valores, mantiene 
 
 **Cobertura empírica:** selección aleatoria sin reemplazo de 5.000 ASVs (semilla 42), obtenida tras corregir el parser.
 
-| Rango | Con asignación | Sin asignación | Cobertura |
-|---|---:|---:|---:|
-| kingdom | 4.996 | 4 | 99,92 % |
-| phylum | 4.396 | 604 | 87,92 % |
-| class | 3.814 | 1.186 | 76,28 % |
-| order | 2.977 | 2.023 | 59,54 % |
-| family | 1.769 | 3.231 | 35,38 % |
-| genus | 696 | 4.304 | 13,92 % |
-| species | 85 | 4.915 | 1,70 % |
+| Rango   | Con asignación | Sin asignación | Cobertura |
+| ------- | -------------: | -------------: | --------: |
+| kingdom |          4.996 |              4 |   99,92 % |
+| phylum  |          4.396 |            604 |   87,92 % |
+| class   |          3.814 |          1.186 |   76,28 % |
+| order   |          2.977 |          2.023 |   59,54 % |
+| family  |          1.769 |          3.231 |   35,38 % |
+| genus   |            696 |          4.304 |   13,92 % |
+| species |             85 |          4.915 |    1,70 % |
 
 La cobertura cae hacia los rangos específicos. Solo 85 de las 5.000 ASVs seleccionadas disponen de anotación a nivel de especie. Son proporciones de disponibilidad de anotaciones, **no porcentajes de precisión** ni proporciones de muestras biológicas. No son una evaluación exhaustiva de las 155.002 ASVs ni una medida de abundancia de organismos.
 
@@ -508,12 +510,12 @@ En el notebook original se sobrescribían los índices aleatorios por los primer
 
 ### 3.7. Greengenes, SILVA y NCBI Taxonomy
 
-| Recurso | Papel |
-|---|---|
-| Greengenes | Referencia de secuencias 16S y clasificación taxonómica; el notebook documenta Greengenes 13.8 para el dataset histórico. |
-| SILVA | Referencia de secuencias ribosómicas y anotaciones; útil para nuevas clasificaciones y tablas OTU. |
-| RDP | Referencia y herramientas de clasificación de secuencias ribosómicas. |
-| GTDB | Clasificación de bacterias y arqueas basada en datos genómicos. |
+| Recurso       | Papel                                                                                                                            |
+| ------------- | -------------------------------------------------------------------------------------------------------------------------------- |
+| Greengenes    | Referencia de secuencias 16S y clasificación taxonómica; el notebook documenta Greengenes 13.8 para el dataset histórico.        |
+| SILVA         | Referencia de secuencias ribosómicas y anotaciones; útil para nuevas clasificaciones y tablas OTU.                               |
+| RDP           | Referencia y herramientas de clasificación de secuencias ribosómicas.                                                            |
+| GTDB          | Clasificación de bacterias y arqueas basada en datos genómicos.                                                                  |
 | NCBI Taxonomy | Identificadores y clasificación de organismos en recursos NCBI. NCBITaxon ofrece una representación ontológica de esa taxonomía. |
 
 Dos ASVs pueden compartir el mismo linaje. A su vez, una ASV puede recibir clasificaciones diferentes según el procedimiento y la versión de la referencia. No es correcto sobrescribir una anotación por otra automáticamente, ni suponer que una referencia es siempre mejor.
@@ -532,17 +534,17 @@ Para el futuro KG conviene distinguir secuencia, anotación, taxón y procedenci
 
 El TSV aporta el contexto de las muestras. Tiene 2.000 filas y 76 columnas. Los IDs `#SampleID` coinciden con los IDs del eje `sample` del BIOM. `study_id` identifica el estudio de procedencia y no sustituye al identificador de muestra.
 
-| Familia de campos | Ejemplos | Qué describe |
-|---|---|---|
-| Identidad y procedencia | `#SampleID`, `study_id`, `doi`, `ebi_accession` | Muestras, estudios, publicaciones y accesiones |
-| Metodología | `target_gene`, `target_subfragment`, `pcr_primers` | Marcador y procesamiento experimental |
-| Clasificación ambiental | `empo_0` a `empo_3` | Categorías del EMP |
-| Descripción ambiental | `env_biome`, `env_feature`, `env_material` | Contexto, entidad ambiental local, material |
-| Jerarquía de biomas | `envo_biome_0` a `envo_biome_5` | Ruta de etiquetas de bioma proporcionada por EMP |
-| Geografía | `country`, `latitude_deg`, `longitude_deg`, `depth_m`, `altitude_m`, `elevation_m` | Localización y posición |
-| Fisicoquímica | `ph`, `temperature_deg_c`, `salinity_psu`, `oxygen_mg_per_l` y nutrientes | Mediciones del ambiente |
-| Huésped | `host_taxid`, `host_genus`, `host_species` | Clasificación del organismo huésped, no de las ASVs |
-| Datos derivados | `adiv_observed_otus`, `adiv_shannon`, campos `observations_*` | Métricas proporcionadas por el EMP; verificar método antes de compararlas |
+| Familia de campos       | Ejemplos                                                                           | Qué describe                                                              |
+| ----------------------- | ---------------------------------------------------------------------------------- | ------------------------------------------------------------------------- |
+| Identidad y procedencia | `#SampleID`, `study_id`, `doi`, `ebi_accession`                                    | Muestras, estudios, publicaciones y accesiones                            |
+| Metodología             | `target_gene`, `target_subfragment`, `pcr_primers`                                 | Marcador y procesamiento experimental                                     |
+| Clasificación ambiental | `empo_0` a `empo_3`                                                                | Categorías del EMP                                                        |
+| Descripción ambiental   | `env_biome`, `env_feature`, `env_material`                                         | Contexto, entidad ambiental local, material                               |
+| Jerarquía de biomas     | `envo_biome_0` a `envo_biome_5`                                                    | Ruta de etiquetas de bioma proporcionada por EMP                          |
+| Geografía               | `country`, `latitude_deg`, `longitude_deg`, `depth_m`, `altitude_m`, `elevation_m` | Localización y posición                                                   |
+| Fisicoquímica           | `ph`, `temperature_deg_c`, `salinity_psu`, `oxygen_mg_per_l` y nutrientes          | Mediciones del ambiente                                                   |
+| Huésped                 | `host_taxid`, `host_genus`, `host_species`                                         | Clasificación del organismo huésped, no de las ASVs                       |
+| Datos derivados         | `adiv_observed_otus`, `adiv_shannon`, campos `observations_*`                      | Métricas proporcionadas por el EMP; verificar método antes de compararlas |
 
 La carga deliberadamente preserva texto y marcadores originales:
 
@@ -577,26 +579,26 @@ empo_0: EMP sample (2000)
 
 Distribución de las 17 categorías del nivel 3, obtenida en la ejecución del notebook:
 
-| empo_3 | Muestras |
-|---|---:|
-| Aerosol (non-saline) | 81 |
-| Sediment (non-saline) | 128 |
-| Soil (non-saline) | 129 |
-| Surface (non-saline) | 128 |
-| Water (non-saline) | 129 |
-| Hypersaline (saline) | 13 |
-| Sediment (saline) | 128 |
-| Surface (saline) | 117 |
-| Water (saline) | 128 |
-| Animal corpus | 128 |
-| Animal distal gut | 128 |
-| Animal proximal gut | 128 |
-| Animal secretion | 113 |
-| Animal surface | 143 |
-| Plant corpus | 123 |
-| Plant rhizosphere | 128 |
-| Plant surface | 128 |
-| **Total** | **2.000** |
+| empo_3                |  Muestras |
+| --------------------- | --------: |
+| Aerosol (non-saline)  |        81 |
+| Sediment (non-saline) |       128 |
+| Soil (non-saline)     |       129 |
+| Surface (non-saline)  |       128 |
+| Water (non-saline)    |       129 |
+| Hypersaline (saline)  |        13 |
+| Sediment (saline)     |       128 |
+| Surface (saline)      |       117 |
+| Water (saline)        |       128 |
+| Animal corpus         |       128 |
+| Animal distal gut     |       128 |
+| Animal proximal gut   |       128 |
+| Animal secretion      |       113 |
+| Animal surface        |       143 |
+| Plant corpus          |       123 |
+| Plant rhizosphere     |       128 |
+| Plant surface         |       128 |
+| **Total**             | **2.000** |
 
 El nivel 0 es constante en este dataset; la distinción entre ambientes de vida libre y asociados a huéspedes corresponde al nivel 1. La ontología EMPO contiene categorías adicionales como controles y otros tipos de asociación que no están presentes en esta tabla. Las 17 categorías no constituyen un catálogo universal. La distribución casi equilibrada obedece al diseño de selección de muestras; no estima la frecuencia ambiental global [1].
 
@@ -610,11 +612,11 @@ ENVO es una ontología de alcance general para describir entidades y procesos am
 
 Los tres campos ambientales describen facetas complementarias:
 
-| Campo | Pregunta | Ejemplo conceptual |
-|---|---|---|
-| `env_biome` | ¿En qué contexto ecológico amplio? | Bosque templado |
-| `env_feature` | ¿Qué entidad ambiental local? | Río |
-| `env_material` | ¿Qué material se muestreó o rodeaba a la muestra? | Sedimento fluvial |
+| Campo          | Pregunta                                          | Ejemplo conceptual |
+| -------------- | ------------------------------------------------- | ------------------ |
+| `env_biome`    | ¿En qué contexto ecológico amplio?                | Bosque templado    |
+| `env_feature`  | ¿Qué entidad ambiental local?                     | Río                |
+| `env_material` | ¿Qué material se muestreó o rodeaba a la muestra? | Sedimento fluvial  |
 
 Un río no constituye necesariamente una subclase de bosque y el sedimento no es una subclase de río. Son conceptos relacionados mediante otros tipos de relaciones. No debe deducirse una jerarquía OWL de las tres columnas por su orden.
 
@@ -632,11 +634,11 @@ MIxS (*Minimum Information about any (x) Sequence*) es un estándar del Genomic 
 
 Las denominaciones históricas del EMP se corresponden conceptualmente con los siguientes campos de MIxS:
 
-| Campo EMP | Campo MIxS | Función |
-|---|---|---|
-| `env_biome` | `env_broad_scale` | Contexto ambiental amplio |
-| `env_feature` | `env_local_scale` | Contexto local |
-| `env_material` | `env_medium` | Medio o material |
+| Campo EMP      | Campo MIxS        | Función                   |
+| -------------- | ----------------- | ------------------------- |
+| `env_biome`    | `env_broad_scale` | Contexto ambiental amplio |
+| `env_feature`  | `env_local_scale` | Contexto local            |
+| `env_material` | `env_medium`      | Medio o material          |
 
 Es una correspondencia conceptual, no una conversión automática. No renombramos los campos originales hasta definir una política de integración compatible con la versión del estándar que utilicemos.
 
@@ -677,23 +679,23 @@ La máscara indica `True` cuando falta información. `missing_mask.sum()` cuenta
 
 **Cobertura observada en EMP:** porcentajes sobre 2.000 muestras.
 
-| Campo | Disponibles | Ausentes | Cobertura |
-|---|---:|---:|---:|
-| `#SampleID`, `study_id`, `empo_0`–`empo_3`, `env_biome`, `env_feature`, `env_material` (cada uno) | 2.000 | 0 | 100 % |
-| `envo_biome_0`, `envo_biome_1` (cada uno) | 2.000 | 0 | 100 % |
-| `envo_biome_2` | 1.967 | 33 | 98,35 % |
-| `envo_biome_3` | 1.443 | 557 | 72,15 % |
-| `envo_biome_4` | 840 | 1.160 | 42,00 % |
-| `envo_biome_5` | 78 | 1.922 | 3,90 % |
-| `country` | 2.000 | 0 | 100 % |
-| `latitude_deg`, `longitude_deg` (cada uno) | 1.998 | 2 | 99,90 % |
-| `depth_m` | 1.750 | 250 | 87,50 % |
-| `altitude_m` | 1.919 | 81 | 95,95 % |
-| `elevation_m` | 1.981 | 19 | 99,05 % |
-| `temperature_deg_c` | 411 | 1.589 | 20,55 % |
-| `ph` | 284 | 1.716 | 14,20 % |
-| `salinity_psu` | 121 | 1.879 | 6,05 % |
-| `oxygen_mg_per_l` | 26 | 1.974 | 1,30 % |
+| Campo                                                                                             | Disponibles | Ausentes | Cobertura |
+| ------------------------------------------------------------------------------------------------- | ----------: | -------: | --------: |
+| `#SampleID`, `study_id`, `empo_0`–`empo_3`, `env_biome`, `env_feature`, `env_material` (cada uno) |       2.000 |        0 |     100 % |
+| `envo_biome_0`, `envo_biome_1` (cada uno)                                                         |       2.000 |        0 |     100 % |
+| `envo_biome_2`                                                                                    |       1.967 |       33 |   98,35 % |
+| `envo_biome_3`                                                                                    |       1.443 |      557 |   72,15 % |
+| `envo_biome_4`                                                                                    |         840 |    1.160 |   42,00 % |
+| `envo_biome_5`                                                                                    |          78 |    1.922 |    3,90 % |
+| `country`                                                                                         |       2.000 |        0 |     100 % |
+| `latitude_deg`, `longitude_deg` (cada uno)                                                        |       1.998 |        2 |   99,90 % |
+| `depth_m`                                                                                         |       1.750 |      250 |   87,50 % |
+| `altitude_m`                                                                                      |       1.919 |       81 |   95,95 % |
+| `elevation_m`                                                                                     |       1.981 |       19 |   99,05 % |
+| `temperature_deg_c`                                                                               |         411 |    1.589 |   20,55 % |
+| `ph`                                                                                              |         284 |    1.716 |   14,20 % |
+| `salinity_psu`                                                                                    |         121 |    1.879 |    6,05 % |
+| `oxygen_mg_per_l`                                                                                 |          26 |    1.974 |    1,30 % |
 
 **Cobertura no equivale a calidad.** La presencia de texto no certifica unidades correctas, formatos numéricos válidos, exactitud geográfica o correspondencia con una ontología. La ausencia puede ser legítima, por ejemplo, cuando una medición no era aplicable. No eliminar muestras simplemente por no tener pH o salinidad, ni seleccionar únicamente casos completos para validar el KG: se introducirían sesgos y no comprobaríamos su comportamiento con información incompleta.
 
@@ -735,7 +737,7 @@ integrated_preview = mapping_preview.join(
 assert len(integrated_preview) == len(sample_ids)
 ```
 
-El ejemplo es una variante abreviada de la unión del notebook, que selecciona campos concretos. Permite consultar las métricas de muestras de suelo y sus descripciones ambientales. No sustituye al script `build_sample_table.py` ni valida todo el pipeline.
+El ejemplo es una variante abreviada de la unión del notebook, que selecciona campos concretos. Permite consultar las métricas de muestras de suelo y sus descripciones ambientales. Esta integración tiene una finalidad exploratoria y didáctica. No constituye el pipeline definitivo de procesamiento y población del Knowledge Graph, que se desarrollará conforme a la futura ontología OWL.
 
 En una futura tabla OTU, los conjuntos de IDs podrían no ser idénticos al TSV. En ese caso, antes de imponer una igualdad estricta habrá que definir el subconjunto de muestras analizado y registrar exclusiones y sus causas. Una unión interna sin comprobaciones puede eliminar silenciosamente muestras.
 
@@ -745,14 +747,14 @@ En una futura tabla OTU, los conjuntos de IDs podrían no ser idénticos al TSV.
 
 RDF identifica recursos mediante IRIs. Una estrategia de identificación debe distinguir recursos del dominio de registros de origen. Los identificadores de muestra y ASV se han comprobado únicos **dentro de los archivos estudiados**; no se ha demostrado unicidad universal entre todos los datasets, marcadores o versiones.
 
-| Elemento | Criterio que habrá que estudiar |
-|---|---|
-| Muestra | ID de origen y alcance del identificador, preservando estudio y procedencia |
-| ASV | Secuencia completa, región marcadora y contexto metodológico pertinente |
-| OTU | Identificador del clúster o referencia, método y versión |
-| Taxón | Referencia taxonómica y correspondencia comprobada con un identificador |
-| Lugar de muestreo | Política de identidad geográfica; coordenadas no equivalen a muestra o evento |
-| Anotación taxonómica | Rasgo anotado, referencia y versión; posible distinción entre ejecuciones |
+| Elemento             | Criterio que habrá que estudiar                                               |
+| -------------------- | ----------------------------------------------------------------------------- |
+| Muestra              | ID de origen y alcance del identificador, preservando estudio y procedencia   |
+| ASV                  | Secuencia completa, región marcadora y contexto metodológico pertinente       |
+| OTU                  | Identificador del clúster o referencia, método y versión                      |
+| Taxón                | Referencia taxonómica y correspondencia comprobada con un identificador       |
+| Lugar de muestreo    | Política de identidad geográfica; coordenadas no equivalen a muestra o evento |
+| Anotación taxonómica | Rasgo anotado, referencia y versión; posible distinción entre ejecuciones     |
 
 Conservar la cadena completa de las ASVs evita colisiones por truncamiento y garantiza uniones correctas. Una transformación a hash podría ser útil para IRIs compactas si se documenta, es determinista y conserva la secuencia original; no es una decisión tomada en este notebook.
 
@@ -764,11 +766,11 @@ No debe deducirse `owl:sameAs` a partir de una etiqueta igual, coordenadas coinc
 
 La relación entre muestra y ASV es N:M. El recuento depende de ambas, y, si coexistieran distintas tablas o procedimientos, también de la procedencia de esa observación. Un total por muestra o por ASV es una métrica diferente del valor de la celda.
 
-| ASV | S1 | S2 |
-|---|---:|---:|
-| ASV1 | 100 | 400 |
-| ASV2 | 200 | 50 |
-| ASV3 | 4.700 | 4.550 |
+| ASV   |    S1 |    S2 |
+| ----- | ----: | ----: |
+| ASV1  |   100 |   400 |
+| ASV2  |   200 |    50 |
+| ASV3  | 4.700 | 4.550 |
 | Total | 5.000 | 5.000 |
 
 No podemos guardar simplemente `ASV1 readCount 100` y `ASV1 readCount 400` sin indicar a qué muestra corresponden. Tampoco podemos asignar todos los recuentos a S1 sin identificar las ASVs. En una base relacional, una tabla intermedia con clave `(sample_id, asv_id)` representa el par en el contexto de una tabla de origen. Si integramos varias tablas, posiblemente necesitaremos también `dataset_id` o un identificador de ejecución.
@@ -851,16 +853,16 @@ Estas preguntas ayudarán a decidir clases, relaciones y requisitos de validaci�
 
 ### 5.6. Diferencias entre RDF, OWL y SHACL
 
-| Tecnología | Función | Ejemplo |
-|---|---|---|
-| RDF | Modelo de datos basado en tripletas sujeto-predicado-objeto | S1 pertenece al estudio 1001 |
-| RDFS | Vocabulario para clases, propiedades, jerarquía, dominio y rango | Toda instancia de una subclase también es instancia de la superclase |
-| OWL | Lenguaje ontológico para axiomas y razonamiento formal | Definir categorías y relaciones semánticas más expresivas |
-| SHACL | Validación de grafos según formas y restricciones explícitas | Exigir un identificador o un tipo numérico válido |
-| SPARQL | Consultas y operaciones sobre datos RDF | Recuperar muestras con pH disponible |
-| Turtle | Serialización textual de RDF | Guardar tripletas en un archivo `.ttl` |
-| GraphDB | Almacenamiento, consulta y razonamiento sobre RDF según configuración | Cargar y consultar el KG |
-| Protégé | Editor de ontologías | Diseñar y evaluar el modelo OWL |
+| Tecnología | Función                                                               | Ejemplo                                                              |
+| ---------- | --------------------------------------------------------------------- | -------------------------------------------------------------------- |
+| RDF        | Modelo de datos basado en tripletas sujeto-predicado-objeto           | S1 pertenece al estudio 1001                                         |
+| RDFS       | Vocabulario para clases, propiedades, jerarquía, dominio y rango      | Toda instancia de una subclase también es instancia de la superclase |
+| OWL        | Lenguaje ontológico para axiomas y razonamiento formal                | Definir categorías y relaciones semánticas más expresivas            |
+| SHACL      | Validación de grafos según formas y restricciones explícitas          | Exigir un identificador o un tipo numérico válido                    |
+| SPARQL     | Consultas y operaciones sobre datos RDF                               | Recuperar muestras con pH disponible                                 |
+| Turtle     | Serialización textual de RDF                                          | Guardar tripletas en un archivo `.ttl`                               |
+| GraphDB    | Almacenamiento, consulta y razonamiento sobre RDF según configuración | Cargar y consultar el KG                                             |
+| Protégé    | Editor de ontologías                                                  | Diseñar y evaluar el modelo OWL                                      |
 
 RDF, OWL y SHACL resuelven problemas diferentes [11–13]. RDFS/OWL no funcionan como las restricciones de una base de datos relacional. Por ejemplo, declarar dominio y rango puede producir inferencias sobre tipos en vez de rechazar una tripleta. Una cardinalidad mínima en OWL tampoco valida necesariamente que un valor esté explícitamente registrado, debido a la OWA.
 
@@ -895,16 +897,16 @@ La armonización mediante LLM, el mapeo a ENVO/NCBITaxon y la integración de nu
 
 El trabajo de reorganización separa los archivos originales, los resultados generados y los componentes versionados. Este apéndice recoge las decisiones de Git adoptadas en la conversación, sin sustituir al README ni a las instrucciones definitivas de ejecución.
 
-| Ruta | Criterio |
-|---|---|
-| `data/raw/` | Datos descargados, conservados intactos localmente, ignorados por Git |
-| `data/inspection/` | Resultados regenerables de inspección, ignorados |
-| `data/processed/` | Resultados derivados (CSV, TTL), ignorados |
+| Ruta                              | Criterio                                                                                     |
+| --------------------------------- | -------------------------------------------------------------------------------------------- |
+| `data/raw/`                       | Datos descargados, conservados intactos localmente, ignorados por Git                        |
+| `data/inspection/`                | Resultados regenerables de inspección, ignorados                                             |
+| `data/processed/`                 | Resultados derivados (CSV, TTL), ignorados                                                   |
 | `data/examples/`, `data/samples/` | Ejemplos y subconjuntos pequeños de prueba que pueden justificarse como archivos versionados |
-| `notebooks/` | Exploración, aprendizaje y resultados interpretados |
-| `scripts/` | Procesos reproducibles |
-| `src/empkg/` | Código reutilizable, pendiente de consolidación |
-| `docs/notes/` | Apuntes técnicos y académicos |
+| `notebooks/`                      | Exploración, aprendizaje y resultados interpretados                                          |
+| `scripts/`                        | Procesos reproducibles                                                                       |
+| `src/empkg/`                      | Código reutilizable, pendiente de consolidación                                              |
+| `docs/notes/`                     | Apuntes técnicos y académicos                                                                |
 
 Los archivos originales no se modifican; ello facilita la trazabilidad y la reproducibilidad. Los principios FAIR (localizables, accesibles, interoperables y reutilizables) orientan el trabajo de datos [15], aunque no prohíben literalmente modificar archivos. Preservar la fuente y registrar las transformaciones es una buena práctica que ayuda a cumplirlos.
 
@@ -926,72 +928,72 @@ Estas preguntas condensan los ejercicios de comprensión de la conversación, co
 
 ### B.1. Fuentes, BIOM y almacenamiento
 
-| Pregunta | Respuesta |
-|---|---|
+| Pregunta                                  | Respuesta                                                                                              |
+| ----------------------------------------- | ------------------------------------------------------------------------------------------------------ |
 | ¿Por qué necesitamos BIOM y mapping file? | El BIOM aporta secuencias, recuentos y taxonomía; el TSV, el contexto de las muestras. Se unen por ID. |
-| ¿Qué contiene una celda BIOM? | Un recuento de lecturas de una ASV en una muestra. Los IDs y metadatos están aparte. |
-| ¿Qué diferencia BIOM de HDF5? | BIOM define la estructura biológica; HDF5 es el formato binario jerárquico que usa BIOM 2.x. |
-| ¿Por qué conservar `data/raw/`? | Para reproducir y auditar las transformaciones; los datos de origen permanecen intactos. |
-| ¿Por qué separar descargas del notebook? | Evitar duplicación y mantener la adquisición independiente de la exploración. |
-| ¿Por qué una matriz dispersa? | Porque casi todas las combinaciones ASV-muestra tienen recuento cero. |
-| ¿Qué diferencia CSR de CSC? | CSR facilita acceso por ASV (fila); CSC por muestra (columna). |
-| ¿Qué guardan `data`, `indices`, `indptr`? | Valores, posiciones del eje opuesto y límites de cada segmento. |
-| ¿Por qué `nnz` supera el número de ASVs? | Una ASV puede tener recuentos positivos en varias muestras. |
-| ¿Un cero demuestra ausencia biológica? | No, solo ausencia de lecturas registradas para ese par en la tabla procesada. |
-| ¿Qué aporta `biom-format`? | Una API especializada que abstrae HDF5 y facilita operaciones por ambos ejes. |
+| ¿Qué contiene una celda BIOM?             | Un recuento de lecturas de una ASV en una muestra. Los IDs y metadatos están aparte.                   |
+| ¿Qué diferencia BIOM de HDF5?             | BIOM define la estructura biológica; HDF5 es el formato binario jerárquico que usa BIOM 2.x.           |
+| ¿Por qué conservar `data/raw/`?           | Para reproducir y auditar las transformaciones; los datos de origen permanecen intactos.               |
+| ¿Por qué separar descargas del notebook?  | Evitar duplicación y mantener la adquisición independiente de la exploración.                          |
+| ¿Por qué una matriz dispersa?             | Porque casi todas las combinaciones ASV-muestra tienen recuento cero.                                  |
+| ¿Qué diferencia CSR de CSC?               | CSR facilita acceso por ASV (fila); CSC por muestra (columna).                                         |
+| ¿Qué guardan `data`, `indices`, `indptr`? | Valores, posiciones del eje opuesto y límites de cada segmento.                                        |
+| ¿Por qué `nnz` supera el número de ASVs?  | Una ASV puede tener recuentos positivos en varias muestras.                                            |
+| ¿Un cero demuestra ausencia biológica?    | No, solo ausencia de lecturas registradas para ese par en la tabla procesada.                          |
+| ¿Qué aporta `biom-format`?                | Una API especializada que abstrae HDF5 y facilita operaciones por ambos ejes.                          |
 
 <a name="b-2-metataxonomia-y-metricas"></a>
 
 ### B.2. Metataxonomía y métricas
 
-| Pregunta | Respuesta |
-|---|---|
+| Pregunta                                         | Respuesta                                                                                    |
+| ------------------------------------------------ | -------------------------------------------------------------------------------------------- |
 | ¿Lectura, ASV y microorganismo son equivalentes? | No: observación de secuenciación, variante inferida y organismo individual, respectivamente. |
-| ¿ASV y OTU? | Variante de secuencia concreta frente a unidad de agrupación operacional. |
-| ¿Dos especies pueden compartir una ASV? | Sí, si comparten la secuencia de la región analizada. |
-| ¿Qué significa 5.000 lecturas y 304 ASVs? | Las 5.000 lecturas retenidas se distribuyen entre 304 variantes distintas. |
-| ¿5.000 lecturas equivalen a 5.000 células? | No: influyen las copias del marcador, PCR y otros sesgos. |
-| ¿De quién es el recuento? | Del par ASV-muestra en una tabla/proceso concreto. |
-| ¿Procesamos FASTQ? | No, partimos de tablas ya procesadas por EMP. |
-| ¿Qué abundancia relativa tiene 250/5.000? | 5 % de las lecturas. |
-| ¿Misma riqueza implica misma diversidad? | No, las distribuciones de abundancias pueden ser distintas. |
-| ¿Qué prevalencia tiene 100/2.000? | 5 % de las muestras del conjunto. |
-| ¿Puede haber alta abundancia y baja prevalencia? | Sí, por ejemplo, una ASV dominante en una única muestra. |
-| ¿Qué hace la rarefacción? | Submuestrea a una profundidad común, descartando lecturas y posiblemente muestras. |
-| ¿Por qué la suma de riquezas es `nnz`? | Cada posición no cero se cuenta una vez en su columna. |
-| ¿Por qué no materializar todas las métricas? | Son derivables; pueden quedar obsoletas si cambia su contexto o los datos. |
+| ¿ASV y OTU?                                      | Variante de secuencia concreta frente a unidad de agrupación operacional.                    |
+| ¿Dos especies pueden compartir una ASV?          | Sí, si comparten la secuencia de la región analizada.                                        |
+| ¿Qué significa 5.000 lecturas y 304 ASVs?        | Las 5.000 lecturas retenidas se distribuyen entre 304 variantes distintas.                   |
+| ¿5.000 lecturas equivalen a 5.000 células?       | No: influyen las copias del marcador, PCR y otros sesgos.                                    |
+| ¿De quién es el recuento?                        | Del par ASV-muestra en una tabla/proceso concreto.                                           |
+| ¿Procesamos FASTQ?                               | No, partimos de tablas ya procesadas por EMP.                                                |
+| ¿Qué abundancia relativa tiene 250/5.000?        | 5 % de las lecturas.                                                                         |
+| ¿Misma riqueza implica misma diversidad?         | No, las distribuciones de abundancias pueden ser distintas.                                  |
+| ¿Qué prevalencia tiene 100/2.000?                | 5 % de las muestras del conjunto.                                                            |
+| ¿Puede haber alta abundancia y baja prevalencia? | Sí, por ejemplo, una ASV dominante en una única muestra.                                     |
+| ¿Qué hace la rarefacción?                        | Submuestrea a una profundidad común, descartando lecturas y posiblemente muestras.           |
+| ¿Por qué la suma de riquezas es `nnz`?           | Cada posición no cero se cuenta una vez en su columna.                                       |
+| ¿Por qué no materializar todas las métricas?     | Son derivables; pueden quedar obsoletas si cambia su contexto o los datos.                   |
 
 <a name="b-3-taxonomia"></a>
 
 ### B.3. Taxonomía
 
-| Pregunta | Respuesta |
-|---|---|
-| ¿Taxón, rango y linaje? | Grupo biológico, nivel de clasificación y sucesión de taxones, respectivamente. |
-| ¿ASVs distintas con el mismo linaje? | Sí; la identidad de secuencia es distinta de la identidad taxonómica. |
-| ¿Deblur o SILVA? | No son alternativas directas: uno infiere variantes, otro aporta referencias para clasificarlas. |
-| ¿Qué significa `g__`? | La anotación no proporciona género; no demuestra que no exista. |
-| ¿Cobertura del 90 % equivale a exactitud del 90 %? | No; solo indica que el 90 % de las ASVs analizadas tiene un valor anotado en ese rango. |
-| ¿Por qué conservar el ID completo? | Evitar colisiones y unir anotaciones y recuentos sin desalinearlos. |
-| ¿Sobrescribir una anotación al cambiar de base? | No automáticamente; conservar y distinguir procedencia y versiones. |
-| ¿Taxonomía u ontología? | La taxonomía clasifica; la ontología permite además representar relaciones y axiomas del dominio. |
+| Pregunta                                           | Respuesta                                                                                         |
+| -------------------------------------------------- | ------------------------------------------------------------------------------------------------- |
+| ¿Taxón, rango y linaje?                            | Grupo biológico, nivel de clasificación y sucesión de taxones, respectivamente.                   |
+| ¿ASVs distintas con el mismo linaje?               | Sí; la identidad de secuencia es distinta de la identidad taxonómica.                             |
+| ¿Deblur o SILVA?                                   | No son alternativas directas: uno infiere variantes, otro aporta referencias para clasificarlas.  |
+| ¿Qué significa `g__`?                              | La anotación no proporciona género; no demuestra que no exista.                                   |
+| ¿Cobertura del 90 % equivale a exactitud del 90 %? | No; solo indica que el 90 % de las ASVs analizadas tiene un valor anotado en ese rango.           |
+| ¿Por qué conservar el ID completo?                 | Evitar colisiones y unir anotaciones y recuentos sin desalinearlos.                               |
+| ¿Sobrescribir una anotación al cambiar de base?    | No automáticamente; conservar y distinguir procedencia y versiones.                               |
+| ¿Taxonomía u ontología?                            | La taxonomía clasifica; la ontología permite además representar relaciones y axiomas del dominio. |
 
 <a name="b-4-metadatos-y-semantica"></a>
 
 ### B.4. Metadatos y semántica
 
-| Pregunta | Respuesta |
-|---|---|
-| ¿Qué diferencia EMPO y ENVO? | EMPO clasifica hábitats del EMP; ENVO tiene alcance ambiental más general y granular. |
-| ¿Qué representan los cuatro niveles EMPO? | Raíz, asociación general, subcategoría y hábitat específico. |
-| ¿Cómo describir sedimento de río en bosque templado? | `env_biome`: bosque templado; `env_feature`: río; `env_material`: sedimento fluvial. |
-| ¿Son subclases entre sí? | No necesariamente; son facetas distintas del ambiente. |
-| ¿Etiqueta o identificador ontológico? | La etiqueta es texto; la IRI referencia un concepto definido, después de verificar el mapeo. |
-| ¿Descartar muestra sin pH? | No por ese motivo; lo desconocido no equivale a falso o cero. |
-| ¿Por qué comprobar unicidad e igualdad de conjuntos? | Para evitar duplicados, multiplicación de filas y pérdidas durante uniones. |
-| ¿Mismas coordenadas, misma muestra? | No necesariamente: pueden diferir material, huésped, momento y profundidad. |
-| ¿Por qué no probar solo muestras completas? | Para evitar sesgo y comprobar la robustez ante información incompleta. |
-| ¿Clasificación salina equivale a medición? | No; una categoría y un valor experimental son hechos diferentes. SHACL puede exigir el valor si se justifica. |
+| Pregunta                                                      | Respuesta                                                                                                       |
+| ------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------- |
+| ¿Qué diferencia EMPO y ENVO?                                  | EMPO clasifica hábitats del EMP; ENVO tiene alcance ambiental más general y granular.                           |
+| ¿Qué representan los cuatro niveles EMPO?                     | Raíz, asociación general, subcategoría y hábitat específico.                                                    |
+| ¿Cómo describir sedimento de río en bosque templado?          | `env_biome`: bosque templado; `env_feature`: río; `env_material`: sedimento fluvial.                            |
+| ¿Son subclases entre sí?                                      | No necesariamente; son facetas distintas del ambiente.                                                          |
+| ¿Etiqueta o identificador ontológico?                         | La etiqueta es texto; la IRI referencia un concepto definido, después de verificar el mapeo.                    |
+| ¿Descartar muestra sin pH?                                    | No por ese motivo; lo desconocido no equivale a falso o cero.                                                   |
+| ¿Por qué comprobar unicidad e igualdad de conjuntos?          | Para evitar duplicados, multiplicación de filas y pérdidas durante uniones.                                     |
+| ¿Mismas coordenadas, misma muestra?                           | No necesariamente: pueden diferir material, huésped, momento y profundidad.                                     |
+| ¿Por qué no probar solo muestras completas?                   | Para evitar sesgo y comprobar la robustez ante información incompleta.                                          |
+| ¿Clasificación salina equivale a medición?                    | No; una categoría y un valor experimental son hechos diferentes. SHACL puede exigir el valor si se justifica.   |
 | ¿Por qué no construir la ontología directamente desde el TSV? | Porque las columnas describen almacenamiento y no determinan las entidades, semántica ni consultas del dominio. |
 
 ---
@@ -1000,38 +1002,38 @@ Estas preguntas condensan los ejercicios de comprensión de la conversación, co
 
 ## Glosario
 
-| Término | Definición breve |
-|---|---|
-| 16S rRNA | ARN ribosómico de la subunidad pequeña de bacterias y arqueas; su gen se usa como marcador. |
-| Amplicón | Fragmento de ADN obtenido por amplificación. |
-| ASV | Variante de secuencia de amplicón inferida. |
-| BIOM | Biological Observation Matrix. |
-| CSV / TSV | Texto tabular separado por comas / tabulaciones. |
-| CSR / CSC | Representaciones dispersas comprimidas por filas / columnas. |
-| Deblur / DADA2 | Métodos de inferencia de variantes de secuencia. |
-| EMP / EMPO | Earth Microbiome Project / su clasificación ontológica ambiental. |
-| ENVO | Environment Ontology. |
-| EDA | Análisis exploratorio de datos. |
-| FAIR | Principios de localización, acceso, interoperabilidad y reutilización. |
-| HDF5 | Formato binario jerárquico de datos científicos. |
-| IRI | Identificador internacionalizado de recurso. |
-| KG | Knowledge Graph o grafo de conocimiento. |
-| Linaje | Sucesión de taxones en una clasificación. |
-| MIxS | Estándar de metadatos de secuenciación. |
-| NNZ | Número de elementos no cero. |
-| OTU | Unidad taxonómica operacional. |
-| OWL / OWA | Lenguaje de ontologías web / hipótesis de mundo abierto. |
-| PCR | Reacción en cadena de la polimerasa. |
-| Prevalencia | Proporción de muestras con una observación positiva para una variante. |
-| Procedencia | Información sobre origen, método, versión y transformaciones de un dato. |
-| Rarefacción | Submuestreo a una profundidad objetivo. |
-| RDF / RDFS | Modelo de tripletas / vocabulario de esquemas RDF. |
-| Riqueza observada | Número de variantes distintas registradas en una muestra. |
-| SHACL | Lenguaje para validar grafos RDF mediante formas. |
-| SILVA | Base de datos de secuencias ribosómicas y taxonomía. |
-| SPARQL | Lenguaje de consulta de datos RDF. |
-| Taxón | Grupo de organismos clasificado dentro de un sistema taxonómico. |
-| Turtle | Formato textual de serialización RDF. |
+| Término           | Definición breve                                                                            |
+| ----------------- | ------------------------------------------------------------------------------------------- |
+| 16S rRNA          | ARN ribosómico de la subunidad pequeña de bacterias y arqueas; su gen se usa como marcador. |
+| Amplicón          | Fragmento de ADN obtenido por amplificación.                                                |
+| ASV               | Variante de secuencia de amplicón inferida.                                                 |
+| BIOM              | Biological Observation Matrix.                                                              |
+| CSV / TSV         | Texto tabular separado por comas / tabulaciones.                                            |
+| CSR / CSC         | Representaciones dispersas comprimidas por filas / columnas.                                |
+| Deblur / DADA2    | Métodos de inferencia de variantes de secuencia.                                            |
+| EMP / EMPO        | Earth Microbiome Project / su clasificación ontológica ambiental.                           |
+| ENVO              | Environment Ontology.                                                                       |
+| EDA               | Análisis exploratorio de datos.                                                             |
+| FAIR              | Principios de localización, acceso, interoperabilidad y reutilización.                      |
+| HDF5              | Formato binario jerárquico de datos científicos.                                            |
+| IRI               | Identificador internacionalizado de recurso.                                                |
+| KG                | Knowledge Graph o grafo de conocimiento.                                                    |
+| Linaje            | Sucesión de taxones en una clasificación.                                                   |
+| MIxS              | Estándar de metadatos de secuenciación.                                                     |
+| NNZ               | Número de elementos no cero.                                                                |
+| OTU               | Unidad taxonómica operacional.                                                              |
+| OWL / OWA         | Lenguaje de ontologías web / hipótesis de mundo abierto.                                    |
+| PCR               | Reacción en cadena de la polimerasa.                                                        |
+| Prevalencia       | Proporción de muestras con una observación positiva para una variante.                      |
+| Procedencia       | Información sobre origen, método, versión y transformaciones de un dato.                    |
+| Rarefacción       | Submuestreo a una profundidad objetivo.                                                     |
+| RDF / RDFS        | Modelo de tripletas / vocabulario de esquemas RDF.                                          |
+| Riqueza observada | Número de variantes distintas registradas en una muestra.                                   |
+| SHACL             | Lenguaje para validar grafos RDF mediante formas.                                           |
+| SILVA             | Base de datos de secuencias ribosómicas y taxonomía.                                        |
+| SPARQL            | Lenguaje de consulta de datos RDF.                                                          |
+| Taxón             | Grupo de organismos clasificado dentro de un sistema taxonómico.                            |
+| Turtle            | Formato textual de serialización RDF.                                                       |
 
 ---
 
