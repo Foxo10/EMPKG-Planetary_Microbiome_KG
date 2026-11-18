@@ -10,14 +10,14 @@ No se pretende representar cada columna del mapping file automáticamente, reali
 
 ## Fases
 
-| Fase | Objetivo | Estado |
-|---|---|---|
-| 0 | Exploración del dominio y de los datos | Completada |
-| 1 | Ingeniería ontológica | Siguiente |
-| 2 | Población experimental y validación del modelo | Pendiente |
-| 3 | Pipeline reproducible y población del conjunto completo | Pendiente |
-| 4 | Explotación del KG y evaluación | Pendiente |
-| 5 | Armonización semántica asistida y evaluación de ampliaciones | Pendiente, según alcance acordado |
+| Fase | Objetivo                                                     | Estado                            |
+| ---- | ------------------------------------------------------------ | --------------------------------- |
+| 0    | Exploración del dominio y de los datos                       | Completada                        |
+| 1    | Ingeniería ontológica                                        | En curso                          |
+| 2    | Población experimental y validación del modelo               | Pendiente                         |
+| 3    | Pipeline reproducible y población del conjunto completo      | Pendiente                         |
+| 4    | Explotación del KG y evaluación                              | Pendiente                         |
+| 5    | Armonización semántica asistida y evaluación de ampliaciones | Pendiente, según alcance acordado |
 
 ```mermaid
 flowchart LR
@@ -40,7 +40,7 @@ flowchart LR
 - [x] Comprobar la correspondencia y unicidad de los identificadores de muestra.
 - [x] Construir una prueba de concepto RDF v0 y extraer aprendizajes.
 - [x] Reorganizar el notebook de exploración y documentar los fundamentos.
-- [ ] Cerrar la reorganización documental e integrarla en `develop`.
+- [x] Cerrar la reorganización documental e integrarla en `develop`.
 
 **Entregables:** `notebooks/00_explore_biom.ipynb`, scripts de adquisición/inspección, apuntes y documentación actualizada. El prototipo RDF v0 queda accesible en Git como antecedente, no como modelo activo.
 
@@ -48,13 +48,17 @@ flowchart LR
 
 **Objetivo:** definir qué conocimiento debe representar EMPKG-lite antes de implementar el pipeline.
 
-- [ ] Estudiar fundamentos de ingeniería ontológica y OWL; aprender Protégé con ejemplos pequeños, razonadores y consultas DL.
+- [x] Estudiar fundamentos de ingeniería ontológica e instalar y aprender el uso básico de Protégé.
+- [x] Estudiar entidades, axiomas, propiedades, OWA, identidad, razonamiento, consistencia y satisfacibilidad; realizar ejercicios introductorios.
+- [ ] Completar el estudio de expresiones complejas y equivalencias (teoría presentada; práctica pendiente de revisión), restricciones, propiedades avanzadas y perfiles OWL pertinentes.
 - [ ] Delimitar dominio, propósito, alcance y requisitos junto al tutor cuando proceda.
 - [ ] Formular y documentar preguntas de competencia y criterios de éxito.
 - [ ] Evaluar ontologías y vocabularios reutilizables (EMPO, ENVO, NCBITaxon, MIxS y otros según necesidades); documentar licencias, versiones, IRIs y estrategia de reutilización.
 - [ ] Diseñar el modelo conceptual: identidad de muestras y estudios, observaciones de secuencia, anotaciones taxonómicas, recuentos, ambiente, mediciones y procedencia.
 - [ ] Resolver patrones de relaciones con atributos, identidad, unidades, información incompleta y evolución de referencias taxonómicas.
 - [ ] Formalizar clases, propiedades, axiomas y anotaciones OWL en Protégé; revisar la consistencia mediante un razonador.
+
+**Avance (18 de noviembre de 2026):** [apuntes de ingeniería ontológica y OWL](notes/ontology_engineering.md). Se ha trabajado con una ontología didáctica, no con EMPKG-lite v1. La adaptación de LOT y Ontology Development 101 es una propuesta; el alcance, las preguntas de competencia y el modelo formal siguen pendientes. Se priorizará contrastar el alcance y la contribución LLM con el tutor antes de cerrar el diseño.
 
 **Entregables previstos:** ontología inicial (por ejemplo, `ontology/empkg.ttl`), preguntas de competencia, documentación del modelo y decisiones justificadas. Los nombres de clases y propiedades se definirán aquí, no se heredan automáticamente del RDF v0.
 
@@ -114,14 +118,14 @@ Otras ampliaciones, condicionadas al tiempo y resultados: tablas OTU del EMP con
 
 ## Riesgos y medidas
 
-| Riesgo | Medida |
-|---|---|
-| Crecimiento del alcance | Priorizar preguntas de competencia y un KG funcional |
-| Gran tamaño del grafo | Procesamiento disperso, pruebas graduales y medición de recursos antes de escalar |
-| Mapeos taxonómicos o ambientales ambiguos | Conservar originales, versiones y procedencia; revisión de correspondencias |
-| Datos incompletos | Representación parcial y validación explícita; no imputar ausencias sin fundamento |
+| Riesgo                                     | Medida                                                                               |
+| ------------------------------------------ | ------------------------------------------------------------------------------------ |
+| Crecimiento del alcance                    | Priorizar preguntas de competencia y un KG funcional                                 |
+| Gran tamaño del grafo                      | Procesamiento disperso, pruebas graduales y medición de recursos antes de escalar    |
+| Mapeos taxonómicos o ambientales ambiguos  | Conservar originales, versiones y procedencia; revisión de correspondencias          |
+| Datos incompletos                          | Representación parcial y validación explícita; no imputar ausencias sin fundamento   |
 | Diferencias entre inferencia OWL y GraphDB | Seleccionar régimen de inferencia, contrastar con razonador y documentar diferencias |
-| Desviación de la propuesta original | Revisar alcance y papel del LLM con el tutor |
+| Desviación de la propuesta original        | Revisar alcance y papel del LLM con el tutor                                         |
 
 ## Gestión del desarrollo
 

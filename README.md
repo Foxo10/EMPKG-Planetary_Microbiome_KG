@@ -12,22 +12,22 @@ EMPKG-lite constituye una primera implementación de alcance acotado de la propu
 
 Se utiliza el subconjunto `subset_2k` de EMP Release 1:
 
-| Archivo | Contenido |
-|---|---|
+| Archivo                                    | Contenido                                                      |
+| ------------------------------------------ | -------------------------------------------------------------- |
 | `emp_deblur_90bp.subset_2k.rare_5000.biom` | Matriz dispersa de recuentos de ASVs y anotaciones taxonómicas |
-| `emp_qiime_mapping_subset_2k.tsv` | Metadatos de las muestras, estudios y ambientes |
+| `emp_qiime_mapping_subset_2k.tsv`          | Metadatos de las muestras, estudios y ambientes                |
 
 Según la exploración realizada en el notebook del proyecto:
 
-| Característica | Valor |
-|---|---:|
-| Muestras | 2.000 |
-| ASVs distintas | 155.002 |
-| Longitud de secuencia | 90 bases |
-| Pares ASV-muestra con recuento positivo | 858.173 |
-| Lecturas por muestra tras rarefacción | 5.000 |
-| Categorías EMPO de nivel 3 | 17 |
-| Columnas del mapping file | 76 |
+| Característica                          |    Valor |
+| --------------------------------------- | -------: |
+| Muestras                                |    2.000 |
+| ASVs distintas                          |  155.002 |
+| Longitud de secuencia                   | 90 bases |
+| Pares ASV-muestra con recuento positivo |  858.173 |
+| Lecturas por muestra tras rarefacción   |    5.000 |
+| Categorías EMPO de nivel 3              |       17 |
+| Columnas del mapping file               |       76 |
 
 El alcance inicial es el subconjunto completo de 2.000 muestras, no todo EMP Release 1. Los recuentos describen lecturas procesadas, no cantidades directas de microorganismos. La selección de muestras y el procesamiento limitan las conclusiones ecológicas que pueden extraerse.
 
@@ -50,14 +50,14 @@ flowchart TD
 
 ## Tecnologías
 
-| Tecnología | Responsabilidad |
-|---|---|
-| Python, biom-format, h5py, pandas | Exploración y tratamiento de datos |
-| Protégé y OWL | Diseño, formalización y razonamiento sobre la ontología |
-| RDF, Turtle y RDFLib | Representación y generación automatizada de datos RDF |
-| GraphDB | Almacenamiento y explotación del grafo |
-| SPARQL | Consultas y comprobación de requisitos |
-| SHACL | Validación de la calidad y estructura de los datos RDF |
+| Tecnología                        | Responsabilidad                                         |
+| --------------------------------- | ------------------------------------------------------- |
+| Python, biom-format, h5py, pandas | Exploración y tratamiento de datos                      |
+| Protégé y OWL                     | Diseño, formalización y razonamiento sobre la ontología |
+| RDF, Turtle y RDFLib              | Representación y generación automatizada de datos RDF   |
+| GraphDB                           | Almacenamiento y explotación del grafo                  |
+| SPARQL                            | Consultas y comprobación de requisitos                  |
+| SHACL                             | Validación de la calidad y estructura de los datos RDF  |
 
 Se evaluará la reutilización de EMPO, ENVO, NCBI Taxonomy/NCBITaxon, MIxS y otros vocabularios pertinentes. Su incorporación y versiones se decidirán durante el diseño.
 
@@ -86,12 +86,15 @@ Los archivos originales se descargan en `data/raw/` desde [EMP Release 1](https:
 ├── docs/
 │   ├── notes/
 │   │   ├── emp_bioinformatics_fundamentals.md
-│   │   └── abd_empkg-lite.md
+│   │   ├── abd_empkg-lite.md
+│   │   └── ontology_engineering.md
 │   ├── decisions.md
 │   ├── original_project_proposal.md
 │   └── roadmap.md
 ├── notebooks/
 │   └── 00_explore_biom.ipynb
+├── ontology/
+│   └── tutorial.ttl
 ├── scripts/
 │   ├── download_data.py
 │   └── inspect_data.py
@@ -104,10 +107,11 @@ Las carpetas de ontologías, consultas, shapes, código reutilizable y pruebas s
 
 ## Estado y documentación
 
-La exploración inicial está completada. La implementación RDF v0 fue una prueba de concepto, retirada de la rama de trabajo en favor de un diseño ontológico explícito. La ontología OWL v1 y el nuevo pipeline de población están pendientes; todavía no se presenta un KG v1 operativo.
+La exploración inicial está completada. La implementación RDF v0 fue una prueba de concepto, retirada de la rama de trabajo en favor de un diseño ontológico explícito. La fase de ingeniería ontológica está en curso: se han estudiado fundamentos de OWL y realizado ejercicios introductorios en Protégé. La ontología OWL v1 y el nuevo pipeline de población están pendientes; todavía no se presenta un KG v1 operativo.
 
 - [Roadmap](docs/roadmap.md): planificación y entregables.
 - [Registro de decisiones](docs/decisions.md): justificación técnica y trazabilidad.
 - [Fundamentos bioinformáticos y semánticos](docs/notes/emp_bioinformatics_fundamentals.md): apuntes de aprendizaje.
+- [Ingeniería ontológica y fundamentos de OWL](docs/notes/ontology_engineering.md): apuntes y prácticas de aprendizaje.
 - [Apuntes ABD](docs/notes/abd_empkg-lite.md): antecedentes de modelado y aprendizaje.
 - [Propuesta original](docs/original_project_proposal.md): planteamiento histórico, no especificación vigente.
